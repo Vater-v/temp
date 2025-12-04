@@ -553,13 +553,22 @@ a {
 }
 
 .hero__rating {
-  display: flex;
+  display: inline-flex; /* Чтобы блок не растягивался на всю ширину */
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 12px;
+  background-color: var(--color-white); /* Белая подложка на сером фоне */
+  padding: 8px 16px;
+  border-radius: 100px; /* Форма капсулы */
+  box-shadow: var(--shadow-sm); /* Легкая тень для объема */
+  margin-bottom: 24px; /* Чуть больше воздуха до заголовка */
   font-weight: 600;
   font-size: 14px;
+}
+
+/* Опционально: сделать цвет текста чуть мягче */
+.hero__rating-text {
   color: var(--color-black);
+  transform: translateY(1px); /* Оптическая компенсация текста */
 }
 .hero__title {
   font-size: 32px;
@@ -641,7 +650,44 @@ a {
   margin-bottom: 12px;
   color: var(--color-black);
 }
+.hero__container {
+  display: grid;
+  gap: 24px; /* Уменьшаем с 40px до 24px на мобильных */
+  grid-template-columns: minmax(0, 1fr);
+}
+.hero__features-item {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Чуть больше отступ от иконки до текста */
+}
 
+/* Модифицируем иконку (если позволяет SVG, или оберните её в span) */
+.hero__features-item .icon--check {
+  background-color: rgba(40, 167, 69, 0.1); /* Полупрозрачный зеленый фон */
+  border-radius: 50%; /* Круг */
+  padding: 4px; /* Отступ внутри круга */
+  width: 28px; /* Чуть увеличиваем общий размер */
+  height: 28px;
+  /* Важно: размер самого SVG внутри viewBox должен быть учтен, 
+     либо используйте box-sizing: content-box */
+}
+/* Возвращаем большой отступ только на десктопе */
+@media (min-width: 1024px) {
+  .hero__container {
+    gap: 60px;
+  }
+}
+/* Добавляем плавность движения */
+.btn-arrow {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* При наведении на кнопку сдвигаем стрелку вправо */
+@media (hover: hover) {
+  .button:hover .btn-arrow {
+    transform: translateX(4px);
+  }
+}
 /* --- STYLES --- */
 .styles {
   background-color: var(--color-bg-light);
