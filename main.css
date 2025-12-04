@@ -876,180 +876,288 @@ p {
 .mobile-menu__footer .btn {
   width: 100%;
 }
-
 /* ======================================================================
-   Phase 6: Стилизация Секций
+   Phase 6: Стилизация Секций (Ultimate Premium Edition)
 ====================================================================== */
 
 /* --- 6.1. Hero (.hero) --- */
-
 .hero {
   padding-top: 40px;
   padding-bottom: 60px;
+  /* Глубокий радиальный градиент: эффект прожектора в темном шоуруме */
+  background: radial-gradient(
+    circle at 50% 30%,
+    #1f1f1f 0%,
+    var(--color-bg-primary) 70%
+  );
+  overflow: hidden; /* Важно: скрывает вылеты бликов */
 }
 
-/* 33. Макет Hero (.hero__layout) */
 .hero__layout {
   display: grid;
   gap: 40px;
+  position: relative;
+  align-items: center;
 }
 
 @media (min-width: 1024px) {
-  /* Используем 1024px как точку перехода для Hero */
   .hero {
     padding-top: 80px;
-    padding-bottom: 100px;
+    padding-bottom: 120px;
   }
   .hero__layout {
-    grid-template-columns: 1.2fr 1fr;
-    align-items: center;
-    gap: 60px;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 80px;
   }
 }
 
-.hero__content {
-  /* Убедимся, что контент находится над фоновым шумом */
-  position: relative;
-  z-index: 2;
-}
-
-/* 34. Бейдж Доверия (.trust-badge) */
+/* 34. Бейдж Доверия */
 .trust-badge {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 16px;
-  border-radius: 50px; /* Скругленный бейдж */
-  margin-bottom: 20px;
+  gap: 12px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  margin-bottom: 24px;
   font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  /* Эффект стеклянной капсулы */
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
 }
 
-/* 35. Список Преимуществ (.bullets) */
+.stars-icon {
+  color: var(--color-rating);
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4)); /* Золотое свечение */
+}
+
+/* 35. Список Преимуществ */
 .bullets {
-  padding: 24px;
-  margin-bottom: 30px;
+  padding: 24px 30px;
+  margin-bottom: 40px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
 }
 
 .bullets li {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 15px;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
   font-weight: 500;
+  color: var(--color-text-primary);
 }
 
 .bullets li:last-child {
   margin-bottom: 0;
 }
 
-/* 36. Группа CTA (.cta-group) */
-.cta-hint {
-  font-size: 14px;
-  color: var(--color-text-muted);
-  margin-top: 15px;
+.icon-check {
+  color: var(--color-success);
+  filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.5));
+  flex-shrink: 0;
+  margin-top: 3px;
 }
 
-/* Медиа (Изображение) */
-@media (min-width: 1024px) {
-  .hero-img {
-    border-radius: var(--radius-lg);
-    /* Добавим легкую тень для отделения от фона */
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    max-height: 70vh;
-    width: auto;
-    margin: 0 auto;
+/* Hero Image: Левитация + 3D + Свет */
+.hero__media-desktop {
+  position: relative;
+  z-index: 1;
+}
+
+/* "Аура" за автомобилем */
+.hero__media-desktop::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.05) 0%,
+    transparent 70%
+  );
+  filter: blur(50px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes floatHero {
+  0%,
+  100% {
+    transform: translateY(0);
   }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.hero-img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+
+  /* Комбинация физики (перспектива) и жизни (левитация) */
+  animation: floatHero 6s ease-in-out infinite;
+  transform: perspective(1000px) rotateY(-5deg);
+  transition: transform 0.5s ease, filter 0.5s ease;
+
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.5));
+}
+
+.hero__media-desktop:hover .hero-img {
+  /* При наведении машина "подъезжает" к зрителю */
+  transform: perspective(1000px) rotateY(0deg) scale(1.02);
+  filter: drop-shadow(0 40px 70px rgba(0, 0, 0, 0.7));
 }
 
 /* --- 6.2. Details (.details) --- */
-
-/* 37. Блок Контента (.content-block) */
 .content-block {
   display: grid;
-  gap: 30px;
-  margin-bottom: 60px;
+  gap: 40px;
+  margin-bottom: 100px;
 }
 
-.content-block:last-child {
-  margin-bottom: 0;
-}
-
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .content-block {
     grid-template-columns: 1fr 1fr;
     align-items: center;
-    gap: 60px;
+    gap: 80px;
   }
 
-  /* 38. Реверс Блока (.content-block.reverse) */
+  /* Чередование контента */
   .content-block.reverse .media-wrapper {
     order: 2;
   }
   .content-block.reverse .text-content {
     order: 1;
+    text-align: right;
+  }
+
+  /* Зеркалим линию для реверсивного блока */
+  .content-block.reverse .stitch-line {
+    padding-left: 0;
+    padding-right: 40px;
+  }
+  .content-block.reverse .stitch-line::before {
+    left: auto;
+    right: 0;
   }
 }
 
-/* Медиа обертка */
 .media-wrapper {
+  position: relative;
   border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
-/* 40. Декоративная Линия (.stitch-line) */
+/* Рамка-акцент поверх фото */
+.media-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+/* 40. Декоративная Линия (Stitch Line V2.0 - Realistic) */
 .stitch-line {
-  border-left: 3px dashed var(--color-accent);
-  padding-left: 20px;
+  position: relative;
+  padding-left: 30px;
+  /* Убираем старый бордер */
+  border: none;
 }
 
-@media (min-width: 768px) {
-  .stitch-line {
-    padding-left: 30px;
-  }
+.stitch-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  bottom: 5px;
+  width: 4px;
+  /* Имитация реальной нити через градиент */
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-accent) 50%,
+    transparent 50%
+  );
+  background-size: 4px 14px; /* Размер стежка */
+  background-repeat: repeat-y;
+  /* Свечение нити */
+  filter: drop-shadow(0 0 3px rgba(229, 57, 53, 0.5));
+  opacity: 0.9;
 }
 
 /* --- 6.3. Styles (.styles) --- */
-
-/* 41. Сетка Стилей (.grid-container--styles) */
 .grid-container--styles {
   display: grid;
-  gap: 30px;
+  gap: 40px;
   grid-template-columns: 1fr;
 }
 
 @media (min-width: 768px) {
   .grid-container--styles {
     grid-template-columns: repeat(2, 1fr);
+    /* Добавляем отступы, чтобы тени при наведении не обрезались */
+    padding: 20px;
+    margin: -20px;
   }
 }
 
-/* 42. Карточка Стиля (.style-card) */
+/* 42. Карточка Стиля */
 .style-card {
+  position: relative;
   background-color: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.4s ease, border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-.style-card:hover {
-  transform: translateY(-5px);
+/* Красная тема: Красное свечение */
+.style-card[data-theme="red"]:hover {
+  transform: translateY(-10px);
+  border-color: rgba(229, 57, 53, 0.4);
+  box-shadow: 0 20px 60px rgba(229, 57, 53, 0.15);
 }
 
-.card-media {
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+/* Черная тема: Серебряное свечение */
+.style-card[data-theme="black"]:hover {
+  transform: translateY(-10px);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 60px rgba(255, 255, 255, 0.08);
 }
 
-/* 43. Контент Карточки (.card-content) */
 .card-content {
-  padding: 24px;
+  padding: 30px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom, var(--color-bg-secondary), #151515);
+}
+
+.card-content h3 {
+  margin-bottom: 12px;
+  font-size: 1.5rem;
 }
 
 .card-content .btn {
-  margin-top: 20px;
+  margin-top: auto;
+  width: 100%;
 }
 
 /* --- 6.4. Technology (.technology) --- */
-
-/* 44. Сетка Технологий (.grid-container--tech) */
 .grid-container--tech {
   display: grid;
   gap: 30px;
@@ -1062,172 +1170,222 @@ p {
   }
 }
 
-/* 45. Элемент Технологии (.tech-item) */
+/* 45. Элемент Технологии (Glass Card) */
 .tech-item {
-  background-color: var(--color-bg-primary);
+  /* Эффект матового стекла */
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-lg);
-  padding: 24px;
+  padding: 30px 24px;
   text-align: center;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.tech-item:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .tech-item figure {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* --- 6.5. Video Overview (.video-overview) --- */
-
-/* 46. Обертка Видео (.video-wrapper) */
 .video-wrapper {
+  position: relative;
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
+  background: #000;
+
+  /* Эффект свечения экрана (Ambilight) */
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  cursor: pointer;
 }
 
-.video-wrapper video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* Кастомная кнопка Play (CSS Only) */
+.video-wrapper::after {
+  content: "▶";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: rgba(229, 57, 53, 0.85);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: white;
+  padding-left: 6px; /* Визуальная центровка треугольника */
+  backdrop-filter: blur(4px);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 5;
+  pointer-events: none; /* Клик проходит к видео */
+}
+
+.video-wrapper:hover::after {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: rgba(229, 57, 53, 1);
+  box-shadow: 0 0 30px rgba(229, 57, 53, 0.5);
+}
+
+/* Скрываем кнопку, если видео запущено (трюк через active или JS класс) */
+.video-wrapper:active::after {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
 }
 
 /* --- 6.6. Kit (.kit) --- */
-
-/* 47. Макет Комплекта (.kit__layout) */
 .kit__layout {
   display: grid;
   gap: 40px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .kit__layout {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.2fr 1fr;
     align-items: center;
-    gap: 60px;
+    gap: 80px;
   }
 }
 
 .kit__image img {
   border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
-/* 48. Контейнер Списка (.kit__list-container) */
 .kit__list-container {
-  padding: 30px;
+  padding: 40px;
+  position: relative;
+  /* Усиливаем темную подложку */
+  background: linear-gradient(
+    145deg,
+    rgba(30, 30, 30, 0.6) 0%,
+    rgba(20, 20, 20, 0.8) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* 49. Список Комплекта (.kit__list li) */
+/* 49. Список Комплекта */
 .kit__list li {
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  align-items: baseline;
-}
-
-.kit__list li:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 15px;
 }
 
 .kit__item-count {
-  font-weight: 700;
+  font-family: monospace; /* Технический стиль */
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.1);
   color: var(--color-accent);
-  margin-right: 10px;
-  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 4px;
   min-width: 50px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.kit__note {
-  color: var(--color-text-muted);
-  margin-top: 20px;
+.kit__list li:hover .kit__item-count {
+  background: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
+  transition: 0.3s;
 }
 
 .cta-kit {
+  width: 100%;
   margin-top: 30px;
 }
 
 /* --- 6.7. Gallery (.gallery) --- */
+.gallery {
+  overflow: hidden;
+}
 
-/* 50. Мобильный Слайдер (.scroll-snap-slider) */
 .scroll-snap-slider {
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   gap: 16px;
-  /* Скрытие полосы прокрутки */
-  -ms-overflow-style: none; /* IE и Edge */
-  scrollbar-width: none; /* Firefox */
+  padding-bottom: 20px;
+  /* Скрытие скроллбара */
+  scrollbar-width: none;
 }
-
 .scroll-snap-slider::-webkit-scrollbar {
-  display: none; /* Chrome, Safari и Opera */
+  display: none;
 }
 
-/* Учет горизонтального padding контейнера для мобильного слайдера галереи */
-.gallery .scroll-snap-slider {
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-left: -20px;
-  margin-right: -20px;
-}
-
-/* 51. Слайд (.slide) */
 .slide {
-  scroll-snap-align: start;
-  /* 85% ширины экрана, чтобы показать край следующего слайда */
-  flex: 0 0 85%;
+  scroll-snap-align: center;
+  flex: 0 0 80%;
   border-radius: var(--radius-md);
   overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s;
 }
 
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  aspect-ratio: 3/4;
-}
+/* 53. Десктопная Сетка (Masonry Style) */
+@media (min-width: 768px) {
+  .gallery-grid-desktop {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 240px;
+    gap: 20px;
+    grid-auto-flow: dense;
+  }
 
-/* 52. Подсказка Свайпа (.swipe-hint) */
-.swipe-hint {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  color: var(--color-text-muted);
-  font-size: 14px;
-}
+  .gallery-item {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    transition: filter 0.3s, transform 0.3s;
+    /* Легкое затемнение для контраста */
+    filter: brightness(0.9);
+  }
 
-/* 53. Десктопная Сетка (.gallery-grid-desktop) (Стилизуется в медиа-запросах в Фазе 9) */
-
-/* 54. Элементы Галереи (.gallery-item) */
-.gallery-item {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: var(--radius-md);
+  .gallery-item:hover {
+    filter: brightness(1.1);
+    transform: scale(1.02);
+    z-index: 2;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
 }
 
 /* --- 6.8. Reviews (.reviews) --- */
-
-/* Слайдер отзывов не требует выхода за пределы контейнера */
 .reviews-slider {
-  padding-bottom: 20px; /* Для теней карточек */
+  padding: 20px;
+  padding-bottom: 60px;
 }
 
-/* 57. Карточка Отзыва (.review-card) */
 .review-card {
-  scroll-snap-align: start;
-  flex: 0 0 90%; /* Чуть шире на мобильном */
-  max-width: 400px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  scroll-snap-align: center;
+  flex: 0 0 85%;
+  max-width: 420px;
+  padding: 30px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
 }
 
 @media (min-width: 768px) {
@@ -1236,73 +1394,99 @@ p {
   }
 }
 
-.review-card blockquote {
-  margin: 15px 0;
-  flex-grow: 1;
+/* Декоративная кавычка на фоне */
+.review-card::before {
+  content: "”";
+  position: absolute;
+  top: 0px;
+  right: 20px;
+  font-family: serif;
+  font-size: 140px;
+  line-height: 1; /* Чтобы не сдвигало блок */
+  color: rgba(255, 255, 255, 0.03);
+  pointer-events: none;
 }
 
 .review-card blockquote p {
-  font-style: italic;
+  font-style: normal; /* Более современный вид без италика */
+  font-weight: 400;
+  font-size: 1.05rem;
+  line-height: 1.6;
 }
 
 .review-card .author {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--color-text-muted);
-  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
 }
 
 /* --- 6.9. FAQ (.faq) --- */
-
 .accordion {
   max-width: 800px;
   margin: 0 auto;
 }
 
-/* 58. Элемент Аккордеона (.accordion-item) */
 .accordion-item {
-  margin-bottom: 15px;
-}
-
-/* 59. Кнопка Аккордеона (.accordion-header button) */
-.accordion-header button {
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  color: var(--color-text-primary);
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.accordion-header button:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-/* 60. Иконка Плюс (.icon-plus) */
-.icon-plus {
-  transition: transform 0.3s ease-out;
-  flex-shrink: 0;
-}
-
-/* 62. Открытое Состояние (Иконка) */
-[aria-expanded="true"] .icon-plus {
-  transform: rotate(135deg); /* Превращает плюс в крестик */
-}
-
-/* 61. Контент Аккордеона (.accordion-content) */
-.accordion-content {
-  /* Начальное состояние (скрыто) - управляется JS для расчета высоты */
-  display: none;
+  margin-bottom: 16px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  transition: background 0.3s;
   overflow: hidden;
 }
 
-/* Стилизация текста внутри контента */
+.accordion-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.accordion-header button {
+  width: 100%;
+  text-align: left;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.icon-plus {
+  color: var(--color-text-muted);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Состояние "Открыто" */
+[aria-expanded="true"] .icon-plus {
+  transform: rotate(135deg);
+  color: var(--color-accent);
+}
+
+.accordion-content {
+  /* Трюк с Grid для плавной анимации высоты на чистом CSS (нужна смена класса или display) */
+  /* Здесь используем стандартную анимацию появления */
+  animation: fadeSlideIn 0.4s ease;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .accordion-content p {
-  padding: 0 20px 20px 20px;
+  padding: 0 24px 24px 24px;
+  line-height: 1.7;
   color: var(--color-text-muted);
 }
 
