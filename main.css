@@ -275,12 +275,47 @@ a {
 }
 
 .logo {
-  font-weight: 800;
+  /* --- Типографика --- */
+  font-family: var(--font-main); /* Явно указываем шрифт */
+  font-weight: 800; /* Максимальная жирность для "премиум" веса */
   font-size: 24px;
+  line-height: 1; /* Убираем лишние отступы сверху/снизу */
   text-transform: uppercase;
+  letter-spacing: -0.04em; /* Чуть сужаем буквы — это делает логотип более сбитым и графичным */
+
+  /* --- Цвет --- */
   color: var(--color-black);
-  letter-spacing: -0.5px;
-  user-select: none;
+
+  /* --- UX / Интерактивность --- */
+  text-decoration: none;
+  display: inline-flex; /* Позволяет работать с отступами */
+  align-items: center;
+  padding: 5px 0; /* Увеличиваем область клика без изменения визуального размера */
+  user-select: none; /* Защита от случайного выделения текста */
+
+  /* --- Анимация --- */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Акцент на слове Style (Красная нить) */
+.logo span {
+  color: var(--color-accent);
+  margin-left: 2px; /* Микро-отступ для читаемости */
+}
+
+/* --- Hover-эффект (UX) --- */
+/* Легкая прозрачность дает понять, что это ссылка, не сдвигая макет */
+@media (hover: hover) {
+  .logo:hover {
+    opacity: 0.8;
+  }
+}
+
+/* --- Focus State (Доступность/Accessibility) --- */
+.logo:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 /* --- Mobile Nav --- */
@@ -916,6 +951,13 @@ a {
   margin-top: 10px;
 }
 
+.reviews__dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px; /* Расстояние между точками */
+}
+
 /* Стили точек (такие же, как в галерее) */
 .reviews__dot {
   width: 8px;
@@ -952,6 +994,11 @@ a {
     overflow: visible;
     scroll-snap-type: none;
     padding: 0;
+  }
+
+  /* ДОБАВИТЬ ЭТОТ БЛОК: */
+  .reviews__controls {
+    display: none;
   }
   @media (hover: hover) {
     .review-card:hover {
