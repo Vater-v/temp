@@ -1,0 +1,368 @@
+/* -------------------------------- */
+/* --- sections/order-block.css --- */
+/* --- Ultimate Edition vFinal ---- */
+/* -------------------------------- */
+
+.order-section {
+    position: relative;
+    padding-top: 80px;
+    padding-bottom: clamp(100px, 15vh, 160px);
+
+    /* Глубокий фон: переход в подвал */
+    background: radial-gradient(
+        circle at 50% 0%,
+        #2a2a2a 0%,
+        var(--bg-primary) 80%
+    );
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/* --- 1. Атмосфера (Noise + Glow) --- */
+
+/* Текстура шума (Grain) для кинематографичности */
+.order-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    /* SVG фильтр шума */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: overlay;
+}
+
+/* Фоновое красное свечение (Дыхание) */
+.order-section::after {
+    content: "";
+    position: absolute;
+    bottom: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1200px;
+    height: 800px;
+
+    background: radial-gradient(circle, var(--accent-color), transparent 65%);
+    filter: blur(140px);
+    opacity: 0.12;
+    z-index: -1;
+    pointer-events: none;
+
+    animation: orderAmbientPulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes orderAmbientPulse {
+    0% {
+        opacity: 0.1;
+        transform: translateX(-50%) scale(1);
+    }
+    100% {
+        opacity: 0.15;
+        transform: translateX(-50%) scale(1.1);
+    }
+}
+
+/* --- 2. Сетка (Grid Layout) --- */
+.order-layout {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+/* --- 3. Медиа-блок (Картинка слева) --- */
+.order-media {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.order-media h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.1;
+
+    /* Металлический градиент */
+    background: linear-gradient(135deg, #fff 30%, #999 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #fff;
+
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.order-image {
+    width: 100%;
+    height: auto;
+    border-radius: 24px;
+
+    /* Стеклянная рамка */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.02);
+
+    /* Глубокая тень + Рефлекс */
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1),
+        box-shadow 0.6s ease;
+    will-change: transform;
+}
+
+/* Интерактив на ПК: Легкое выравнивание */
+@media (hover: hover) {
+    .order-media:hover .order-image {
+        /* Эффект: картинка "тянется" к курсору */
+        transform: scale(1.02);
+        box-shadow: 0 50px 90px -20px rgba(0, 0, 0, 0.8),
+            0 0 0 1px rgba(229, 57, 53, 0.3) inset; /* Красный внутренний блик */
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* --- 4. Контейнер Формы (Premium Glass) --- */
+.order-form-container {
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+
+    background: rgba(20, 20, 20, 0.65);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+
+    padding: 40px 32px;
+    border-radius: 24px;
+
+    /* Световые грани: имитация света сверху */
+    border: 1px solid transparent;
+    border-top-color: rgba(255, 255, 255, 0.15);
+    border-bottom-color: rgba(0, 0, 0, 0.4);
+    border-left-color: rgba(255, 255, 255, 0.05);
+
+    /* Тень и внутреннее свечение */
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    transition: transform 0.4s ease, border-color 0.4s ease,
+        box-shadow 0.4s ease;
+}
+
+/* UX: Подсветка формы, когда пользователь вводит данные */
+.order-form-container:focus-within {
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 50px 90px rgba(0, 0, 0, 0.7), 0 0 30px rgba(229, 57, 53, 0.1); /* Легкий красный ореол */
+    transform: translateY(-5px);
+}
+
+/* --- 5. Блок Цены --- */
+.price-block {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+
+    /* Градиентная разделительная линия */
+    border-bottom: 1px solid transparent;
+    border-image: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent
+        )
+        1;
+}
+
+.label-discount {
+    display: inline-block;
+    background: rgba(229, 57, 53, 0.1);
+    color: #ff8a80;
+    border: 1px solid rgba(229, 57, 53, 0.3);
+    padding: 6px 14px;
+    border-radius: 50px;
+
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+
+    /* Пульсация */
+    box-shadow: 0 0 15px rgba(229, 57, 53, 0.2);
+    animation: discountPulse 2s infinite ease-in-out;
+}
+
+@keyframes discountPulse {
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(229, 57, 53, 0.2);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(229, 57, 53, 0.5);
+    }
+}
+
+.old-price {
+    font-size: 1.25rem;
+    text-decoration: line-through;
+    color: var(--text-muted);
+    margin-right: 12px;
+    font-weight: 500;
+}
+
+.new-price {
+    display: inline-block;
+    font-size: clamp(3rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -2px;
+    color: #fff;
+
+    /* Металлический текст */
+    background: linear-gradient(180deg, #fff 10%, #adadad 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+}
+
+.price-note {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+/* --- 6. Гарантии (Grid Icons) --- */
+.guarantees {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.guarantees p {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.3;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+/* Стилизация иконок галочек */
+.guarantees p::before {
+    content: "✓";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--accent-color); /* Красная галочка */
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 900;
+
+    transition: all 0.3s ease;
+}
+
+.guarantees p:hover {
+    color: #fff;
+}
+.guarantees p:hover::before {
+    background: var(--accent-color);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(229, 57, 53, 0.6);
+}
+
+/* =========================================
+   DESKTOP ADAPTATION (Split Layout)
+   ========================================= */
+@media (min-width: 1024px) {
+    .order-layout {
+        display: grid;
+        /* Левая часть чуть шире для эффектности */
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 80px;
+        align-items: start; /* Важно для Sticky */
+    }
+
+    .order-media {
+        /* Sticky Image: Картинка следует за скроллом */
+        position: sticky;
+        top: 120px;
+        margin-bottom: 0;
+    }
+
+    .order-media h2 {
+        text-align: left;
+        margin-bottom: 40px;
+        max-width: 15ch; /* Ограничение ширины заголовка */
+    }
+
+    .order-image {
+        /* 3D Перспектива: картинка повернута к форме */
+        transform: perspective(1000px) rotateY(3deg);
+        box-shadow: -20px 40px 70px rgba(0, 0, 0, 0.6);
+    }
+
+    /* При наведении картинка выравнивается */
+    .order-media:hover .order-image {
+        transform: perspective(1000px) rotateY(0deg) scale(1.02);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    .order-form-container {
+        /* На всю ширину своей колонки */
+        max-width: 100%;
+        padding: 48px 40px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .order-layout {
+        gap: 120px;
+    }
+}
+
+/* =========================================
+   MOBILE FIXES
+   ========================================= */
+@media (max-width: 640px) {
+    .order-form-container {
+        padding: 32px 20px;
+    }
+
+    .new-price {
+        font-size: 3rem;
+    }
+
+    .guarantees {
+        gap: 8px;
+    }
+
+    .guarantees p {
+        font-size: 0.75rem;
+    }
+}

@@ -1,0 +1,246 @@
+/* ------------------- */
+/* base/typography.css */
+/* ------------------- */
+
+:root {
+    /* Fluid Typography Scale */
+    --fs-h1: clamp(2.125rem, 4vw + 1rem, 4.5rem);
+    --fs-h2: clamp(1.75rem, 3vw + 1rem, 3rem);
+    --fs-h3: clamp(1.35rem, 2vw + 1rem, 2rem);
+    --fs-body: clamp(1rem, 0.5vw + 0.8rem, 1.125rem);
+    --fs-small: 0.875rem;
+    --fs-eyebrow: 0.75rem;
+
+    /* Line Heights */
+    --lh-heading: 1.15;
+    --lh-body: 1.6;
+}
+
+/* --- Global Performance & Reset --- */
+body {
+    font-family: var(--font-main), system-ui, -apple-system, "Segoe UI", Roboto,
+        Helvetica, Arial, sans-serif;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-primary);
+
+    /* Rendering Optimizations */
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    font-synthesis: none;
+
+    /* Hyphenation */
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+@media (min-width: 1024px) {
+    body {
+        line-height: 1.7;
+        text-rendering: optimizeLegibility;
+        font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    }
+}
+
+/* --- Headings --- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 0;
+    margin-bottom: 0.6em;
+    color: #ffffff;
+    font-weight: 900;
+    line-height: var(--lh-heading);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -webkit-hyphens: manual;
+    hyphens: manual;
+}
+
+@media (min-width: 768px) {
+    h1,
+    h2,
+    h3 {
+        text-wrap: balance;
+    }
+}
+
+h1 {
+    font-size: var(--fs-h1);
+    letter-spacing: -0.03em;
+}
+
+h2 {
+    max-width: 30ch;
+    margin-inline: auto;
+    margin-bottom: var(--inner-spacing);
+    font-size: var(--fs-h2);
+    letter-spacing: -0.02em;
+    text-align: center;
+}
+
+h3 {
+    margin-bottom: 0.5em;
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+h4 {
+    margin-bottom: 0.5em;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+/* --- Body Text --- */
+p {
+    max-width: 65ch;
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+    text-wrap: pretty;
+    content-visibility: auto;
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+/* --- Links --- */
+a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 4px;
+    border-radius: 2px;
+}
+
+p a {
+    position: relative;
+    z-index: 1;
+    /* Hit Area Expansion */
+    margin: -8px -2px;
+    padding: 8px 2px;
+    color: #fff;
+    border-bottom: 1px solid rgba(229, 57, 53, 0.4);
+    text-underline-offset: 4px;
+    text-decoration-skip-ink: auto;
+}
+
+p a:active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: transparent;
+    border-radius: 4px;
+}
+
+@media (hover: hover) {
+    p a:hover {
+        color: var(--accent-color);
+        border-bottom-color: var(--accent-color);
+    }
+}
+
+/* --- Lists --- */
+.content-list {
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+    list-style: none;
+}
+
+.content-list li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.content-list li::before {
+    content: "•";
+    position: absolute;
+    top: -0.1em;
+    left: 0;
+    color: var(--accent-color);
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+/* --- Utilities --- */
+.text-eyebrow {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--accent-color);
+    font-size: var(--fs-eyebrow);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.text-lead {
+    max-width: 45ch;
+    color: #e0e0e0;
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.text-numeric,
+.new-price,
+.old-price,
+.kit-price-tag {
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+    letter-spacing: 0;
+    white-space: nowrap;
+}
+
+.text-gradient {
+    display: inline-block;
+    color: #fff; /* Fallback */
+    transform: translateZ(0);
+}
+
+@supports (-webkit-background-clip: text) {
+    .text-gradient {
+        background: linear-gradient(135deg, #ffffff 30%, #a5a5a5 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    }
+}
+
+.text-accent {
+    color: var(--accent-color);
+}
+.text-uppercase {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
+
+.text-center {
+    text-align: center;
+}
+.text-left {
+    text-align: left;
+}
+.text-right {
+    text-align: right;
+}
+
+@media (max-width: 640px) {
+    .text-mobile-left {
+        text-align: left;
+    }
+}

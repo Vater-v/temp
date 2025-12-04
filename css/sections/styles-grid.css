@@ -1,0 +1,349 @@
+/* -------------------------------- */
+/* --- sections/styles-grid.css --- */
+/* --- Ultimate Edition vFinal+ --- */
+/* -------------------------------- */
+
+/* --- Сетка (Grid Layout) --- */
+.styles .grid-container {
+    max-width: 1100px;
+    margin-inline: auto;
+
+    /* Умная сетка с поддержкой Container Queries */
+    container-type: inline-size;
+    align-items: stretch;
+}
+
+/* --- Карточка (Основа) --- */
+.style-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Растягиваем на всю высоту */
+
+    /* Глубокий темный фон + Текстура Шума (Noise) */
+    background-color: #1a1a1a;
+    background-image: linear-gradient(
+            145deg,
+            rgba(40, 40, 40, 0.4) 0%,
+            rgba(10, 10, 10, 0.9) 100%
+        ),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+
+    /* Стеклянная граница + Внутренняя фаска (Bevel Effect) */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    border-radius: var(--radius-lg, 24px);
+    overflow: hidden;
+
+    /* Изоляция контекста и оптимизация */
+    isolation: isolate;
+    contain: layout paint;
+    content-visibility: auto; /* Браузер рисует только когда в экране */
+
+    transform: translateZ(0);
+    will-change: transform, box-shadow;
+
+    transition: all 0.5s var(--ease-smooth, cubic-bezier(0.25, 0.8, 0.25, 1));
+}
+
+/* --- Scroll-Driven Animation (Появление при скролле) --- */
+@supports (animation-timeline: view()) {
+    .style-card {
+        opacity: 0;
+        transform: translateY(40px);
+        animation: cardEntry 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        animation-timeline: view();
+        animation-range: entry 10% cover 20%;
+    }
+}
+
+@keyframes cardEntry {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Взаимодействие (Hover & Focus) --- */
+
+/* 1. Левитация (только мышь) */
+@media (hover: hover) {
+    .style-card:hover {
+        transform: translateY(-12px) scale(1.01);
+        z-index: 10;
+    }
+}
+
+/* 2. Нажатие (Touch Feedback) */
+.style-card:active {
+    transform: scale(0.98);
+    transition-duration: 0.1s;
+}
+
+/* 3. Фокус клавиатуры (Accessibility) */
+.style-card:focus-within {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.3);
+}
+
+/* === ВАРИАЦИИ КАРТОЧЕК (Стилизация) === */
+/* Поддержка и nth-child (для текущего HTML) и data-theme (на будущее) */
+
+/* Карточка 1: Красная строчка (Sport) */
+.style-card:nth-child(1),
+.style-card[data-theme="red"] {
+    /* Едва заметный красный отлив фона */
+    background-image: linear-gradient(
+            145deg,
+            rgba(229, 57, 53, 0.06) 0%,
+            rgba(10, 10, 10, 0.95) 100%
+        ),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+.style-card:nth-child(1):hover,
+.style-card[data-theme="red"]:hover {
+    border-color: rgba(229, 57, 53, 0.5);
+    /* Ambient Glow: Неоновое свечение */
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8),
+        0 0 40px -10px rgba(229, 57, 53, 0.2),
+        /* Внешняя аура */ inset 0 0 20px rgba(229, 57, 53, 0.08); /* Внутренний свет */
+}
+
+/* Карточка 2: Черная классика (Classic) */
+.style-card:nth-child(2),
+.style-card[data-theme="black"] {
+    background-image: linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.03) 0%,
+            rgba(10, 10, 10, 0.95) 100%
+        ),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+.style-card:nth-child(2):hover,
+.style-card[data-theme="black"]:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    /* Стальное свечение */
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8),
+        0 0 40px -10px rgba(255, 255, 255, 0.08),
+        inset 0 0 20px rgba(255, 255, 255, 0.03);
+}
+
+/* --- Медиа-контейнер (Фото) --- */
+.card-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3.2; /* Оптимальная пропорция */
+    overflow: hidden;
+    z-index: 0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: var(--bg-card);
+    transition: border-color 0.4s ease;
+}
+
+.style-card:hover .card-media {
+    border-bottom-color: transparent;
+}
+
+.card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.95);
+    transform: scale(1.01); /* Фикс белых линий */
+
+    /* Cinematic Zoom */
+    transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), filter 0.5s ease;
+    backface-visibility: hidden; /* Fix Safari jitter */
+}
+
+.style-card:hover .card-media img {
+    transform: scale(1.12);
+    filter: brightness(1.1) contrast(1.05);
+}
+
+/* Градиентный оверлей (Vignette) */
+.card-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 40%,
+        rgba(26, 26, 26, 0.5) 70%,
+        #1a1a1a 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Эффект Блика (Sheen) */
+.style-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.03) 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.03) 70%,
+        transparent 100%
+    );
+
+    transform: skewX(-25deg);
+    pointer-events: none;
+    z-index: 5;
+    transition: left 0.7s ease;
+}
+
+.style-card:hover::after {
+    left: 200%;
+}
+
+/* Лейбл (Tag) */
+.card-media::before {
+    content: "Premium Choice";
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 2;
+
+    background: rgba(10, 10, 10, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    padding: 6px 14px;
+    border-radius: 50px;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #fff;
+
+    /* Анимация появления */
+    opacity: 0;
+    transform: translateY(-10px) scale(0.9);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
+}
+
+.style-card:nth-child(2) .card-media::before,
+.style-card[data-theme="black"] .card-media::before {
+    content: "Classic Style";
+}
+
+.style-card:hover .card-media::before {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Контент (Текст) --- */
+.card-content {
+    position: relative;
+    z-index: 2;
+    padding: 24px 28px 32px;
+
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    /* Наезжаем текстом на фото */
+    margin-top: -60px;
+}
+
+.card-content h3 {
+    font-size: clamp(1.6rem, 3vw, 1.9rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    color: #fff;
+
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+
+    transition: transform 0.4s ease;
+}
+
+.card-content p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+    flex-grow: 1;
+
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    transition: color 0.3s ease, transform 0.4s ease;
+}
+
+/* Микро-анимация подъема текста */
+.style-card:hover .card-content h3,
+.style-card:hover .card-content p {
+    transform: translateY(-4px);
+}
+
+.style-card:hover .card-content p {
+    color: #f0f0f0;
+}
+
+/* --- Кнопка (Smart Button) --- */
+.style-card .btn {
+    width: 100%;
+    margin-top: auto;
+
+    /* Исходно: Ghost Button */
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    backdrop-filter: blur(4px);
+
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Hover карточки активирует кнопку */
+.style-card:nth-child(1):hover .btn,
+.style-card[data-theme="red"]:hover .btn {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    box-shadow: 0 8px 25px rgba(229, 57, 53, 0.4);
+    transform: translateY(-2px);
+}
+
+.style-card:nth-child(2):hover .btn,
+.style-card[data-theme="black"]:hover .btn {
+    background-color: #fff;
+    color: #000;
+    border-color: #fff;
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+.style-card .btn:active {
+    transform: scale(0.97) !important;
+}
+
+/* --- Desktop Adaptation --- */
+@media (min-width: 1024px) {
+    .card-media {
+        aspect-ratio: 4 / 5; /* На ПК фото выше и эпичнее */
+    }
+
+    .card-content {
+        margin-top: -90px; /* Сильнее наезжаем на фото */
+        padding-top: 50px;
+        text-align: center;
+
+        /* Дополнительный градиент для плавности перехода */
+        background: linear-gradient(to bottom, transparent 0%, #1a1a1a 30%);
+    }
+}

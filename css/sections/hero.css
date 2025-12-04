@@ -1,0 +1,408 @@
+/* -------------------------------- */
+/* --- sections/hero.css       ---- */
+/* --- Ultimate Performance Ed ---- */
+/* -------------------------------- */
+
+/* --- Основной контейнер --- */
+.hero {
+    position: relative;
+    /* dvh гарантирует корректную высоту на iOS с плавающими панелями */
+    height: 100dvh;
+    min-height: 560px; /* Оптимально для мобильных */
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--bg-primary);
+
+    /* PERFORMANCE: Изоляция перерисовки. Браузер не пересчитывает футер при анимации хиро */
+    contain: layout paint style;
+    isolation: isolate;
+}
+
+/* --- ОПТИМИЗАЦИЯ: Шум только для Desktop (min-width: 768px) --- */
+/* Фильтр feTurbulence убивает мобильные CPU. Включаем только на планшетах/ПК */
+@media (min-width: 768px) {
+    .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
+        opacity: 0.04;
+        pointer-events: none;
+        z-index: 1;
+        mix-blend-mode: overlay;
+        will-change: opacity;
+    }
+}
+
+/* --- Видео на фоне (Mobile) --- */
+.hero-video-mobile {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 60%;
+    z-index: 0;
+    /* Затемняем CSS-ом (дешевле чем фильтр) */
+    filter: brightness(0.85);
+    background-color: var(--bg-secondary);
+
+    /* GPU Hack для предотвращения мерцания */
+    transform: translateZ(0);
+}
+
+/* --- Умный Оверлей (Optimized Gradient) --- */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+
+    /* Линейный градиент быстрее радиального */
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.1) 0%,
+        rgba(0, 0, 0, 0) 30%,
+        rgba(0, 0, 0, 0.6) 80%,
+        var(--bg-primary) 100%
+    );
+    pointer-events: none;
+}
+
+/* --- Layout Контента --- */
+.hero-layout {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Mobile: текст внизу */
+
+    /* Safe Area для iPhone X+ */
+    padding-top: max(60px, env(safe-area-inset-top));
+    padding-bottom: max(90px, env(safe-area-inset-bottom) + 20px);
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 650px;
+    margin: 0 auto;
+    width: 100%;
+    /* GPU слой для анимации появления */
+    will-change: transform, opacity;
+}
+
+/* --- Типографика Hero --- */
+.hero h1 {
+    /* Fluid Typography: ограничиваем минимум, чтобы не ломалось на iPhone SE */
+    font-size: clamp(2rem, 7vw, 4.2rem);
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+
+    /* Оптимизированная тень (без размытия большого радиуса) */
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+    letter-spacing: -0.03em;
+}
+
+.subtitle {
+    font-size: clamp(1rem, 3vw, 1.35rem);
+    margin-bottom: 32px;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 400;
+    line-height: 1.5;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    padding: 0 12px;
+}
+
+/* --- Список преимуществ (Mobile Performance) --- */
+.bullets {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+    margin: 0 auto 40px auto;
+    width: fit-content;
+
+    /* Более простой фон для мобильных вместо тяжелого стекла */
+    background: rgba(20, 20, 20, 0.85);
+    backdrop-filter: blur(10px); /* Уменьшенный blur */
+    -webkit-backdrop-filter: blur(10px);
+
+    padding: 20px 28px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bullets li {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.bullets .icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 26px;
+    height: 26px;
+    background: rgba(229, 57, 53, 0.15);
+    color: var(--accent-color);
+    border-radius: 50%;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+/* --- Группа кнопок --- */
+.cta-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+}
+
+.hero .btn {
+    padding: 20px 40px;
+    width: 100%;
+    max-width: 340px; /* Чтобы кнопка не была бесконечной на планшетах */
+    box-shadow: 0 10px 30px rgba(229, 57, 53, 0.4);
+}
+
+/* ОПТИМИЗАЦИЯ: Отключаем анимацию блика на мобильных (батарея) */
+.hero .btn::after {
+    display: none;
+}
+
+.cta-hint {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 !important;
+}
+
+/* --- Desktop Video Placeholder --- */
+.hero-media-desktop {
+    display: none;
+}
+
+/* =========================================
+   TABLET ADAPTATION
+   ========================================= */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .hero-layout {
+        justify-content: center;
+        padding-bottom: 60px;
+    }
+    .hero h1 {
+        max-width: 20ch;
+        margin-inline: auto;
+    }
+    .bullets {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* =========================================
+   DESKTOP VERSION (High Fidelity)
+   ========================================= */
+@media (min-width: 1024px) {
+    .hero {
+        height: auto;
+        min-height: 95vh;
+        padding: 120px 0 80px 0;
+
+        background: radial-gradient(
+            circle at 75% 45%,
+            #222 0%,
+            var(--bg-primary) 65%
+        );
+    }
+
+    /* Включаем блик на ПК */
+    .hero .btn::after {
+        display: block;
+        animation: btnShine 4s infinite ease-in-out;
+    }
+
+    .hero-video-mobile,
+    .hero-overlay {
+        display: none;
+    }
+
+    .hero-layout {
+        display: grid;
+        grid-template-columns: 1fr 1.1fr;
+        align-items: center;
+        gap: 80px;
+        padding-bottom: 0;
+        height: auto;
+        text-align: left;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding-top: 0;
+        padding-left: clamp(20px, 5vw, 60px);
+    }
+
+    .hero-content {
+        text-align: left;
+        max-width: 600px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .bullets {
+        background: transparent;
+        padding: 0;
+        border: none;
+        backdrop-filter: none;
+        box-shadow: none;
+        margin-bottom: 45px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .bullets li {
+        font-size: 1.15rem;
+        color: var(--text-primary);
+    }
+
+    .bullets .icon {
+        background: transparent;
+        border: none;
+        width: auto;
+        height: auto;
+        font-size: 1.4rem;
+        color: var(--accent-color);
+    }
+
+    .hero h1 {
+        margin-bottom: 28px;
+        text-shadow: none;
+        color: #fff;
+
+        background: linear-gradient(
+            110deg,
+            #ffffff 30%,
+            #b0b0b0 45%,
+            #ffffff 50%,
+            #b0b0b0 55%,
+            #ffffff 70%
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+
+        animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards,
+            textShine 6s linear infinite;
+        padding-bottom: 0.1em;
+    }
+
+    .subtitle {
+        color: var(--text-secondary);
+        font-size: 1.35rem;
+        margin-bottom: 45px;
+        text-shadow: none;
+        max-width: 90%;
+        padding: 0;
+    }
+
+    .cta-group {
+        align-items: flex-start;
+        width: auto;
+    }
+
+    .hero .btn {
+        width: auto;
+    }
+
+    /* --- Desktop 3D Video --- */
+    .hero-media-desktop {
+        display: block;
+        position: relative;
+        width: 100%;
+        max-width: 750px;
+        justify-self: center;
+        opacity: 0;
+        animation: fadeInUp 1s ease-out 0.6s forwards;
+        perspective: 1500px;
+        aspect-ratio: 16 / 9;
+    }
+
+    /* Оптимизированная аура (Opacity вместо Box-Shadow) */
+    .hero-media-desktop::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        height: 80%;
+        background: radial-gradient(
+            circle,
+            var(--accent-color),
+            transparent 70%
+        );
+        filter: blur(100px);
+        opacity: 0.15;
+        z-index: -1;
+        animation: heroGlowPulse 6s ease-in-out infinite alternate;
+    }
+
+    .hero-media-desktop video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 24px;
+        outline: 1px solid rgba(255, 255, 255, 0.08);
+        background-color: #1a1a1a;
+
+        box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8),
+            0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+
+        animation: floatVideoRealistic 8s ease-in-out infinite;
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+            box-shadow 0.6s ease;
+    }
+
+    .hero-media-desktop:hover video {
+        animation-play-state: paused;
+        transform: scale(1.02) rotateX(2deg) translateY(-10px);
+        box-shadow: 0 50px 100px -20px rgba(229, 57, 53, 0.25),
+            0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    }
+}
+
+/* Keyframes */
+@keyframes textShine {
+    to {
+        background-position: 200% center;
+    }
+}
+@keyframes heroGlowPulse {
+    0% {
+        opacity: 0.15;
+    }
+    100% {
+        opacity: 0.25;
+    }
+}

@@ -1,0 +1,323 @@
+/* -------------------------------- */
+/* --- sections/kit.css        ---- */
+/* --- Ultimate Edition vFinal ---- */
+/* -------------------------------- */
+
+/* --- 1. Обертка секции (Atmosphere) --- */
+.kit {
+    position: relative;
+    padding-top: 60px;
+    padding-bottom: 80px;
+    overflow: hidden; /* Скрываем вылеты декоративного света */
+    z-index: 1;
+
+    /* Глубокий переход от предыдущей секции к подвалу */
+    background: radial-gradient(
+        circle at 0% 50%,
+        rgba(30, 30, 30, 1) 0%,
+        var(--bg-primary) 80%
+    );
+    isolation: isolate;
+}
+
+/* Декор: Красное атмосферное пятно позади комплекта */
+.kit::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 50%; /* Смещено влево, под картинку */
+    transform: translate(-20%, -50%);
+    width: 60vw;
+    height: 60vw;
+
+    background: radial-gradient(circle, var(--accent-color), transparent 65%);
+    filter: blur(140px);
+    opacity: 0.08; /* Деликатная аура */
+    pointer-events: none;
+    z-index: -1;
+}
+
+.kit-content {
+    position: relative;
+    z-index: 2;
+    /* Верхняя разделительная линия с угасанием по краям */
+    border-top: 1px solid transparent;
+    background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent
+        )
+        top no-repeat;
+    background-size: 100% 1px;
+    padding-top: 60px;
+}
+
+.kit-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    align-items: center;
+}
+
+/* --- 2. Картинка Комплекта (Levitating 3D Frame) --- */
+.kit-image {
+    position: relative;
+    width: 100%;
+    border-radius: var(--radius-lg);
+
+    /* Стеклянная рамка (Паспарту) */
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(5px);
+    padding: 8px; /* Отступ рамки от фото */
+    overflow: hidden;
+
+    /* Сложная тень: Глубина + Рефлекс */
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    /* Настройка 3D пространства */
+    perspective: 1200px;
+    transform-style: preserve-3d;
+
+    /* Анимация "Дыхания" (Левитация) */
+    animation: kitFloat 6s ease-in-out infinite;
+    will-change: transform;
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.kit-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+
+    /* Легкий зум для устранения артефактов краев */
+    transform: scale(1.01);
+    transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), filter 0.6s ease;
+}
+
+/* Интерактив: "Подлет" ближе к зрителю */
+@media (hover: hover) {
+    .kit-image:hover {
+        /* При наведении останавливаем левитацию и фиксируем в "активном" положении */
+        animation-play-state: paused;
+        transform: perspective(1200px) rotateY(-2deg) rotateX(2deg)
+            translateY(-10px) scale(1.02);
+
+        border-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 50px 90px -20px rgba(0, 0, 0, 0.8),
+            0 0 0 1px rgba(229, 57, 53, 0.2) inset; /* Красный внутренний блик */
+    }
+
+    .kit-image:hover img {
+        transform: scale(1.06); /* Зум фото внутри рамки */
+        filter: brightness(1.08);
+    }
+}
+
+/* Эффект Блика (Sheen), пробегающего по стеклу */
+.kit-image::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 60%;
+    height: 100%;
+
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.05) 30%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.05) 70%,
+        transparent 100%
+    );
+    transform: skewX(-25deg);
+    pointer-events: none;
+    z-index: 3;
+    transition: left 0.7s ease;
+}
+
+.kit-image:hover::after {
+    left: 200%; /* Пролетает через всю картинку */
+}
+
+/* --- 3. Контейнер текста (Glass Panel) --- */
+.kit-list-container {
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.kit-list-container h3 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin-bottom: 35px;
+    line-height: 1.1;
+
+    /* Металлический градиент текста */
+    background: linear-gradient(135deg, #fff 30%, #a5a5a5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #fff; /* Fallback */
+
+    position: relative;
+    display: inline-block;
+}
+
+/* Декоративный "стежок" под заголовком */
+.kit-list-container h3::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--accent-color);
+    margin-top: 15px;
+    border-radius: 2px;
+    box-shadow: 0 0 12px rgba(229, 57, 53, 0.6);
+}
+
+/* --- 4. Список "Прострочка" (Brand DNA List) --- */
+.kit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* Отступы задаем внутри li для линии */
+    margin-bottom: 45px;
+    position: relative;
+}
+
+/* Вертикальная линия (Нить), соединяющая пункты */
+.kit-list::before {
+    content: "";
+    position: absolute;
+    left: 9px; /* Центр ромба */
+    top: 15px;
+    bottom: 35px;
+    width: 1px;
+    /* Градиент уходит в прозрачность к низу */
+    background: linear-gradient(
+        to bottom,
+        var(--accent-color) 20%,
+        rgba(255, 255, 255, 0.05) 100%
+    );
+    z-index: 0;
+}
+
+.kit-list li {
+    position: relative;
+    padding: 14px 0 14px 40px; /* Место слева под маркер */
+
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+
+    transition: transform 0.3s ease, color 0.3s ease;
+    cursor: default;
+    z-index: 1;
+}
+
+/* Интерактив: Сдвиг вправо */
+.kit-list li:hover {
+    transform: translateX(10px);
+    color: #fff;
+}
+
+/* Маркер: Ромб (Diamond Stitch) */
+.kit-list li::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 20px; /* Центрируем относительно первой строки текста */
+    width: 11px;
+    height: 11px;
+
+    background-color: var(--bg-primary); /* Центр темный */
+    border: 2px solid var(--accent-color); /* Красная рамка */
+
+    transform: rotate(45deg) translateY(-50%);
+    transform-origin: center center;
+
+    box-shadow: 0 0 8px rgba(229, 57, 53, 0.4);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Активное состояние маркера */
+.kit-list li:hover::after {
+    background-color: var(--accent-color); /* Заливается красным */
+    border-color: #fff; /* Рамка становится белой */
+    box-shadow: 0 0 15px rgba(229, 57, 53, 0.8);
+    transform: rotate(225deg) translateY(-50%) scale(1.2);
+}
+
+/* --- 5. Кнопка CTA --- */
+.cta-kit {
+    width: 100%;
+    /* Пульсация для привлечения внимания */
+    animation: glowPulse 3s infinite ease-in-out;
+}
+
+/* --- 6. Desktop Adaptation --- */
+@media (min-width: 1024px) {
+    .kit-layout {
+        display: grid;
+        grid-template-columns: 1.2fr 0.9fr; /* Картинка больше */
+        gap: 100px;
+        align-items: center;
+    }
+
+    /* Визуальный порядок: Картинка слева */
+    .kit-image {
+        order: 1;
+        /* Усиливаем перспективу на большом экране */
+        perspective: 1500px;
+    }
+
+    .kit-list-container {
+        order: 2;
+        /* Упаковываем текст в стеклянную панель */
+        padding: 40px 48px;
+        background: linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.03) 0%,
+            transparent 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 24px;
+        backdrop-filter: blur(10px);
+    }
+
+    .cta-kit {
+        width: auto;
+        min-width: 260px;
+    }
+}
+
+/* --- 7. Animations (Keyframes) --- */
+@keyframes kitFloat {
+    0%,
+    100% {
+        transform: perspective(1500px) rotateY(-5deg) rotateX(2deg)
+            translateY(0);
+    }
+    50% {
+        /* Легкий подъем и изменение угла */
+        transform: perspective(1500px) rotateY(-5deg) rotateX(0deg)
+            translateY(-15px);
+    }
+}
+
+/* --- 8. Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+    .kit-image {
+        animation: none;
+        transform: none;
+    }
+    .kit-image:hover {
+        transform: none;
+    }
+    .cta-kit {
+        animation: none;
+    }
+}

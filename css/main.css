@@ -1,0 +1,38 @@
+/* ------------------------------------------------ */
+/* --- MAIN STYLESHEET (Entry Point)           ---- */
+/* --- Architecture: 7-1 Pattern (Simplified)  ---- */
+/* ------------------------------------------------ */
+
+/* 1. Base (Фундамент) */
+@import "base/variables.css"; /* Переменные цвета, шрифтов */
+@import "base/reset.css"; /* Сброс браузерных стилей */
+@import "base/typography.css"; /* Шрифты, заголовки, текст */
+@import "base/global.css"; /* Body, HTML, скроллбар */
+
+/* 2. Utilities (Инструменты) */
+@import "utilities/animations.css"; /* Keyframes */
+@import "utilities/helpers.css"; /* .sr-only, .text-center */
+@import "utilities/effects.css"; /* Glassmorphism, Glow */
+
+/* 3. Layout (Каркас) */
+@import "layout/container.css"; /* .container, grid systems */
+@import "layout/header.css"; /* Верхнее меню */
+@import "layout/footer.css"; /* Подвал */
+
+/* 4. Components (UI Элементы) */
+@import "components/buttons.css"; /* .btn */
+@import "components/forms.css"; /* input, select */
+@import "components/radio-tiles.css"; /* Выбор цвета */
+@import "components/cards.css"; /* .media-wrapper */
+@import "components/accordion.css"; /* FAQ */
+@import "components/modal.css"; /* Mobile Sticky Bar */
+
+/* 5. Sections (Секции страницы) */
+@import "sections/hero.css"; /* Первый экран */
+@import "sections/details.css"; /* Детали (01, 02) */
+@import "sections/styles-grid.css"; /* Карточки стилей */
+@import "sections/technologies.css"; /* Технологии */
+@import "sections/kit.css"; /* Комплект */
+@import "sections/gallery.css"; /* Фотогалерея */
+@import "sections/reviews.css"; /* Отзывы */
+@import "sections/order-block.css"; /* Форма заказа */

@@ -1,0 +1,322 @@
+/* -------------------------------- */
+/* --- sections/reviews.css    ---- */
+/* --- Ultimate Edition vFinal ---- */
+/* -------------------------------- */
+
+.reviews {
+    position: relative;
+    z-index: 1;
+    /* Глубокий фон: плавный переход в темноту */
+    background: radial-gradient(
+        circle at 50% 0%,
+        #252525 0%,
+        var(--bg-primary) 80%
+    );
+    /* overflow: clip лучше hidden, так как не ломает position: sticky */
+    overflow: clip;
+    padding-bottom: var(--section-spacing);
+}
+
+/* --- 1. Текстура и Атмосфера (Noise + Glow) --- */
+
+/* Слой шума (Film Grain) для кинематографичности */
+.reviews::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.03; /* Едва заметная фактура */
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: overlay;
+}
+
+/* Красное "дыхание" света по центру */
+.reviews::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 1000px;
+    height: 600px;
+
+    background: radial-gradient(
+        ellipse,
+        rgba(229, 57, 53, 0.06),
+        transparent 65%
+    );
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: -1;
+
+    /* Анимация пульсации */
+    animation: reviewsAmbientPulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes reviewsAmbientPulse {
+    0% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+    100% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+}
+
+/* --- 2. Слайдер (Mobile & Tablet) --- */
+.reviews-slider {
+    display: flex;
+    gap: 20px;
+
+    /* Умные отступы: Слева отступ равен безопасному отступу контейнера */
+    padding: 20px max(20px, env(safe-area-inset-left)) 60px;
+
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 20px; /* Чтобы карточка прилипала ровно */
+
+    /* Инерция iOS */
+    -webkit-overflow-scrolling: touch;
+
+    /* Скрываем скроллбар */
+    scrollbar-width: none;
+
+    /* Маска прозрачности по краям (Fade Out) */
+    mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 5%,
+        black 95%,
+        transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 5%,
+        black 95%,
+        transparent 100%
+    );
+}
+
+.reviews-slider::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- 3. Карточка (Glass Card v2.0) --- */
+.review-card {
+    position: relative;
+    flex-shrink: 0;
+
+    /* Адаптивная ширина: на мобильных широкая, но с запасом */
+    width: clamp(280px, 85vw, 400px);
+
+    /* Темное стекло */
+    background: linear-gradient(
+        165deg,
+        rgba(35, 35, 35, 0.6) 0%,
+        rgba(15, 15, 15, 0.8) 100%
+    );
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    /* Границы через box-shadow (более аккуратный рендеринг) */
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        /* Верхний блик (фаска) */ inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        /* Тонкая обводка */ 0 20px 40px -10px rgba(0, 0, 0, 0.6); /* Внешняя тень */
+
+    border-radius: 24px;
+    padding: 36px 30px;
+
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+
+    display: flex;
+    flex-direction: column;
+
+    isolation: isolate;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* --- Декор: "Призрачная" Цитата --- */
+.review-card::before {
+    content: "”";
+    position: absolute;
+    top: 0px;
+    right: 25px;
+
+    /* Красивый шрифт с засечками для контраста */
+    font-family: serif;
+    font-size: 140px;
+    line-height: 0.8;
+    font-weight: 900;
+
+    /* Градиент уходит в прозрачность */
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.06) 0%,
+        transparent 80%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    pointer-events: none;
+    z-index: -1;
+    transition: transform 0.6s var(--ease-bounce);
+}
+
+/* Анимация цитаты при наведении */
+.review-card:hover::before {
+    transform: translateY(-10px) rotate(10deg);
+}
+
+/* --- Рейтинг (Мерцающие звезды) --- */
+.rating {
+    font-size: 18px;
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+
+    /* Золотой градиент */
+    background: linear-gradient(135deg, #ffd700 0%, #ffa000 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* Свечение */
+    filter: drop-shadow(0 0 6px rgba(255, 193, 7, 0.3));
+}
+
+/* --- Текст отзыва --- */
+.review-card p:not(.author) {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85); /* Чуть ярче для читаемости */
+    margin-bottom: 30px;
+    flex-grow: 1; /* Прижимает автора к низу */
+    font-weight: 400;
+
+    /* Современная типографика (без висячих слов) */
+    text-wrap: pretty;
+}
+
+/* --- Автор и Подпись --- */
+.author {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Красный маркер (DNA Бренда) */
+.author::before {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 3px;
+    background: var(--accent-color);
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(229, 57, 53, 0.5);
+    transition: width 0.3s ease;
+}
+
+/* Бейдж "Проверено" */
+.author::after {
+    content: "✓ Проверено";
+    margin-left: auto;
+
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.4);
+
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    transition: all 0.3s ease;
+}
+
+/* =========================================
+   TABLET ADAPTATION (iPad)
+   ========================================= */
+@media (min-width: 600px) and (max-width: 1023px) {
+    .reviews-slider {
+        /* На планшетах показываем 1.5-2 карточки, чтобы заполнить экран */
+        gap: 24px;
+    }
+    .review-card {
+        width: 340px; /* Фиксированная комфортная ширина */
+    }
+}
+
+/* =========================================
+   DESKTOP VERSION (min-width: 1024px)
+   ========================================= */
+@media (min-width: 1024px) {
+    .reviews-slider {
+        /* Переключение в сетку */
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        padding: 0;
+
+        overflow: visible;
+        mask-image: none;
+        -webkit-mask-image: none;
+        scroll-snap-type: none;
+    }
+
+    .review-card {
+        width: 100%;
+        max-width: none;
+        height: 100%; /* Одинаковая высота */
+
+        /* Чуть прозрачнее фон на ПК для глубины */
+        background: rgba(30, 30, 30, 0.3);
+    }
+
+    /* --- Desktop Hover Effects (Spotlight) --- */
+    /* Эффекты только если есть мышь */
+    @media (hover: hover) {
+        .review-card:hover {
+            transform: translateY(-12px); /* Левитация */
+            background: rgba(40, 40, 40, 0.5);
+            z-index: 10;
+
+            /* Комбинированная подсветка: Тень + Красный рефлекс снизу */
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8),
+                0 20px 40px -10px rgba(var(--clr-red-rgb), 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* Интерактив автора */
+        .review-card:hover .author::before {
+            width: 35px; /* Удлинение линии */
+            background: #fff;
+            box-shadow: 0 0 10px #fff;
+        }
+
+        /* Интерактив бейджа (загорается зеленым) */
+        .review-card:hover .author::after {
+            background: rgba(76, 175, 80, 0.1);
+            color: #66bb6a;
+            border-color: rgba(76, 175, 80, 0.2);
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.1);
+        }
+    }
+}

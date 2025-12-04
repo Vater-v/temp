@@ -1,0 +1,134 @@
+/* -------------------*/
+/* base/variables.css */
+/* -------------------*/
+
+:root {
+    /* --- 1. Viewport & Safe Areas --- */
+    --vh: 100dvh;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --touch-target: 48px;
+
+    /* --- 2. Primitives: Brand & Neutrals --- */
+    --clr-red-base: #e53935;
+    --clr-red-rgb: 229, 57, 53;
+    --clr-red-dark: #c62828;
+    --clr-red-glow: #ff8a80;
+
+    --clr-white: #ffffff;
+    --clr-white-rgb: 255, 255, 255;
+    --clr-black: #000000;
+    --clr-black-rgb: 0, 0, 0;
+
+    --clr-gray-100: #e0e0e0;
+    --clr-gray-400: #a5a5a5;
+    --clr-gray-600: #666666;
+    --clr-gray-700: #333333;
+    --clr-gray-800: #252525;
+    --clr-gray-900: #1a1a1a;
+    --clr-gray-950: #0a0a0a;
+
+    /* --- 3. Semantics: Surfaces & Text --- */
+    --bg-primary: var(--clr-gray-950);
+    --bg-secondary: var(--clr-gray-900);
+    --bg-card: var(--clr-gray-800);
+
+    --glass-opacity: 0.85;
+    --bg-glass: rgba(10, 10, 10, var(--glass-opacity));
+    --bg-overlay: rgba(0, 0, 0, 0.7);
+
+    --text-primary: var(--clr-white);
+    --text-secondary: var(--clr-gray-400);
+    --text-muted: var(--clr-gray-600);
+
+    /* --- 4. Actions & Borders --- */
+    --accent-color: var(--clr-red-base);
+    --accent-hover: var(--clr-red-dark);
+
+    --border-color: rgba(var(--clr-white-rgb), 0.08);
+    --border-hover: rgba(var(--clr-white-rgb), 0.2);
+
+    --gradient-metal: linear-gradient(135deg, #ffffff 30%, #a5a5a5 100%);
+    --gradient-glow: radial-gradient(
+        circle,
+        var(--accent-color),
+        transparent 70%
+    );
+
+    /* --- 5. Typography (Fluid) --- */
+    --font-main: "Inter", system-ui, -apple-system, sans-serif;
+
+    --fs-h1: clamp(2rem, 5vw + 1rem, 4.5rem);
+    --fs-h2: clamp(1.75rem, 4vw + 1rem, 3rem);
+    --fs-h3: clamp(1.35rem, 3vw + 0.5rem, 2rem);
+    --fs-body: clamp(0.95rem, 0.5vw + 0.8rem, 1.125rem);
+    --fs-sm: 0.875rem;
+
+    /* --- 6. Layout & Spacing --- */
+    --container-width: 1280px;
+    --header-height: clamp(60px, 8vh, 80px);
+
+    --section-spacing: clamp(60px, 10vh, 120px);
+    --inner-spacing: clamp(24px, 4vw, 60px);
+    --grid-gap: clamp(16px, 3vw, 40px);
+
+    /* --- 7. Shapes & Depth --- */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 999px;
+
+    --shadow-sm: 0 4px 12px rgba(0, 5, 20, 0.3);
+    --shadow-md: 0 15px 40px -10px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 30px 70px rgba(0, 0, 0, 0.7);
+
+    --glow-accent: 0 0 20px rgba(var(--clr-red-rgb), 0.5);
+    --glow-text: 0 0 12px rgba(var(--clr-white-rgb), 0.5);
+
+    /* --- 8. Motion & Z-Index --- */
+    --dur-fast: 0.2s;
+    --dur-normal: 0.3s;
+    --dur-slow: 0.6s;
+
+    --ease-smooth: cubic-bezier(0.25, 0.8, 0.25, 1);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+    --gpu-transform: translate3d(0, 0, 0);
+
+    --z-back: -1;
+    --z-base: 1;
+    --z-sticky: 100;
+    --z-header: 500;
+    --z-overlay: 900;
+    --z-modal: 1000;
+    --z-toast: 2000;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Media Queries                                                             */
+/* -------------------------------------------------------------------------- */
+
+/* Mobile (<768px): Performance Adjustments */
+@media (max-width: 768px) {
+    :root {
+        --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.8);
+        --section-spacing: 60px;
+        --radius-lg: 20px;
+    }
+}
+
+/* Reduced Motion: Accessibility & Battery Saver */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --dur-fast: 0s;
+        --dur-normal: 0s;
+        --dur-slow: 0s;
+        --ease-smooth: linear;
+        --ease-bounce: linear;
+        --shadow-lg: none;
+        --glow-accent: none;
+    }
+}

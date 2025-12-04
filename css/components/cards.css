@@ -1,0 +1,188 @@
+/* -------------------------------- */
+/* --- components/cards.css    ---- */
+/* --- Ultimate Edition v3.0   ---- */
+/* -------------------------------- */
+
+/* --- Медиа-контейнер (Glass & Depth) --- */
+.media-wrapper {
+    position: relative;
+    border-radius: var(--radius-lg, 20px);
+    overflow: hidden;
+
+    /* Базовый фон (Skeleton Placeholder) - заглушка пока нет фото */
+    background-color: var(--bg-card);
+
+    /* 1. Стеклянная рамка */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    /* 2. Комплексная тень (Rim Light Effect):
+       - Внешняя глубокая тень для отрыва от фона
+       - Внутренняя белая полоска (inset) сверху для эффекта "фаски" стекла 
+       - Внутренняя темная полоска снизу для объема
+    */
+    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+
+    /* Оптимизация рендеринга (GPU) */
+    transform: translateZ(0);
+    backface-visibility: hidden; /* Фикс для Safari */
+    will-change: transform, box-shadow;
+
+    /* Изоляция контекста (чтобы свечение не перекрывало интерфейс) */
+    isolation: isolate;
+
+    transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* --- Эффект 1: Скользящий блик (Sheen) --- */
+/* Премиальный глянцевый отблеск, пробегающий по стеклу */
+.media-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.15),
+        transparent
+    );
+    transform: skewX(-25deg);
+    pointer-events: none;
+    z-index: 3;
+    transition: left 0.7s ease;
+}
+
+/* --- Эффект 2: Атмосферное свечение (Backlight) --- */
+.media-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    /* Радиальный градиент: мягкий свет из центра */
+    background: radial-gradient(
+        circle at center,
+        var(--accent-color),
+        transparent 75%
+    );
+
+    opacity: 0;
+    mix-blend-mode: overlay; /* Наложение делает цвета сочными и глубокими */
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* --- Контент (Img / Video) --- */
+.media-wrapper img,
+.media-wrapper video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    /* Изначально чуть приглушаем яркость (акцент на контенте/тексте) */
+    filter: brightness(0.95);
+
+    /* Хак scale(1.01) убирает субпиксельные белые полосы по краям при анимации */
+    transform: scale(1.01);
+
+    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), filter 0.6s ease;
+}
+
+/* =========================================
+   INTERACTION STATES (Desktop Only)
+   ========================================= */
+/* ВАЖНО: Применяем ховер ТОЛЬКО если есть мышь.
+   На тач-скринах эффекты не будут "залипать" при скролле. */
+@media (hover: hover) {
+    .media-wrapper:hover,
+    .content-block:hover .media-wrapper {
+        border-color: rgba(255, 255, 255, 0.25);
+
+        /* Левитация */
+        transform: translateY(-8px);
+
+        /* Усиленная тень + легкое красное свечение снизу (Reflex) */
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            /* Фаска ярче */ 0 20px 40px -10px rgba(229, 57, 53, 0.15); /* Цветная тень на пол */
+    }
+
+    /* Запуск блика (пролетает слева направо) */
+    .media-wrapper:hover::before,
+    .content-block:hover .media-wrapper::before {
+        left: 150%;
+        transition: left 1s ease;
+    }
+
+    /* Включение внутренней подсветки */
+    .media-wrapper:hover::after,
+    .content-block:hover .media-wrapper::after {
+        opacity: 0.2;
+    }
+
+    /* Кинематографичный зум картинки */
+    .media-wrapper:hover img,
+    .media-wrapper:hover video,
+    .content-block:hover .media-wrapper img,
+    .content-block:hover .media-wrapper video {
+        transform: scale(1.08);
+        filter: brightness(1.05) contrast(1.05); /* Картинка "оживает" */
+    }
+}
+
+/* --- Active State (Click) --- */
+/* Тактильный отклик при нажатии */
+.media-wrapper:active {
+    transform: scale(0.98);
+    transition-duration: 0.1s;
+}
+
+/* --- Focus State (Accessibility) --- */
+/* Видно только при навигации с клавиатуры (Tab) */
+.media-wrapper:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--accent-color);
+}
+
+/* =========================================
+   SKELETON LOADING (Заглушка)
+   ========================================= */
+/* Класс .loading добавляется JS-ом, пока картинка грузится */
+.media-wrapper.loading img,
+.media-wrapper.loading video {
+    opacity: 0;
+}
+
+.media-wrapper.loading::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    left: 0; /* Сброс анимации блика */
+    transform: none; /* Сброс skew */
+
+    /* Мерцающий градиент */
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite linear;
+}
+
+@keyframes skeletonShimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}

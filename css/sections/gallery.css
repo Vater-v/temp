@@ -1,0 +1,272 @@
+/* -------------------------------- */
+/* --- sections/gallery.css    ---- */
+/* --- Ultimate Edition vFinal ---- */
+/* -------------------------------- */
+
+.gallery {
+    position: relative;
+    z-index: 1;
+    /* Разрешаем теням выходить за границы контейнера при наведении */
+    overflow: visible;
+}
+
+/* =========================================
+   1. MOBILE SLIDER (Cinematic Snap)
+   ========================================= */
+.scroll-snap-slider {
+    display: flex;
+    gap: 16px;
+
+    /* [SMART PADDING]
+       Центруем активный слайд математически точно.
+       Формула: (100% ширины экрана / 2) - (ширина слайда 85% / 2) = 7.5% отступ
+       Но лучше использовать calc для точности с пикселями.
+    */
+    padding: 0 calc(50% - 42.5%) 60px;
+
+    overflow-x: auto;
+    scroll-snap-type: x mandatory; /* Строгая магнитная привязка */
+    scroll-snap-stop: always; /* Остановка на каждом фото (ощущение веса) */
+
+    /* Нативная инерция iOS */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+
+    /* Скрытие скроллбара (но физика остается) */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    /* Перспектива для 3D эффектов при скролле */
+    perspective: 1000px;
+}
+
+.scroll-snap-slider::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- Карточка Слайда --- */
+.slide {
+    position: relative;
+    flex-shrink: 0;
+    width: 85%; /* Золотой стандарт мобильных галерей */
+    max-width: 380px;
+
+    scroll-snap-align: center;
+
+    /* Оптимизация анимации (GPU) */
+    will-change: transform, opacity, filter;
+    transform-style: preserve-3d;
+}
+
+/* Эффект нажатия (Tactile Feedback) */
+.slide:active {
+    transform: scale(0.97);
+    transition: transform 0.2s ease;
+}
+
+/* --- Scroll-Driven Animation (Mobile Cover Flow) --- */
+/* Работает в современных Chrome/Edge/Safari: 
+   Фотографии плавно меняют прозрачность и угол при уходе к краям экрана */
+@supports (animation-timeline: view(x)) {
+    .slide {
+        animation: slide-reveal linear both;
+        animation-timeline: view(x);
+        /* Анимация работает от края до края вьюпорта */
+        animation-range: cover 0% cover 100%;
+    }
+}
+
+@keyframes slide-reveal {
+    0% {
+        opacity: 0.5;
+        transform: scale(0.9);
+        filter: brightness(0.6) grayscale(0.4);
+    }
+    45% {
+        opacity: 1;
+        transform: scale(1);
+        filter: brightness(1) grayscale(0);
+    }
+    55% {
+        opacity: 1;
+        transform: scale(1);
+        filter: brightness(1) grayscale(0);
+    }
+    100% {
+        opacity: 0.5;
+        transform: scale(0.9);
+        filter: brightness(0.6) grayscale(0.4);
+    }
+}
+
+.slide img {
+    width: 100%;
+    aspect-ratio: 4 / 5; /* Instagram Portrait (идеально для сидений) */
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+
+    /* Стекло и Глубина */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--bg-card);
+
+    /* Двойная тень для реализма */
+    box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.7),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+
+    user-select: none;
+    pointer-events: none; /* Чтобы свайп не "застревал" на картинке */
+}
+
+/* --- Подсказка свайпа (Hand Icon) --- */
+.swipe-hint {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: -30px;
+    margin-bottom: 40px;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.5);
+
+    pointer-events: none;
+}
+
+.hand-icon {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    animation: swipeAnim 2s infinite ease-in-out;
+    filter: drop-shadow(0 0 8px rgba(229, 57, 53, 0.5));
+}
+
+/* =========================================
+   2. DESKTOP GRID (Bento Spotlight)
+   ========================================= */
+.gallery-grid-desktop {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .swipe-hint {
+        display: none !important;
+    }
+
+    .gallery-grid-desktop {
+        display: grid !important;
+        /* Асимметричная сетка */
+        grid-template-columns: repeat(4, 1fr);
+        /* Авто-высота строк позволяет контенту дышать */
+        grid-auto-rows: 280px;
+        /* Dense: заполняет пустые дыры мелкими элементами, если порядок сбился */
+        grid-auto-flow: dense;
+
+        gap: 24px;
+        margin-top: 60px;
+        width: 100%;
+
+        /* Включаем плавность для всего контейнера */
+        transition: all 0.4s ease;
+    }
+
+    /* --- Элемент Галереи (IMG) --- */
+    .gallery-item {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: var(--radius-lg);
+
+        /* Исходное состояние: чуть приглушенное */
+        filter: brightness(0.95) saturate(0.9);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background-color: var(--bg-card);
+
+        /* Курсор лупы намекает на кликабельность */
+        cursor: zoom-in;
+
+        /* Плавные переходы всех свойств */
+        transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1),
+            filter 0.5s ease, border-color 0.3s ease, box-shadow 0.5s ease,
+            opacity 0.4s ease;
+
+        /* Оптимизация рендеринга */
+        transform: translateZ(0);
+
+        /* Каскадная анимация появления при загрузке */
+        opacity: 0;
+        animation: fadeScaleUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    /* Задержки для эффекта "волны" при загрузке страницы */
+    .gallery-item:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+    .gallery-item:nth-child(2) {
+        animation-delay: 0.15s;
+    }
+    .gallery-item:nth-child(3) {
+        animation-delay: 0.2s;
+    }
+    .gallery-item:nth-child(4) {
+        animation-delay: 0.25s;
+    }
+    .gallery-item:nth-child(5) {
+        animation-delay: 0.3s;
+    }
+    .gallery-item:nth-child(6) {
+        animation-delay: 0.35s;
+    }
+    .gallery-item:nth-child(7) {
+        animation-delay: 0.4s;
+    }
+
+    /* --- SPOTLIGHT EFFECT (Эффект Прожектора) --- */
+
+    /* 1. Когда мышь на СЕТКЕ: все элементы уходят в тень */
+    .gallery-grid-desktop:hover .gallery-item {
+        opacity: 0.5;
+        filter: grayscale(0.5) blur(1px);
+        transform: scale(0.98);
+    }
+
+    /* 2. Когда мышь на ФОТО: оно "просыпается" */
+    .gallery-grid-desktop .gallery-item:hover {
+        opacity: 1;
+        filter: grayscale(0) blur(0) brightness(1.1);
+        transform: scale(1.05); /* Зум */
+        z-index: 10; /* Поднимаем над остальными */
+
+        border-color: rgba(255, 255, 255, 0.6);
+
+        /* Свечение: Тень + Внутренний красный рефлекс */
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8),
+            inset 0 0 0 1px var(--accent-color);
+    }
+
+    /* Утилиты для Bento-сетки (применяются к img) */
+    .span-col-2 {
+        grid-column: span 2;
+    }
+    .span-row-2 {
+        grid-row: span 2;
+    }
+}
+
+/* --- Анимация появления (локально) --- */
+@keyframes fadeScaleUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* --- Заглушка загрузки --- */
+.gallery-item[loading] {
+    background: #1a1a1a;
+}
