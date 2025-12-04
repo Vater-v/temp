@@ -1,143 +1,223 @@
 /* ======================================================================
-   Phase 1: Глобальный Сброс (Modern Reset) и Базовые Настройки
+   Phase 1: Architecture & Foundation (State of the Art 2025)
+   Architect: Summanizer
 ====================================================================== */
 
-/* 1. Глобальный сброс box-model и отступов */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* 1. Определение слоев каскада
+   Это фундамент архитектуры. Стили в слое 'reset' всегда будут слабее стилей
+   в слое 'theme' или 'base', независимо от веса селектора.
+*/
+@layer reset, theme, base;
 
-* {
-  margin: 0;
-  padding: 0;
-  /* Наследуем шрифты сразу для форм, чтобы не было "прыжков" стилей */
-  font: inherit;
-}
+/* ======================================================================
+   LAYER: THEME (Design Tokens)
+====================================================================== */
+@layer theme {
+  :root {
+    /* --- Level 1: Primitive Tokens (Палитра) --- */
+    /* Цвета определяются здесь, но не используются напрямую в верстке */
+    --palette-obsidian-950: #050505;
+    --palette-obsidian-900: #0a0a0a;
+    --palette-obsidian-800: #1a1a1a;
+    --palette-obsidian-700: #333333;
 
-/* 2. Настройки HTML */
-html {
-  /* Плавная прокрутка с учетом фиксированной шапки */
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+    --palette-snow-100: #f5f5f5;
+    --palette-snow-400: #a0a0a0;
 
-  /* Запрет на авто-масштабирование текста в iOS при повороте экрана */
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: none;
+    --palette-crimson-500: #e53935;
+    --palette-crimson-700: #b71c1c;
 
-  /* Гарантируем высоту */
-  height: 100%;
-}
+    --palette-gold-400: #ffd700;
+    --palette-emerald-500: #4caf50;
 
-/* 3. Настройки Body */
-body {
-  /* dVH учитывает динамические панели мобильных браузеров */
-  min-height: 100dvh;
+    /* --- Level 2: Semantic Tokens (Контекст использования) --- */
+    /* Используем именно эти переменные в компонентах.
+       Это позволяет менять тему "на лету" без рефакторинга. */
 
-  /* Оптимизация шрифтов */
-  line-height: 1.6;
-  text-rendering: optimizeSpeed;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    /* Backgrounds */
+    --color-bg-primary: var(--palette-obsidian-900);
+    --color-bg-secondary: var(--palette-obsidian-800);
+    --color-bg-backdrop: rgba(5, 5, 5, 0.85); /* Glass effect base */
 
-  /* Прижатие футера (Sticky Footer) через Flexbox */
-  display: flex;
-  flex-direction: column;
+    /* Text */
+    --color-text-primary: var(--palette-snow-100);
+    --color-text-muted: var(--palette-snow-400);
 
-  /* Подключение переменных */
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  font-family: var(--font-family-base);
-}
+    /* UI & Brand */
+    --color-accent: var(--palette-crimson-500);
+    --color-border: var(--palette-obsidian-700);
+    --color-rating: var(--palette-gold-400);
+    --color-success: var(--palette-emerald-500);
 
-/* Растягиваем main, чтобы футер всегда был внизу */
-main {
-  flex-grow: 1;
-}
+    /* Typography */
+    --font-family-base: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, sans-serif;
 
-/* 4. Медиа-контент (Делаем отзывчивым и блочным) */
-img,
-picture,
-video,
-canvas,
-svg {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
+    /* Shape & Layout */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
 
-/* 5. Умный сброс списков */
-/* Убираем маркеры у списков с классом или role="list" */
-ul[class],
-ol[class],
-ul[role="list"] {
-  list-style: none;
-}
-
-/* 6. Сброс форм для Темной Темы */
-/* Убираем дефолтные рамки и белый фон, наследуем цвет текста */
-input,
-button,
-textarea,
-select {
-  border: none;
-  background: transparent;
-  color: inherit;
-}
-
-/* 7. Типографика */
-/* Предотвращение переполнения контейнеров длинными словами */
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  overflow-wrap: break-word;
-}
-
-/* Ссылки */
-a {
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
-}
-
-/* 8. Доступность (Accessibility) */
-/* Отключение анимаций для пользователей с вестибулярными нарушениями */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+    /* Header Height Constant (для расчетов sticky и scroll-padding) */
+    --header-height: 80px;
   }
+}
+
+/* ======================================================================
+   LAYER: RESET (Modern Reset)
+====================================================================== */
+@layer reset {
+  /* Box Sizing для всех элементов */
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    box-sizing: border-box;
+  }
+
+  /* Сброс отступов */
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Настройки документа */
+  html {
+    /* Нативная темная тема для скроллбаров и UI браузера */
+    color-scheme: dark;
+
+    /* Резервируем место под скроллбар, чтобы контент не "прыгал" */
+    scrollbar-gutter: stable;
+
+    /* Логическая высота */
+    block-size: 100%;
+
+    /* Запрет зума текста при повороте на iOS */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: none;
+  }
+
+  /* Медиа-контент: Логические свойства */
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-inline-size: 100%; /* Вместо max-width */
+    block-size: auto; /* Вместо height */
+  }
+
+  /* Наследование шрифтов для форм */
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    background: transparent;
+    border: none;
+    color: inherit;
+  }
+
+  /* Улучшенная типографика */
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  /* Балансировка заголовков */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  /* Предотвращение висячих слов в тексте */
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Сброс списков (только для классов, сохраняя семантику list role) */
+  :where(ul, ol)[class] {
+    list-style: none;
   }
 }
 
-/* 9. Определение CSS-переменных */
-:root {
-  /* Цвета: Темная премиальная тема */
-  --color-bg-primary: #0a0a0a;
-  --color-bg-secondary: #1a1a1a;
-  --color-text-primary: #f5f5f5;
-  --color-text-muted: #a0a0a0;
-  --color-accent: #e53935; /* Красный акцент */
-  --color-border: #333333;
-  --color-success: #4caf50;
-  --color-rating: #ffd700;
+/* ======================================================================
+   LAYER: BASE (Global Styles)
+====================================================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Учитываем высоту шапки при скролле к якорю */
+    scroll-padding-block-start: var(--header-height);
+  }
 
-  /* Шрифты и радиусы */
-  --font-family-base: "Inter", sans-serif;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
+  body {
+    /* Используем dvb (Dynamic Viewport Block) для идеальной высоты на мобильных */
+    min-block-size: 100dvb;
+
+    /* Sticky Footer Setup */
+    display: flex;
+    flex-direction: column;
+
+    /* Применение токенов */
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-base);
+
+    /* Оптимизация шрифтов */
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Прижатие футера */
+  main {
+    flex-grow: 1;
+    isolation: isolate; /* Новый контекст наложения */
+  }
+
+  /* Ссылки */
+  a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  /* Accessibility: Focus Visible */
+  /* Аутлайн появляется ТОЛЬКО при навигации с клавиатуры */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* Убираем дефолтный аутлайн мыши */
+  :focus:not(:focus-visible) {
+    outline: transparent;
+  }
+
+  /* Accessibility: Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 /* ======================================================================
