@@ -646,169 +646,218 @@
 }
 
 /* ======================================================================
-   Phase 4: Компоненты (Кнопки, Иконки) — FINAL PREMIUM EDITION
+   Phase 4: Компоненты (Ultimate Edition 2025)
+   Tech: @layer, :where(), Oklab Color-Mix, Logical Props, Cap Units
 ====================================================================== */
+@layer components {
+  /* 19. Базовый Компонент Кнопки (.btn)
+     Используем :where() для нулевой специфичности. 
+     Это позволяет легко переопределять стили в модификаторах и медиа-запросах.
+  */
+  :where(.btn) {
+    /* --- Local Scope Tokens (Настройки по умолчанию) --- */
+    --btn-height: 56px; /* Оптимально для тач-интерфейсов */
+    --btn-radius: var(--radius-md);
+    --btn-gap: 0.6em; /* Отступ между иконкой и текстом */
 
-/* 19. Базовый стиль Кнопки (.btn) */
-.btn {
-  /* Layout & Box Model */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px; /* Идеальный отступ иконки от текста */
-  padding: 14px 28px;
+    /* Цветовая логика (по умолчанию прозрачная) */
+    --btn-base-bg: transparent;
+    --btn-text: inherit;
+    --btn-border: transparent;
+    --btn-shadow: none;
 
-  /* Typography */
-  font-family: var(--font-family-base);
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 1.2;
-  letter-spacing: 0.03em;
-  text-decoration: none;
-  text-align: center;
+    /* Физика анимации: "Дорогая" инерция */
+    --btn-ease: cubic-bezier(0.25, 0.8, 0.25, 1);
 
-  /* Appearance */
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
+    /* --- Layout & Logical Props --- */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--btn-gap);
 
-  /* Tech: Изоляция контекста (важно для эффектов бликов) */
-  position: relative;
-  isolation: isolate;
-  user-select: none;
+    /* Гарантируем минимальную высоту для удобства нажатия */
+    min-block-size: var(--btn-height);
+    padding-inline: 28px; /* Логический padding слева/справа */
+    padding-block: 10px; /* Логический padding сверху/снизу */
 
-  /* Physics Animation: Плавная, но уверенная (как подвеска авто) */
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
+    /* --- Typography --- */
+    font-family: var(--font-family-base);
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    white-space: nowrap; /* Текст не должен переноситься */
 
-/* Доступность: Стильный фокус для клавиатуры */
-.btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--color-bg-primary), 0 0 0 5px var(--color-accent);
-}
+    /* --- Appearance & Engine --- */
+    background: var(--btn-base-bg);
+    color: var(--btn-text);
+    border: 1px solid var(--btn-border);
+    border-radius: var(--btn-radius);
+    box-shadow: var(--btn-shadow);
 
-/* Эффект нажатия (Active State) */
-.btn:active {
-  transform: scale(0.97) translateY(1px); /* Физическое вдавливание */
-}
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    isolation: isolate; /* Новый контекст наложения для z-index */
+    touch-action: manipulation; /* Убирает задержку тапа на мобильных */
 
-/* 20. Основная Кнопка (.btn-primary) — "Sport Mode" */
-.btn-primary {
-  /* Градиент имитирует свет, падающий на лакированную поверхность */
-  background: linear-gradient(145deg, #ff5252 0%, #c62828 100%);
-  color: #ffffff;
-
-  /* Inset shadow создает "фаску" (объемный край) сверху */
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    0 4px 12px rgba(229, 57, 53, 0.3);
-
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Читаемость */
-}
-
-.btn-primary:hover {
-  /* Смещение градиента и подъем кнопки */
-  background: linear-gradient(145deg, #ff6b6b 0%, #d32f2f 100%);
-  transform: translateY(-2px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 8px 25px rgba(229, 57, 53, 0.5);
-}
-
-.btn-primary:active {
-  background: #b71c1c;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-/* 21. Вторичная Кнопка (.btn-secondary) — "Toned Glass" */
-.btn-secondary {
-  /* Эффект тонированного стекла */
-  background-color: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-
-  color: var(--color-text-primary);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.btn-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5); /* Рамка загорается */
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.btn-secondary:active {
-  background-color: rgba(255, 255, 255, 0.06);
-}
-
-/* 22. Модификаторы Размера */
-.btn-sm {
-  padding: 10px 20px;
-  font-size: 14px;
-  border-radius: var(--radius-sm);
-}
-
-.btn-large {
-  padding: 18px 40px;
-  font-size: 18px;
-  text-transform: uppercase; /* Придает вес CTA кнопке */
-  letter-spacing: 0.05em;
-}
-
-/* 23. Свечение и Пульсация (.btn-glow) */
-/* Анимация пульса для привлечения внимания */
-@keyframes pulse-red {
-  0% {
-    box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.6);
+    transition: transform 0.2s var(--btn-ease), background 0.3s ease,
+      border-color 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
   }
-  70% {
-    box-shadow: 0 0 0 10px rgba(229, 57, 53, 0);
+
+  /* --- States (Состояния) --- */
+
+  /* Focus Visible: Доступность для клавиатуры без ущерба дизайну */
+  :where(.btn):focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+    box-shadow: none;
   }
-  100% {
-    box-shadow: 0 0 0 0 rgba(229, 57, 53, 0);
+
+  /* Active: Механический отклик (кроме режима reduced-motion) */
+  @media (prefers-reduced-motion: no-preference) {
+    :where(.btn):active {
+      transform: scale(0.97) translateY(1px);
+    }
   }
-}
 
-.btn-glow {
-  animation: pulse-red 2.5s infinite;
-}
+  /* ================= VARIANTS (Модификаторы) ================= */
 
-.btn-glow:hover {
-  animation: none; /* При наведении пульс замирает, работает hover-эффект */
-  box-shadow: 0 0 30px rgba(229, 57, 53, 0.6),
-    inset 0 0 10px rgba(255, 255, 255, 0.2);
-}
+  /* 20. Primary Button ("Sport Mode")
+     Используем пространство OKLAB для создания сочных градиентов
+     из одного базового цвета.
+  */
+  .btn-primary {
+    /* Единый источник правды для цвета */
+    --accent-base: var(--color-accent);
 
-/* 24. Иконки и Индикаторы */
-/* Выравнивание иконок внутри кнопок */
-.btn svg,
-.icon-check,
-.icon-plus {
-  width: 1.25em;
-  height: 1.25em;
-  display: block;
-  flex-shrink: 0;
-}
+    /* Генерируем градиент автоматически */
+    --bg-start: var(--accent-base);
+    --bg-end: color-mix(in oklab, var(--accent-base), black 10%);
 
-/* Галочки как зеленые LED-индикаторы */
-.icon-check {
-  color: var(--color-success);
-  filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.5));
-}
+    /* Тень: цвет кнопки с прозрачностью 60% */
+    --shadow-color: color-mix(in srgb, var(--accent-base), transparent 60%);
 
-/* Звезды с золотым свечением */
-.stars-icon,
-.rating-stars {
-  color: var(--color-rating);
-  display: inline-flex;
-  gap: 2px;
-  filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.4));
-}
+    --btn-base-bg: linear-gradient(145deg, var(--bg-start), var(--bg-end));
+    --btn-text: #ffffff;
 
-/* Анимация плюса в аккордеоне */
-.icon-plus {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Сложная тень: Блик сверху + Цветное свечение снизу */
+    --btn-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      0 4px 12px var(--shadow-color);
+
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Hover: Осветляем градиент и поднимаем кнопку */
+  .btn-primary:hover {
+    --bg-start: color-mix(in oklab, var(--accent-base), white 10%);
+    --bg-end: var(--accent-base);
+
+    transform: translateY(-2px);
+    /* Усиливаем тень при подъеме */
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 8px 24px var(--shadow-color);
+  }
+
+  /* Active: Затемняем */
+  .btn-primary:active {
+    --bg-start: color-mix(in oklab, var(--accent-base), black 15%);
+    --bg-end: color-mix(in oklab, var(--accent-base), black 25%);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  /* 21. Secondary Button ("Smart Glass") 
+     Используем color-mix для точного управления прозрачностью
+  */
+  .btn-secondary {
+    /* База: Белый цвет с 4% непрозрачности */
+    --glass-bg: color-mix(in srgb, #ffffff, transparent 96%);
+    --glass-border: color-mix(in srgb, #ffffff, transparent 85%);
+
+    --btn-base-bg: var(--glass-bg);
+    --btn-text: var(--color-text-primary);
+    --btn-border: var(--glass-border);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-secondary:hover {
+    /* При наведении стекло становится плотнее (10% непрозрачности) */
+    --btn-base-bg: color-mix(in srgb, #ffffff, transparent 90%);
+    --btn-border: color-mix(in srgb, #ffffff, transparent 50%); /* Рамка ярче */
+    --btn-text: #ffffff;
+
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  /* 22. Modifiers (Sizes) */
+  .btn-sm {
+    --btn-height: 40px;
+    padding-inline: 20px;
+    font-size: 0.875rem; /* 14px */
+    --btn-radius: var(--radius-sm);
+  }
+
+  .btn-large {
+    --btn-height: 64px;
+    padding-inline: 40px;
+    font-size: 1.125rem; /* 18px */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* 23. Effects (.btn-glow) */
+  .btn-glow {
+    /* Генерируем цвет пульсации из цвета текста (currentColor) или акцента */
+    animation: pulse-ring 2.5s infinite;
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      box-shadow: 0 0 0 0
+        color-mix(in srgb, var(--color-accent), transparent 40%);
+    }
+    70% {
+      /* Растворяем тень в ноль */
+      box-shadow: 0 0 0 12px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  /* 24. Icons Alignment (Smart Cap Units) */
+  .btn svg,
+  .icon-check,
+  .icon-plus {
+    /* Высота равна высоте заглавной буквы шрифта (Cap Height) 
+       Это обеспечивает идеальное визуальное выравнивание. */
+    block-size: 1.2cap;
+    inline-size: auto;
+    aspect-ratio: 1/1;
+
+    /* Fallback для старых браузеров */
+    min-block-size: 1.2em;
+
+    flex-shrink: 0;
+    fill: none;
+    display: block;
+  }
+
+  /* Рейтинг (Звезды) */
+  .rating-stars {
+    color: var(--color-rating);
+    display: inline-flex;
+    gap: 0.1em;
+    /* Золотое свечение */
+    filter: drop-shadow(
+      0 0 4px color-mix(in srgb, var(--color-rating), transparent 50%)
+    );
+  }
 }
 
 /* ======================================================================
