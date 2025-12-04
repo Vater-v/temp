@@ -1,356 +1,334 @@
-/* ----------------------------------------------------------------- */
-/* --- utilities/animations.css (Ultimate Edition vFinal)       ---- */
-/* --- High Performance (GPU), Cinematic Easings, Modular Logic ---- */
-/* ----------------------------------------------------------------- */
+/* utilities/animations.css */
 
 :root {
-    /* --- Global Timing & Easing --- */
-    --ease-out-expo: cubic-bezier(
-        0.19,
-        1,
-        0.22,
-        1
-    ); /* Резкий старт, плавный финиш */
-    --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1); /* Пружинистый эффект */
-    --ease-smooth: cubic-bezier(
-        0.25,
-        0.8,
-        0.25,
-        1
-    ); /* Классическая плавность */
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  --anim-y-dist: 20px;
+  --anim-scale-start: 0.96;
+  --anim-blur-start: 0px;
 }
 
-/* =========================================
-   1. ENTRANCE (Появление)
-   ========================================= */
+@media (min-width: 1024px) {
+  :root {
+    --anim-y-dist: 40px;
+    --anim-scale-start: 0.92;
+    --anim-blur-start: 10px;
+  }
+}
 
-/* --- Cinematic Fade Up (Blur + Move) --- */
-/* Премиальный стандарт: элемент выплывает из блюра.
-   Используется для основных блоков контента. */
+/* 1. Keyframes */
+
 @keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translate3d(0, 40px, 0) scale(0.98);
-        filter: blur(10px); /* Матовое стекло при старте */
-    }
-    100% {
-        opacity: 1;
-        transform: translate3d(0, 0, 0) scale(1);
-        filter: blur(0);
-    }
-}
-
-/* --- Clip Reveal (Для заголовков H1/H2) --- */
-/* Текст "вырастает" из невидимой границы снизу */
-@keyframes clipReveal {
-    0% {
-        clip-path: inset(100% 0 0 0);
-        transform: translate3d(0, 20px, 0);
-        opacity: 0;
-    }
-    100% {
-        clip-path: inset(0 0 0 0);
-        transform: translate3d(0, 0, 0);
-        opacity: 1;
-    }
-}
-
-/* --- Scale Reveal (Для модалок и карточек) --- */
-@keyframes scaleIn {
-    0% {
-        opacity: 0;
-        transform: scale(0.92);
-        filter: blur(8px);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-        filter: blur(0);
-    }
-}
-
-/* --- Mobile Sticky Bar Reveal --- */
-@keyframes slideUp {
-    from {
-        transform: translate3d(0, 100%, 0);
-    }
-    to {
-        transform: translate3d(0, 0, 0);
-    }
-}
-
-/* --- Skeleton Loading (Shimmer) --- */
-@keyframes skeletonShimmer {
-    0% {
-        background-position: 200% 0;
-    }
-    100% {
-        background-position: -200% 0;
-    }
-}
-
-/* =========================================
-   2. AMBIENT (Атмосфера и Фоны)
-   ========================================= */
-
-/* --- Hero Glow (Дыхание фона) --- */
-@keyframes glowPulse {
-    0%,
-    100% {
-        opacity: 0.15;
-        transform: translate(-50%, -50%) scale(1);
-        filter: blur(80px);
-    }
-    50% {
-        opacity: 0.3;
-        transform: translate(-50%, -50%) scale(1.15);
-        filter: blur(100px); /* Усиление размытия */
-    }
-}
-
-/* --- Film Grain Animation (Оживление шума) --- */
-/* Делает текстуру шума "живой", как кинопленка */
-@keyframes noiseShift {
-    0% {
-        transform: translate3d(0, 0, 0);
-    }
-    10% {
-        transform: translate3d(-5%, -5%, 0);
-    }
-    20% {
-        transform: translate3d(-10%, 5%, 0);
-    }
-    30% {
-        transform: translate3d(5%, -10%, 0);
-    }
-    40% {
-        transform: translate3d(-5%, 15%, 0);
-    }
-    50% {
-        transform: translate3d(-10%, 5%, 0);
-    }
-    60% {
-        transform: translate3d(15%, 0, 0);
-    }
-    70% {
-        transform: translate3d(0, 10%, 0);
-    }
-    80% {
-        transform: translate3d(-15%, 0, 0);
-    }
-    90% {
-        transform: translate3d(10%, 5%, 0);
-    }
-    100% {
-        transform: translate3d(5%, 0, 0);
-    }
-}
-
-/* --- Realistic Float (Левитация видео/картинок) --- */
-@keyframes floatRealistic {
-    0%,
-    100% {
-        transform: translateY(0) rotateX(0) rotateY(0);
-        box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.6),
-            0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-    }
-    50% {
-        transform: translateY(-15px) rotateX(2deg) rotateY(-2deg);
-        box-shadow: 0 50px 90px -15px rgba(0, 0, 0, 0.4),
-            0 0 0 1px rgba(255, 255, 255, 0.15) inset;
-    }
-}
-
-/* --- Kit Float (Для комплекта в секции Kit) --- */
-@keyframes kitFloat {
-    0%,
-    100% {
-        transform: perspective(1500px) rotateY(-5deg) rotateX(2deg)
-            translateY(0);
-    }
-    50% {
-        transform: perspective(1500px) rotateY(-5deg) rotateX(0deg)
-            translateY(-15px);
-    }
-}
-
-/* =========================================
-   3. INTERACTIONS (Действия и UI)
-   ========================================= */
-
-/* --- Button Shine (Пролетающий блик) --- */
-@keyframes btnShineRun {
-    0% {
-        left: -100%;
-        opacity: 0;
-    }
-    20% {
-        opacity: 0.5;
-    }
-    100% {
-        left: 200%;
-        opacity: 0;
-    }
-}
-
-/* --- Laser Border (Footer) --- */
-@keyframes laserRun {
-    0% {
-        background-position: 100% 0;
-        opacity: 0.5;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        background-position: -100% 0;
-        opacity: 0.5;
-    }
-}
-
-/* --- Text Metallic Shine --- */
-@keyframes textShine {
-    to {
-        background-position: 200% center;
-    }
-}
-
-/* --- Selection Pop (Радио-кнопки) --- */
-@keyframes selectionPop {
-    0% {
-        transform: scale(1);
-    }
-    40% {
-        transform: scale(0.95);
-    }
-    70% {
-        transform: scale(1.02);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-/* --- Swipe Hint (Hand Icon) --- */
-@keyframes swipeAnim {
-    0%,
-    100% {
-        transform: translate3d(-5px, 0, 0);
-        opacity: 0.5;
-    }
-    50% {
-        transform: translate3d(5px, 0, 0);
-        opacity: 1;
-    }
-}
-
-/* --- Scroll Focus (Gallery) --- */
-@keyframes scroll-focus {
-    0% {
-        transform: scale(0.9);
-        opacity: 0.6;
-        filter: grayscale(0.5);
-    }
-    50% {
-        transform: scale(1);
-        opacity: 1;
-        filter: grayscale(0);
-    }
-    100% {
-        transform: scale(0.9);
-        opacity: 0.6;
-        filter: grayscale(0.5);
-    }
-}
-
-/* --- Validation Shake --- */
-@keyframes shake {
-    10%,
-    90% {
-        transform: translate3d(-1px, 0, 0);
-    }
-    20%,
-    80% {
-        transform: translate3d(2px, 0, 0);
-    }
-    30%,
-    50%,
-    70% {
-        transform: translate3d(-4px, 0, 0);
-    }
-    40%,
-    60% {
-        transform: translate3d(4px, 0, 0);
-    }
-}
-
-/* --- Loading Spinner --- */
-@keyframes btnSpin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* --- Discount Pulse --- */
-@keyframes discountPulse {
-    0%,
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 15px rgba(229, 57, 53, 0.2);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 25px rgba(229, 57, 53, 0.5);
-    }
-}
-
-/* =========================================
-   4. UTILITY CLASSES (Helpers)
-   ========================================= */
-
-/* --- Entrance Helpers --- */
-/* Добавляйте эти классы прямо в HTML */
-.anim-fade-up {
-    animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+  0% {
     opacity: 0;
+    transform: translate3d(0, var(--anim-y-dist), 0)
+      scale(var(--anim-scale-start));
+    filter: blur(var(--anim-blur-start));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes clipReveal {
+  0% {
+    clip-path: inset(100% 0 0 0);
+    transform: translate3d(0, 15px, 0);
+    opacity: 0;
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(var(--anim-scale-start));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@media (min-width: 1024px) {
+  @keyframes skeletonShimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: translate3d(-50%, -50%, 0) scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: translate3d(-50%, -50%, 0) scale(1.05);
+  }
+}
+
+@keyframes floatRealistic {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@media (min-width: 1024px) {
+  @keyframes floatRealistic {
+    0%,
+    100% {
+      transform: translateY(0) rotateX(0) rotateY(0);
+      box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.6);
+    }
+    50% {
+      transform: translateY(-15px) rotateX(2deg) rotateY(-2deg);
+      box-shadow: 0 50px 90px -15px rgba(0, 0, 0, 0.4);
+    }
+  }
+}
+
+@keyframes kitFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (min-width: 1024px) {
+  @keyframes kitFloat {
+    0%,
+    100% {
+      transform: perspective(1500px) rotateY(-5deg) rotateX(2deg) translateY(0);
+    }
+    50% {
+      transform: perspective(1500px) rotateY(-5deg) rotateX(0deg)
+        translateY(-15px);
+    }
+  }
+}
+
+@keyframes noiseShift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (min-width: 1024px) {
+  @keyframes noiseShift {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    20% {
+      transform: translate3d(-10%, 5%, 0);
+    }
+    40% {
+      transform: translate3d(-5%, 15%, 0);
+    }
+    60% {
+      transform: translate3d(15%, 0, 0);
+    }
+    80% {
+      transform: translate3d(-15%, 0, 0);
+    }
+    100% {
+      transform: translate3d(5%, 0, 0);
+    }
+  }
+}
+
+/* 2. Interactions */
+
+@media (hover: hover) {
+  @keyframes btnShineRun {
+    0% {
+      left: -100%;
+      opacity: 0;
+    }
+    20% {
+      opacity: 0.5;
+    }
+    100% {
+      left: 200%;
+      opacity: 0;
+    }
+  }
+}
+
+@keyframes textShine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes chromeShine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes selectionPop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.95);
+  }
+  70% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes swipeAnim {
+  0%,
+  100% {
+    transform: translate3d(-4px, 0, 0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate3d(4px, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes discountPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* 3. Utility Classes */
+
+.anim-fade-up {
+  will-change: transform, opacity;
+  animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+  opacity: 0;
 }
 
 .anim-clip {
-    animation: clipReveal 0.8s var(--ease-out-expo) forwards;
-    opacity: 0;
+  will-change: transform, clip-path;
+  animation: clipReveal 0.8s var(--ease-out-expo) forwards;
+  opacity: 0;
 }
 
-/* --- Staggering Delays (Каскадность) --- */
-/* Задержка анимации для последовательного появления элементов */
 .delay-100 {
-    animation-delay: 100ms;
+  animation-delay: 50ms;
 }
 .delay-200 {
-    animation-delay: 200ms;
+  animation-delay: 100ms;
 }
 .delay-300 {
-    animation-delay: 300ms;
+  animation-delay: 150ms;
 }
 .delay-400 {
-    animation-delay: 400ms;
+  animation-delay: 200ms;
 }
 .delay-500 {
-    animation-delay: 500ms;
-}
-.delay-700 {
-    animation-delay: 700ms;
+  animation-delay: 250ms;
 }
 
-/* =========================================
-   5. ACCESSIBILITY (Reduced Motion)
-   ========================================= */
+@media (min-width: 1024px) {
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  .delay-400 {
+    animation-delay: 400ms;
+  }
+  .delay-500 {
+    animation-delay: 500ms;
+  }
+}
+
+/* 4. Optimization & A11y */
+
+@media (max-width: 1023px) {
+  .fx-noise::before {
+    display: none !important;
+    animation: none !important;
+  }
+
+  .text-chrome {
+    animation: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
+  :root {
+    --anim-y-dist: 0px;
+    --anim-scale-start: 1;
+    --anim-blur-start: 0px;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    filter: none !important;
+  }
+
+  .hero-media-desktop video,
+  .kit-image {
+    animation: none !important;
+  }
 }
