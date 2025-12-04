@@ -1,250 +1,263 @@
-/* -------------------------------- */
-/* --- sections/technologies.css -- */
-/* --- Ultimate Edition vFinal ---- */
-/* -------------------------------- */
+/* sections/technologies.css */
 
-/* --- 1. Секция (Atmosphere & Layout) --- */
 .technology {
-    position: relative;
-    /* Разрешаем теням выходить за границы контейнера */
-    overflow: visible;
-    z-index: 1;
-
-    /* Глубокий переход фона */
-    background: radial-gradient(
-        circle at 50% 50%,
-        #1a1a1a 0%,
-        var(--bg-secondary) 100%
-    );
-    isolation: isolate;
+  position: relative;
+  overflow: clip;
+  z-index: 1;
+  background: radial-gradient(
+    circle at 50% 50%,
+    #1a1a1a 0%,
+    var(--bg-secondary) 100%
+  );
+  isolation: isolate;
+  contain: content;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 800px;
 }
 
-/* Текстура шума (Film Grain) */
 .technology::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    /* SVG фильтр шума */
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    opacity: 0.5;
-    pointer-events: none;
-    z-index: 0;
-    mix-blend-mode: overlay;
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: overlay;
+  display: none;
 }
 
-/* Фоновое атмосферное пятно (Ambient Glow) */
+@media (min-width: 1024px) {
+  .technology::before {
+    display: block;
+  }
+}
+
 .technology::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    width: 50%;
-    height: 60%;
-
-    background: radial-gradient(circle, var(--accent-color), transparent 70%);
-    filter: blur(120px);
-    opacity: 0.08;
-    pointer-events: none;
-    z-index: -1;
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  transform: translateY(-50%);
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, var(--accent-color), transparent 70%);
+  filter: blur(80px);
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: -1;
+  will-change: transform;
 }
 
-/* --- 2. Сетка (Grid) --- */
 .tech-grid {
-    display: grid;
-    /* Умная сетка: карточки не уже 300px */
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--grid-gap, 30px);
-    width: 100%;
-    margin-inline: auto;
-
-    /* Перспектива для 3D эффектов */
-    perspective: 1000px;
+  width: 100%;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--grid-gap, 30px);
+  perspective: 1000px;
 }
 
-/* --- 3. Карточка Технологии (Ultimate Glass Card) --- */
 .tech-item {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg, 24px);
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transform: translateZ(0);
+  will-change: transform;
+  transition: transform 0.4s var(--ease-smooth), box-shadow 0.4s ease,
+    border-color 0.3s ease;
+}
 
-    /* Глубокий темный фон + Градиент */
+@media (min-width: 1024px) {
+  .tech-item {
     background-color: var(--bg-card);
     background-image: linear-gradient(
-        145deg,
-        rgba(255, 255, 255, 0.03) 0%,
-        rgba(10, 10, 10, 0.8) 100%
+      145deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(10, 10, 10, 0.8) 100%
     );
-
-    /* Эффект стекла */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-
-    /* Границы и скругления */
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: var(--radius-lg, 24px);
-
-    /* Убираем padding контейнера, чтобы фото было от края до края */
-    padding: 0;
-    overflow: hidden;
-
-    /* Тени: Глубина + Внутренний блик */
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
 
-    /* Оптимизация анимации */
-    transform: translateZ(0);
-    transition: all 0.5s var(--ease-smooth, cubic-bezier(0.25, 0.8, 0.25, 1));
-
-    /* Ускорение отрисовки */
-    content-visibility: auto;
-}
-
-/* --- Scroll-Driven Animation (Появление при скролле) --- */
-@supports (animation-timeline: view()) {
-    .tech-item {
-        opacity: 0;
-        transform: translateY(40px);
-        animation: techReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-        animation-timeline: view();
-        animation-range: entry 10% cover 20%;
-    }
-}
-
-@keyframes techReveal {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* --- Эффект "Блика" (Sheen) --- */
-.tech-item::after {
+  .tech-item::after {
     content: "";
     position: absolute;
     top: 0;
     left: -150%;
     width: 60%;
     height: 100%;
-
     background: linear-gradient(
-        120deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.02) 30%,
-        rgba(255, 255, 255, 0.15) 50%,
-        rgba(255, 255, 255, 0.02) 70%,
-        transparent 100%
+      120deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.02) 30%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.02) 70%,
+      transparent 100%
     );
-
     transform: skewX(-25deg);
     pointer-events: none;
     z-index: 5;
     transition: left 0.7s ease;
+  }
+
+  .tech-item:hover {
+    transform: translateY(-8px) translateZ(0);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    z-index: 2;
+  }
+
+  .tech-item:hover::after {
+    left: 200%;
+  }
 }
 
-/* --- Взаимодействие (Hover) --- */
-@media (hover: hover) {
-    .tech-item:hover {
-        transform: translateY(-10px);
-        border-color: rgba(255, 255, 255, 0.2);
-
-        /* Комбинированная тень: объем + красный рефлекс */
-        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7),
-            0 20px 40px -10px rgba(229, 57, 53, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .tech-item {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: techReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      animation-timeline: view();
+      animation-range: entry 10% cover 20%;
     }
-
-    /* Запуск блика */
-    .tech-item:hover::after {
-        left: 200%;
-    }
+  }
 }
 
-/* --- Изображение --- */
+@keyframes techReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tech-item:active {
+  transform: scale(0.98);
+  transition-duration: 0.1s;
+}
+
 .tech-item img {
-    width: 100%;
-    height: 240px; /* Фиксированная высота для ровного ряда */
-    object-fit: cover;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-
-    /* Начальное состояние */
-    filter: brightness(0.95);
-    transform: scale(1.01); /* Фикс белых полос */
-
-    transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), filter 0.5s ease;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  filter: brightness(0.95);
+  transform: scale(1.01);
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
+  will-change: transform;
 }
 
-.tech-item:hover img {
-    transform: scale(1.08); /* Кинематографичный зум */
+@media (hover: hover) {
+  .tech-item:hover img {
+    transform: scale(1.06);
     filter: brightness(1.1);
+  }
 }
-
-/* --- Типографика и Отступы --- */
-/* Так как у карточки padding: 0, задаем отступы здесь */
 
 .tech-item h3 {
-    margin: 28px 24px 12px; /* Отступы: сверху, бока, снизу */
+  margin: 24px 20px 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  position: relative;
+  width: fit-content;
+}
+
+@media (min-width: 1024px) {
+  .tech-item h3 {
+    margin: 28px 24px 12px;
     font-size: 1.35rem;
-    font-weight: 700;
-    color: #fff;
-    line-height: 1.2;
-    position: relative;
-    width: fit-content;
+  }
 }
 
-/* Декор: Красная "строчка" (Brand DNA) */
 .tech-item h3::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 24px;
-    height: 3px;
-    background: var(--accent-color);
-    border-radius: 2px;
-    box-shadow: 0 0 8px rgba(229, 57, 53, 0.5);
-    transition: width 0.3s ease;
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 24px;
+  height: 3px;
+  background: var(--accent-color);
+  border-radius: 2px;
+  transition: width 0.3s ease;
 }
 
-.tech-item:hover h3::before {
-    width: 100%; /* Линия подчеркивает всё слово */
+@media (hover: hover) {
+  .tech-item:hover h3::before {
+    width: 100%;
+  }
 }
 
 .tech-item p {
-    margin: 0 24px 32px; /* Отступы: 0, бока, снизу */
+  margin: 0 20px 28px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  text-wrap: pretty;
+  flex-grow: 1;
+}
+
+@media (min-width: 1024px) {
+  .tech-item p {
+    margin: 0 24px 32px;
     font-size: 1rem;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    text-wrap: pretty;
-
-    /* Прижимает текст к верху, выравнивая низ карточек */
-    flex-grow: 1;
-
-    transition: color 0.3s ease;
+  }
 }
 
-.tech-item:hover p {
-    color: #e0e0e0;
+@media (max-width: 1023px) {
+  .tech-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    margin-inline: -20px;
+    padding-inline: 20px;
+    padding-bottom: 40px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .tech-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tech-item {
+    flex: 0 0 85vw;
+    max-width: 340px;
+    height: auto;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    background: #1e1e1e;
+    backdrop-filter: none;
+  }
+
+  .tech-grid::after {
+    content: "";
+    display: block;
+    padding-right: 20px;
+  }
 }
 
-/* --- Mobile Fixes --- */
-@media (max-width: 640px) {
-    .tech-grid {
-        gap: 20px;
-        /* На мобильных одна колонка */
-        grid-template-columns: 1fr;
-    }
-
-    .tech-item h3 {
-        font-size: 1.25rem;
-        margin: 24px 20px 10px;
-    }
-
-    .tech-item p {
-        margin: 0 20px 24px;
-    }
+@media (prefers-reduced-motion: reduce) {
+  .tech-item,
+  .tech-item img,
+  .tech-item::after {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
 }
