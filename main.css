@@ -488,168 +488,234 @@
 }
 
 /* ======================================================================
-   Phase 3: Дизайн-Система: Макет и Типографика (System 2.0 Ultimate)
-   Architect: Tech Lead | Tech: Modular Scale, Fluid Rhythm, Optical Size
+   Phase 3: Дизайн-Система, Макет и Типографика (Ultimate Edition 2025)
+   Architect: Summanizer | Tech: Fluid Modular Scale, CQ Grid, CSS Subgrid
 ====================================================================== */
-
 @layer theme, layout, typography;
 
 /* ======================================================================
    LAYER: THEME (Mathematical Core)
-   Используем "Fluid Type Scale" с коэффициентом 1.25 (Major Third).
-   Диапазон вьюпорта: 375px -> 1440px.
+   System: Жидкостная Модульная Шкала (Major Third 1.250)
+   Range: Интерполяция от 320px до 1440px
 ====================================================================== */
 @layer theme {
   :root {
-    /* --- 1. Fluid Typography (Гармоническая шкала) --- */
-    /* База: 16px (моб) -> 18px (десктоп) */
-    --fs-base: clamp(1rem, 0.93rem + 0.31vw, 1.125rem);
+    /* --- 1. Fluid Typography Engine --- */
+    /* Используем логические единицы 'vi' (viewport inline) для современной адаптивности */
 
-    /* Шаг +1 (H4/Sub): 18px -> 22.5px */
-    --fs-md: clamp(1.125rem, 1.02rem + 0.52vw, 1.406rem);
+    /* Base (Body): 16px -> 18px */
+    --fs-base: clamp(1rem, 0.94rem + 0.29vi, 1.125rem);
 
-    /* Шаг +2 (H3): 22.5px -> 33.75px */
-    --fs-lg: clamp(1.406rem, 1.19rem + 1.08vw, 2.109rem);
+    /* Step 1 (Мелкий текст / Подписи): 12.8px -> 14.4px */
+    --fs-sm: clamp(0.8rem, 0.75rem + 0.23vi, 0.9rem);
 
-    /* Шаг +3 (H2): 28px -> 50px */
-    --fs-xl: clamp(1.758rem, 1.34rem + 2.09vw, 3.164rem);
+    /* Step +1 (H5 / Subtitles): 20px -> 22.5px */
+    --fs-md: clamp(1.25rem, 1.18rem + 0.36vi, 1.406rem);
 
-    /* Шаг +4 (H1/Display): 35px -> 76px */
-    --fs-display: clamp(2.197rem, 1.42rem + 3.89vw, 4.746rem);
+    /* Step +2 (H4): 25px -> 28px */
+    --fs-lg: clamp(1.563rem, 1.47rem + 0.45vi, 1.758rem);
 
-    /* --- 2. Fluid Spacing (Ритм отступов) --- */
-    /* Синхронизировано с размером шрифта для вертикального ритма */
+    /* Step +3 (H3): 31px -> 35px */
+    --fs-xl: clamp(1.953rem, 1.83rem + 0.57vi, 2.197rem);
 
-    /* Мелкий отступ (внутри карточек): 16px -> 24px */
-    --space-sm: clamp(1rem, 0.85rem + 0.75vw, 1.5rem);
+    /* Step +4 (H2): 39px -> 44px */
+    --fs-2xl: clamp(2.441rem, 2.29rem + 0.71vi, 2.746rem);
 
-    /* Средний отступ (между блоками): 32px -> 64px */
-    --space-md: clamp(2rem, 1.4rem + 3vw, 4rem);
+    /* Step +5 (H1 Display): 48px -> 67px (Усиленный контраст для Hero) */
+    --fs-display: clamp(3.052rem, 2.5rem + 2.7vi, 4.209rem);
 
-    /* Крупный отступ (Секции): 64px -> 128px */
-    --space-lg: clamp(4rem, 2.5rem + 7.5vw, 8rem);
-
-    /* Безопасные поля (Gutter): 20px -> 60px */
-    --layout-gutter: clamp(1.25rem, 5vw, 3.75rem);
+    /* --- 2. Fluid Spacing (Vertical Rhythm) --- */
+    /* Отступы, привязанные к размеру шрифта и ширине экрана */
+    --space-xs: clamp(0.5rem, 0.5rem + 0.25vi, 0.75rem);
+    --space-sm: clamp(1rem, 1rem + 0.5vi, 1.5rem);
+    --space-md: clamp(2rem, 1.8rem + 1vi, 3rem);
+    --space-lg: clamp(4rem, 3.5rem + 2.5vi, 8rem);
+    --space-xl: clamp(6rem, 5rem + 4vi, 12rem);
 
     /* --- 3. Layout Constants --- */
-    --layout-max-width: 1440px; /* Шире стандартного для премиум-ощущения */
-    --measure-prose: 65ch; /* Идеальная длина строки для чтения */
-    --measure-header: 20ch; /* Макс. ширина заголовков */
+    --layout-max-width: 1440px;
+    --layout-gutter: max(5vi, 1.5rem); /* Логические безопасные поля */
+    --measure-prose: 65ch; /* Золотой стандарт длины строки */
+    --measure-header: 20ch;
   }
 }
 
 /* ======================================================================
-   LAYER: LAYOUT (Smart Grid & Container Logic)
+   LAYER: LAYOUT (Container Queries & Subgrid Architecture)
 ====================================================================== */
 @layer layout {
-  /* Универсальный контейнер.
-     Использует margin-inline: auto для центрирования
-     и min() для адаптивности без медиа-запросов.
-  */
+  /* 1. Глобальный Контекст (The Container) */
   .container {
     inline-size: 100%;
     max-inline-size: var(--layout-max-width);
-    padding-inline: var(--layout-gutter);
     margin-inline: auto;
+    padding-inline: var(--layout-gutter);
 
-    /* Предотвращение слипания на очень узких экранах */
-    width: min(100%, 100vw);
+    /* Активируем Container Queries для всех вложенных элементов */
+    container-type: inline-size;
+    container-name: layout-context;
   }
 
-  /* Вертикальный ритм секций */
+  /* 2. Секции и Ритм */
   section {
     padding-block: var(--space-lg);
     position: relative;
-    z-index: 1;
+    isolation: isolate; /* Создает новый контекст наложения */
 
-    /* Компенсация Sticky Header для якорных ссылок */
+    /* Умный скролл к якорю (учитывает высоту шапки) */
     scroll-margin-top: var(--header-height, 80px);
   }
 
-  /* Grid Helpers (Subgrid Ready) */
+  /* 3. Умная Сетка (Smart Grid)
+     Перестраивается в зависимости от размера КОНТЕЙНЕРА, а не экрана.
+  */
   .grid-container {
     display: grid;
     gap: var(--space-md);
-    /* Если нет модификаторов, по умолчанию 1 колонка */
+    /* Mobile First: 1 колонка */
     grid-template-columns: 1fr;
   }
 
-  /* Utility Backgrounds */
+  /* @container вместо @media: Истинная модульность */
+  @container layout-context (inline-size > 40rem) {
+    .grid-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @container layout-context (inline-size > 65rem) {
+    .grid-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* 4. Subgrid Pattern (Святой Грааль выравнивания карточек) 
+     Заставляет внутренности карточек (Заголовок, Текст, Футер) выравниваться
+     по одной линии во всем ряду.
+  */
+  .grid-container--cards {
+    /* Определяем глобальные треки в родителе: 
+       Картинка | Заголовок | Текст (растягивается) | Действие */
+    grid-template-rows: auto auto 1fr auto;
+    align-items: start;
+  }
+
+  /* Применяем к прямым потомкам (карточкам) */
+  .grid-container--cards > article,
+  .grid-container--cards > .card,
+  .style-card {
+    /* Карточка занимает 4 строки родительского грида */
+    grid-row: span 4;
+
+    /* Наследуем строки родителя */
+    display: grid;
+    grid-template-rows: subgrid;
+
+    /* Сбрасываем margin, так как отступы управляются grid-gap */
+    margin: 0;
+    height: 100%;
+  }
+
+  /* Утилиты фона */
   .bg-primary {
     background-color: var(--color-bg-canvas);
   }
   .bg-secondary {
     background-color: var(--color-bg-surface);
+    /* Тонкие границы для разделения секций */
+    border-block: 1px solid var(--color-border-dim);
   }
 }
 
 /* ======================================================================
-   LAYER: TYPOGRAPHY (Optical Sizing & Readability)
+   LAYER: TYPOGRAPHY (Optical Sizing & Precision)
 ====================================================================== */
 @layer typography {
-  /* Глобальные настройки для заголовков */
-  :is(h1, h2, h3, h4) {
+  /* 1. Глобальные настройки шрифта */
+  html {
+    /* Inter Features: 
+       cv05 (хвостик у l), cv08 (прямая I), calt (контекстные альт.), kern */
+    font-feature-settings: "cv05", "cv08", "calt", "kern";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 2. Заголовки (Optical Headings) */
+  :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--font-primary);
     color: var(--color-text-primary);
     font-weight: 800;
-    line-height: 1.1; /* Плотный интерлиньяж для крупных кеглей */
 
-    /* Алгоритмическая балансировка: строки выглядят симметрично */
-    text-wrap: balance;
+    /* Плотный интерлиньяж для крупных заголовков (визуальная группировка) */
+    line-height: 1.1;
 
-    /* Negative Tracking для крупных заголовков (делает их "плотнее") */
+    /* Optical Tracking: Отрицательный трекинг для крупного текста делает его "собранным" */
     letter-spacing: -0.025em;
+
+    /* Balance: Предотвращает висячие предлоги и неравномерные строки */
+    text-wrap: balance;
 
     margin-block-end: 0.6em;
   }
 
   h1 {
     font-size: var(--fs-display);
+    letter-spacing: -0.04em; /* Еще плотнее для дисплейного текста */
     line-height: 1.05;
   }
   h2 {
-    font-size: var(--fs-xl);
+    font-size: var(--fs-2xl);
   }
   h3 {
-    font-size: var(--fs-lg);
+    font-size: var(--fs-xl);
     font-weight: 700;
   }
   h4 {
-    font-size: var(--fs-md);
+    font-size: var(--fs-lg);
     font-weight: 600;
   }
+  h5 {
+    font-size: var(--fs-md);
+  }
 
-  /* Настройки основного текста */
+  /* 3. Основной текст (Readability Engine) */
   p,
   li,
-  dl {
+  dl,
+  blockquote {
     font-size: var(--fs-base);
-    line-height: 1.65; /* Воздух для чтения */
-    color: var(--color-text-muted);
 
-    /* Pretty: предотвращает "сироты" в конце абзаца */
-    text-wrap: pretty;
-
-    margin-block-end: var(--space-sm);
+    /* Воздушный интерлиньяж (1.65) для комфортного чтения */
+    line-height: 1.65;
 
     /* Ограничение длины строки для комфорта глаз */
     max-inline-size: var(--measure-prose);
+
+    /* Pretty: Оптимизирует "рваный край", предотвращает одиночные слова на новой строке */
+    text-wrap: pretty;
+
+    color: var(--color-text-muted);
+    margin-block-end: var(--space-sm);
   }
 
-  /* --- Специфические классы --- */
+  /* Гигиена текста на мобильных: предотвращение "рек" (rivers) */
+  @media (max-width: 480px) {
+    p {
+      hyphens: auto;
+      -webkit-hyphens: auto;
+    }
+  }
 
-  /* Главный заголовок секции */
+  /* 4. Компоненты Типографики */
+
+  /* Заголовки секций */
   .section-title {
     text-align: center;
     margin-inline: auto;
     max-inline-size: var(--measure-header);
     margin-block-end: var(--space-md);
-
-    /* Оптическая компенсация: чуть больше воздуха вокруг */
-    padding-inline: 1rem;
   }
 
-  /* Подзаголовок секции (Subtitle) */
   .section-subtitle {
     text-align: center;
     margin-inline: auto;
@@ -661,10 +727,50 @@
     font-weight: 400;
   }
 
-  /* Текст внутри карточек (чуть компактнее) */
-  .card-content p {
-    font-size: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
-    margin-block-end: 1.5em;
+  /* Labels / Small Caps */
+  .text-overline,
+  .form-label,
+  legend {
+    font-size: 0.875rem; /* ~14px */
+    text-transform: uppercase;
+    /* Положительный трекинг улучшает читаемость прописных (Caps) */
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+
+  /* Obsidian Gradient Text (Связь с Phase 1) */
+  .text-gradient-obsidian {
+    background: linear-gradient(
+      135deg,
+      oklch(1 0 0) 30%,
+      /* Pure White */ oklch(0.85 0.05 260) 100% /* Metallic Obsidian Blue */
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+
+    /* Легкое свечение */
+    filter: drop-shadow(0 0 20px oklch(from var(--seed-obsidian) l c h / 0.15));
+    display: inline-block;
+  }
+
+  /* Ссылки в тексте */
+  p a {
+    color: var(--color-text-primary);
+    text-decoration: underline;
+    text-decoration-color: color-mix(
+      in srgb,
+      var(--color-accent),
+      transparent 70%
+    );
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.2s ease;
+  }
+
+  p a:hover {
+    text-decoration-color: var(--color-accent);
   }
 }
 
