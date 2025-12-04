@@ -243,7 +243,16 @@ a {
     width: auto;
   }
 }
-
+/* Исправление для иконок-стрелок, чтобы их было видно */
+.gallery__nav-btn .icon {
+  fill: none; /* Убираем заливку */
+  stroke: currentColor; /* Добавляем обводку */
+  stroke-width: 2; /* Толщина линий */
+  stroke-linecap: round; /* Скругленные края линий */
+  stroke-linejoin: round;
+  width: 28px; /* Чуть увеличим иконку внутри кнопки */
+  height: 28px;
+}
 /* ==========================================================================
    4. Шапка (Header) - Mobile First
    ========================================================================== */
@@ -688,15 +697,20 @@ a {
 }
 
 .gallery__carousel-wrapper {
-  /* Mobile: Horizontal scroll */
   display: grid;
   grid-auto-flow: column;
+  /* Уменьшаем ширину слайда, чтобы следующий было лучше видно (тизер) */
   grid-auto-columns: 85%;
-  gap: 20px;
+  gap: 15px; /* Чуть меньше отступ между фото */
+
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  padding: 10px 20px 30px 20px;
+
+  /* ВАЖНО: Это исправляет прилипание к краю */
+  padding: 0 20px 30px 20px;
+  scroll-padding-left: 20px; /* Указываем браузеру отступ для "примагничивания" */
+
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -740,6 +754,31 @@ a {
   border-radius: 50%;
   box-shadow: var(--shadow-md);
   transition: transform var(--transition);
+}
+.gallery__dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.gallery__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ddd;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.gallery__dot.is-active {
+  background-color: var(--color-accent); /* Красный цвет */
+  transform: scale(1.3);
+}
+
+/* На мобильном можно скрыть стрелки и оставить только точки, если хотите */
+@media (max-width: 767px) {
+  .gallery__nav-btn {
+    display: none; /* Скрываем стрелки, оставляем только свайп + точки */
+  }
 }
 @media (hover: hover) {
   .gallery__nav-btn:hover {

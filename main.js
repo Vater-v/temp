@@ -100,25 +100,24 @@ document.addEventListener("DOMContentLoaded", () => {
    * Оптимизировано для работы с новым CSS Grid скроллом и существующим HTML.
    */
   const initGallerySlider = () => {
-    // Целимся в контейнер, который скроллится (в твоем HTML это wrapper)
     const sliderWrapper = document.querySelector(".gallery__carousel-wrapper");
     const prevBtn = document.querySelector(".js-gallery-prev");
     const nextBtn = document.querySelector(".js-gallery-next");
+    const dotsContainer = document.querySelector(".js-gallery-dots");
 
-    if (!sliderWrapper || !prevBtn || !nextBtn) return;
+    if (!sliderWrapper) return;
 
+    // --- 1. Логика кнопок (существующая) ---
     const scrollSlider = (direction) => {
-      // Проверяем, активен ли режим скролла (на ПК overflow: visible)
       const style = window.getComputedStyle(sliderWrapper);
-      if (style.overflowX !== "auto") return;
+      // Если на ПК (grid) скролл не нужен, выходим (опционально)
+      // if (style.overflowX !== "auto") return;
 
       const slide = sliderWrapper.querySelector(".gallery__slide");
       if (!slide) return;
 
       const slideWidth = slide.offsetWidth;
-      // Получаем актуальный gap из CSS Grid
       const gap = parseInt(style.columnGap || style.gap || 0);
-      // Скроллим на ширину одного слайда + gap
       const scrollAmount = slideWidth + gap;
 
       sliderWrapper.scrollBy({
@@ -127,8 +126,50 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     };
 
-    nextBtn.addEventListener("click", () => scrollSlider("next"));
-    prevBtn.addEventListener("click", () => scrollSlider("prev"));
+    if (prevBtn && nextBtn) {
+      nextBtn.addEventListener("click", () => scrollSlider("next"));
+      prevBtn.addEventListener("click", () => scrollSlider("prev"));
+    }
+
+    // --- 2. Логика точек (новая) ---
+    const slides = sliderWrapper.querySelectorAll(".gallery__slide");
+
+    if (dotsContainer && slides.length > 0) {
+      // Очищаем контейнер перед генерацией
+      dotsContainer.innerHTML = "";
+
+      // Генерируем точки
+      slides.forEach((_, index) => {
+        const dot = document.createElement("div");
+        dot.classList.add("gallery__dot");
+        // Первая точка активна сразу
+        if (index === 0) dot.classList.add("is-active");
+        dotsContainer.appendChild(dot);
+      });
+
+      // Слушаем скролл для переключения активной точки
+      sliderWrapper.addEventListener(
+        "scroll",
+        () => {
+          const scrollLeft = sliderWrapper.scrollLeft;
+          const slideWidth = slides[0].offsetWidth; // Ширина слайда
+          // Вычисляем индекс центрального слайда
+          // Добавляем половину ширины слайда к scrollLeft для точности
+          const centerIndex = Math.round(scrollLeft / slideWidth);
+
+          const dots = document.querySelectorAll(".gallery__dot");
+          dots.forEach((dot, index) => {
+            // Защита от выхода за пределы массива
+            if (index === centerIndex) {
+              dot.classList.add("is-active");
+            } else {
+              dot.classList.remove("is-active");
+            }
+          });
+        },
+        { passive: true }
+      ); // passive для производительности скролла
+    }
   };
 
   /**
