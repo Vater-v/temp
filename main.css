@@ -1,150 +1,133 @@
 /* ======================================================================
    Phase 1: Architecture & Foundation (State of the Art 2025)
-   Architect: Summanizer
+   Architect: Summanizer | Tech: OKLCH, Layers, Logical Props
 ====================================================================== */
 
-/* 1. Определение слоев каскада
-   Это фундамент архитектуры. Стили в слое 'reset' всегда будут слабее стилей
-   в слое 'theme' или 'base', независимо от веса селектора.
-*/
-@layer reset, theme, base;
+/* 1. LAYER ORCHESTRATION
+   Строгий порядок каскада. Стили 'reset' самые слабые, 'utilities' самые сильные.
+   Это предотвращает "войны специфичности". */
+@layer reset, theme, base, layout, components, utilities;
 
 /* ======================================================================
    LAYER: THEME (Design Tokens)
+   Используем OKLCH для доступа к P3 Color Gamut (на 30% больше цветов, чем в RGB).
 ====================================================================== */
 @layer theme {
   :root {
-    /* --- Level 1: Primitive Tokens (Палитра) --- */
-    /* Цвета определяются здесь, но не используются напрямую в верстке */
-    --palette-obsidian-950: #050505;
-    --palette-obsidian-900: #0a0a0a;
-    --palette-obsidian-800: #1a1a1a;
-    --palette-obsidian-700: #333333;
+    /* --- Level 1: Primitives (OKLCH Palette) --- */
+    /* L = Яркость (0-1), C = Насыщенность, H = Оттенок (0-360) */
 
-    --palette-snow-100: #f5f5f5;
-    --palette-snow-400: #a0a0a0;
+    /* OBSIDIAN SERIES (Вместо плоского черного — глубокий темно-синий подтон) */
+    --seed-obsidian: 0.12 0.02 260;
 
-    --palette-crimson-500: #e53935;
-    --palette-crimson-700: #b71c1c;
+    /* CRIMSON SERIES (Яркий, "дорогой" красный P3) */
+    --seed-crimson: 0.58 0.23 28;
 
-    --palette-gold-400: #ffd700;
-    --palette-emerald-500: #4caf50;
+    /* PRECIOUS METALS */
+    --seed-gold: 0.85 0.16 85;
+    --seed-snow: 0.99 0 0;
 
-    /* --- Level 2: Semantic Tokens (Контекст использования) --- */
-    /* Используем именно эти переменные в компонентах.
-       Это позволяет менять тему "на лету" без рефакторинга. */
+    /* --- Level 2: Semantic Tokens (Aliases) --- */
 
     /* Backgrounds */
-    --color-bg-primary: var(--palette-obsidian-900);
-    --color-bg-secondary: var(--palette-obsidian-800);
-    --color-bg-backdrop: rgba(5, 5, 5, 0.85); /* Glass effect base */
+    --color-bg-canvas: oklch(var(--seed-obsidian)); /* #050505 is dead */
+    --color-bg-surface: oklch(0.18 0.025 260); /* Карточки */
 
-    /* Text */
-    --color-text-primary: var(--palette-snow-100);
-    --color-text-muted: var(--palette-snow-400);
-
-    /* UI & Brand */
-    --color-accent: var(--palette-crimson-500);
-    --color-border: var(--palette-obsidian-700);
-    --color-rating: var(--palette-gold-400);
-    --color-success: var(--palette-emerald-500);
+    /* Relative Color Syntax: Прозрачность "на лету" из базового токена */
+    --color-bg-glass: oklch(from var(--color-bg-canvas) l c h / 0.85);
+    --color-bg-subtle: oklch(from var(--seed-snow) l c h / 0.03);
 
     /* Typography */
-    --font-family-base: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-      "Segoe UI", Roboto, sans-serif;
+    --color-text-primary: oklch(var(--seed-snow));
+    /* Автоматически создаем приглушенный текст, уменьшая яркость и прозрачность */
+    --color-text-muted: oklch(from var(--seed-snow) calc(l - 0.3) c h / 0.7);
+    --color-text-invert: oklch(var(--seed-obsidian));
 
-    /* Shape & Layout */
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 16px;
+    /* Brand & UI */
+    --color-accent: oklch(var(--seed-crimson));
+    --color-rating: oklch(var(--seed-gold));
+    --color-success: oklch(0.65 0.18 145); /* Vivid Green */
 
-    /* Header Height Constant (для расчетов sticky и scroll-padding) */
+    /* Borders (Умная прозрачность) */
+    --color-border-dim: oklch(from var(--seed-snow) l c h / 0.08);
+
+    /* Dimensions & Physics */
     --header-height: 80px;
+    --radius-sm: 4px;
+    --radius-md: 12px;
+    --radius-lg: 24px;
+    --font-primary: "Inter", system-ui, -apple-system, sans-serif;
   }
 }
 
 /* ======================================================================
-   LAYER: RESET (Modern Reset)
+   LAYER: RESET (Modern 2025 Standard)
 ====================================================================== */
 @layer reset {
-  /* Box Sizing для всех элементов */
-  *,
-  *::before,
-  *::after {
+  /* Box Sizing */
+  :where(*, *::before, *::after) {
     box-sizing: border-box;
-  }
-
-  /* Сброс отступов */
-  * {
+    border-width: 0;
+    border-style: solid;
     margin: 0;
     padding: 0;
   }
 
-  /* Настройки документа */
+  /* HTML Document Setup */
   html {
-    /* Нативная темная тема для скроллбаров и UI браузера */
+    /* Нативная поддержка темной темы (скроллбары, автозаполнение) */
     color-scheme: dark;
 
-    /* Резервируем место под скроллбар, чтобы контент не "прыгал" */
+    /* Stable Gutter: Контент не "дергается" при появлении скролла */
     scrollbar-gutter: stable;
 
     /* Логическая высота */
     block-size: 100%;
 
-    /* Запрет зума текста при повороте на iOS */
+    /* Отключаем зум шрифта при повороте (iOS) */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: none;
+
+    /* Отключаем "резиновый" скролл всей страницы (Mac/iOS) */
+    overscroll-behavior: none;
+
+    /* Плавная прокрутка */
+    scroll-behavior: smooth;
   }
 
-  /* Медиа-контент: Логические свойства */
-  img,
-  picture,
-  video,
-  canvas,
-  svg {
+  body {
+    /* DVB (Dynamic Viewport Block): Идеальная высота на мобильных (учитывает URL-бар) */
+    min-block-size: 100dvb;
+    line-height: 1.5;
+    /* Сглаживание шрифтов для темного фона */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Media Elements (Logical Props) */
+  :where(img, svg, video, canvas) {
     display: block;
     max-inline-size: 100%; /* Вместо max-width */
     block-size: auto; /* Вместо height */
   }
 
-  /* Наследование шрифтов для форм */
-  input,
-  button,
-  textarea,
-  select {
-    font: inherit;
-    background: transparent;
-    border: none;
-    color: inherit;
-  }
-
-  /* Улучшенная типографика */
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  /* Typography Intelligence */
+  :where(h1, h2, h3, h4) {
+    /* Балансировка строк в заголовках (нет "лесенок") */
+    text-wrap: balance;
     overflow-wrap: break-word;
   }
 
-  /* Балансировка заголовков */
-  h1,
-  h2,
-  h3,
-  h4 {
-    text-wrap: balance;
-  }
-
-  /* Предотвращение висячих слов в тексте */
   p {
+    /* Предотвращение "сирот" (одиночных слов на новой строке) */
     text-wrap: pretty;
   }
 
-  /* Сброс списков (только для классов, сохраняя семантику list role) */
-  :where(ul, ol)[class] {
-    list-style: none;
+  /* Form Elements inheritance */
+  :where(input, button, textarea, select) {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
   }
 }
 
@@ -152,33 +135,15 @@
    LAYER: BASE (Global Styles)
 ====================================================================== */
 @layer base {
-  html {
-    scroll-behavior: smooth;
-    /* Учитываем высоту шапки при скролле к якорю */
-    scroll-padding-block-start: var(--header-height);
-  }
-
   body {
-    /* Используем dvb (Dynamic Viewport Block) для идеальной высоты на мобильных */
-    min-block-size: 100dvb;
-
-    /* Sticky Footer Setup */
+    background-color: var(--color-bg-canvas);
+    color: var(--color-text-primary);
+    font-family: var(--font-primary);
     display: flex;
     flex-direction: column;
-
-    /* Применение токенов */
-    background-color: var(--color-bg-primary);
-    color: var(--color-text-primary);
-    font-family: var(--font-family-base);
-
-    /* Оптимизация шрифтов */
-    line-height: 1.6;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Прижатие футера */
+  /* Sticky Footer Helper */
   main {
     flex-grow: 1;
     isolation: isolate; /* Новый контекст наложения */
@@ -191,20 +156,22 @@
     cursor: pointer;
   }
 
-  /* Accessibility: Focus Visible */
-  /* Аутлайн появляется ТОЛЬКО при навигации с клавиатуры */
+  /* Scroll Padding (Учитываем шапку при переходе по якорям) */
+  html {
+    scroll-padding-block-start: var(--header-height);
+  }
+
+  /* Accessibility: Focus Visible (Только с клавиатуры) */
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 4px;
     border-radius: 2px;
   }
-
-  /* Убираем дефолтный аутлайн мыши */
   :focus:not(:focus-visible) {
     outline: transparent;
   }
 
-  /* Accessibility: Reduced Motion */
+  /* Reduced Motion */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -213,7 +180,6 @@
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
