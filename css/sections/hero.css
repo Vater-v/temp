@@ -1,31 +1,22 @@
-/* -------------------------------- */
-/* --- sections/hero.css       ---- */
-/* --- Ultimate Performance Ed ---- */
-/* -------------------------------- */
+/* --- sections/hero.css --- */
 
-/* --- Основной контейнер --- */
 .hero {
     position: relative;
-    /* dvh гарантирует корректную высоту на iOS с плавающими панелями */
-    height: 100dvh;
-    min-height: 560px; /* Оптимально для мобильных */
     width: 100%;
-
+    height: 100vh;
+    height: 100dvh;
+    min-height: 560px;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
-    overflow: hidden;
-    background-color: var(--bg-primary);
-
-    /* PERFORMANCE: Изоляция перерисовки. Браузер не пересчитывает футер при анимации хиро */
+    background-color: #111;
     contain: layout paint style;
     isolation: isolate;
+    overflow: hidden;
 }
 
-/* --- ОПТИМИЗАЦИЯ: Шум только для Desktop (min-width: 768px) --- */
-/* Фильтр feTurbulence убивает мобильные CPU. Включаем только на планшетах/ПК */
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
     .hero::before {
         content: "";
         position: absolute;
@@ -37,11 +28,9 @@
         pointer-events: none;
         z-index: 1;
         mix-blend-mode: overlay;
-        will-change: opacity;
     }
 }
 
-/* --- Видео на фоне (Mobile) --- */
 .hero-video-mobile {
     position: absolute;
     top: 0;
@@ -51,45 +40,35 @@
     object-fit: cover;
     object-position: center 60%;
     z-index: 0;
-    /* Затемняем CSS-ом (дешевле чем фильтр) */
-    filter: brightness(0.85);
     background-color: var(--bg-secondary);
-
-    /* GPU Hack для предотвращения мерцания */
     transform: translateZ(0);
+    will-change: transform;
 }
 
-/* --- Умный Оверлей (Optimized Gradient) --- */
 .hero-overlay {
     position: absolute;
     inset: 0;
     z-index: 1;
-
-    /* Линейный градиент быстрее радиального */
     background: linear-gradient(
         to bottom,
-        rgba(0, 0, 0, 0.1) 0%,
-        rgba(0, 0, 0, 0) 30%,
-        rgba(0, 0, 0, 0.6) 80%,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.1) 40%,
+        rgba(0, 0, 0, 0.7) 85%,
         var(--bg-primary) 100%
     );
     pointer-events: none;
 }
 
-/* --- Layout Контента --- */
 .hero-layout {
     position: relative;
     z-index: 2;
     width: 100%;
     height: 100%;
-
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; /* Mobile: текст внизу */
-
-    /* Safe Area для iPhone X+ */
-    padding-top: max(60px, env(safe-area-inset-top));
-    padding-bottom: max(90px, env(safe-area-inset-bottom) + 20px);
+    justify-content: flex-end;
+    padding-top: max(80px, env(safe-area-inset-top));
+    padding-bottom: max(100px, env(safe-area-inset-bottom) + 20px);
     padding-left: max(20px, env(safe-area-inset-left));
     padding-right: max(20px, env(safe-area-inset-right));
 }
@@ -99,134 +78,164 @@
     max-width: 650px;
     margin: 0 auto;
     width: 100%;
-    /* GPU слой для анимации появления */
-    will-change: transform, opacity;
 }
 
-/* --- Типографика Hero --- */
 .hero h1 {
-    /* Fluid Typography: ограничиваем минимум, чтобы не ломалось на iPhone SE */
-    font-size: clamp(2rem, 7vw, 4.2rem);
-    line-height: 1.1;
+    font-size: clamp(2.1rem, 9vw, 4.5rem);
+    line-height: 1.05;
     margin-bottom: 20px;
     color: var(--text-primary);
-
-    /* Оптимизированная тень (без размытия большого радиуса) */
-    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
-    letter-spacing: -0.03em;
+    text-wrap: balance;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+    letter-spacing: -0.02em;
 }
 
 .subtitle {
-    font-size: clamp(1rem, 3vw, 1.35rem);
-    margin-bottom: 32px;
-    color: rgba(255, 255, 255, 0.95);
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    margin-bottom: 28px;
+    color: rgba(255, 255, 255, 0.9);
     font-weight: 400;
     line-height: 1.5;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-    padding: 0 12px;
+    padding: 0 10px;
+    text-wrap: pretty;
 }
 
-/* --- Список преимуществ (Mobile Performance) --- */
 .bullets {
     display: inline-flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
     text-align: left;
-    margin: 0 auto 40px auto;
+    margin: 0 auto 32px auto;
     width: fit-content;
-
-    /* Более простой фон для мобильных вместо тяжелого стекла */
-    background: rgba(20, 20, 20, 0.85);
-    backdrop-filter: blur(10px); /* Уменьшенный blur */
-    -webkit-backdrop-filter: blur(10px);
-
-    padding: 20px 28px;
-    border-radius: 20px;
+    background: rgba(20, 20, 20, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px 24px;
+    border-radius: 16px;
+}
+
+@supports (backdrop-filter: blur(10px)) {
+    .bullets {
+        background: rgba(20, 20, 20, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
 }
 
 .bullets li {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 500;
     color: #f0f0f0;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
 }
 
 .bullets .icon {
-    display: inline-flex;
+    display: flex;
     justify-content: center;
     align-items: center;
-    width: 26px;
-    height: 26px;
-    background: rgba(229, 57, 53, 0.15);
+    width: 24px;
+    height: 24px;
+    background: rgba(229, 57, 53, 0.2);
     color: var(--accent-color);
     border-radius: 50%;
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 800;
     flex-shrink: 0;
 }
 
-/* --- Группа кнопок --- */
 .cta-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     width: 100%;
 }
 
 .hero .btn {
-    padding: 20px 40px;
     width: 100%;
-    max-width: 340px; /* Чтобы кнопка не была бесконечной на планшетах */
-    box-shadow: 0 10px 30px rgba(229, 57, 53, 0.4);
+    max-width: 360px;
+    padding: 18px 32px;
+    font-size: 1.1rem;
+    box-shadow: 0 8px 20px rgba(229, 57, 53, 0.3);
 }
 
-/* ОПТИМИЗАЦИЯ: Отключаем анимацию блика на мобильных (батарея) */
 .hero .btn::after {
     display: none;
 }
 
 .cta-hint {
-    font-size: 13px;
+    font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.6);
     margin: 0 !important;
 }
 
-/* --- Desktop Video Placeholder --- */
 .hero-media-desktop {
     display: none;
 }
 
-/* =========================================
-   TABLET ADAPTATION
-   ========================================= */
-@media (min-width: 768px) and (max-width: 1023px) {
+/* Landscape Mode */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        height: auto;
+        min-height: 100vh;
+        padding-top: 80px;
+        padding-bottom: 40px;
+        align-items: flex-start;
+    }
+
     .hero-layout {
+        padding-top: 20px;
+        padding-bottom: 20px;
         justify-content: center;
-        padding-bottom: 60px;
     }
+
     .hero h1 {
-        max-width: 20ch;
-        margin-inline: auto;
+        font-size: 2rem;
+        margin-bottom: 12px;
     }
+
+    .subtitle {
+        display: none;
+    }
+
     .bullets {
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
+        padding: 10px 20px;
+        gap: 16px;
+        margin-bottom: 20px;
     }
 }
 
-/* =========================================
-   DESKTOP VERSION (High Fidelity)
-   ========================================= */
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .hero-layout {
+        justify-content: center;
+        padding-bottom: 80px;
+    }
+
+    .hero h1 {
+        font-size: 3.5rem;
+    }
+
+    .bullets {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+        background: rgba(20, 20, 20, 0.6);
+    }
+}
+
+/* Desktop */
 @media (min-width: 1024px) {
     .hero {
         height: auto;
         min-height: 95vh;
-        padding: 120px 0 80px 0;
-
+        padding: 140px 0 100px 0;
         background: radial-gradient(
             circle at 75% 45%,
             #222 0%,
@@ -234,10 +243,9 @@
         );
     }
 
-    /* Включаем блик на ПК */
     .hero .btn::after {
         display: block;
-        animation: btnShine 4s infinite ease-in-out;
+        animation: btnShineRun 4s infinite ease-in-out;
     }
 
     .hero-video-mobile,
@@ -250,33 +258,28 @@
         grid-template-columns: 1fr 1.1fr;
         align-items: center;
         gap: 80px;
-        padding-bottom: 0;
-        height: auto;
+        padding: 0 0 0 clamp(20px, 5vw, 60px);
         text-align: left;
         max-width: 1400px;
         margin: 0 auto;
-        padding-top: 0;
-        padding-left: clamp(20px, 5vw, 60px);
     }
 
     .hero-content {
         text-align: left;
         max-width: 600px;
         margin: 0;
-        padding: 0;
+        padding-left: 0;
     }
 
     .bullets {
         background: transparent;
-        padding: 0;
-        border: none;
         backdrop-filter: none;
-        box-shadow: none;
-        margin-bottom: 45px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
+        -webkit-backdrop-filter: none;
+        border: none;
+        padding: 0;
+        margin: 0 0 45px 0;
         align-items: flex-start;
+        gap: 16px;
     }
 
     .bullets li {
@@ -285,19 +288,15 @@
     }
 
     .bullets .icon {
-        background: transparent;
-        border: none;
-        width: auto;
-        height: auto;
-        font-size: 1.4rem;
-        color: var(--accent-color);
+        background: rgba(229, 57, 53, 0.1);
+        width: 28px;
+        height: 28px;
+        font-size: 0.85em;
     }
 
     .hero h1 {
         margin-bottom: 28px;
-        text-shadow: none;
-        color: #fff;
-
+        font-size: clamp(3.5rem, 5vw, 4.8rem);
         background: linear-gradient(
             110deg,
             #ffffff 30%,
@@ -310,19 +309,18 @@
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
-
-        animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards,
-            textShine 6s linear infinite;
-        padding-bottom: 0.1em;
+        text-shadow: none;
+        animation: textShine 6s linear infinite;
     }
 
     .subtitle {
         color: var(--text-secondary);
         font-size: 1.35rem;
-        margin-bottom: 45px;
+        margin-bottom: 40px;
         text-shadow: none;
-        max-width: 90%;
         padding: 0;
+        max-width: 90%;
+        display: block;
     }
 
     .cta-group {
@@ -332,22 +330,20 @@
 
     .hero .btn {
         width: auto;
+        min-width: 240px;
     }
 
-    /* --- Desktop 3D Video --- */
     .hero-media-desktop {
         display: block;
         position: relative;
         width: 100%;
-        max-width: 750px;
-        justify-self: center;
-        opacity: 0;
-        animation: fadeInUp 1s ease-out 0.6s forwards;
+        max-width: 800px;
         perspective: 1500px;
         aspect-ratio: 16 / 9;
+        opacity: 0;
+        animation: fadeInUp 1s ease-out 0.4s forwards;
     }
 
-    /* Оптимизированная аура (Opacity вместо Box-Shadow) */
     .hero-media-desktop::before {
         content: "";
         position: absolute;
@@ -362,9 +358,9 @@
             transparent 70%
         );
         filter: blur(100px);
-        opacity: 0.15;
+        opacity: 0.2;
         z-index: -1;
-        animation: heroGlowPulse 6s ease-in-out infinite alternate;
+        animation: heroGlowPulse 5s ease-in-out infinite alternate;
     }
 
     .hero-media-desktop video {
@@ -372,37 +368,56 @@
         height: 100%;
         object-fit: cover;
         border-radius: 24px;
-        outline: 1px solid rgba(255, 255, 255, 0.08);
         background-color: #1a1a1a;
-
-        box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8),
-            0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-
-        animation: floatVideoRealistic 8s ease-in-out infinite;
+        outline: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8);
+        animation: floatRealistic 8s ease-in-out infinite;
         transform-style: preserve-3d;
-        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
-            box-shadow 0.6s ease;
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .hero-media-desktop:hover video {
         animation-play-state: paused;
-        transform: scale(1.02) rotateX(2deg) translateY(-10px);
-        box-shadow: 0 50px 100px -20px rgba(229, 57, 53, 0.25),
-            0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+        transform: scale(1.02) rotateX(3deg) translateY(-10px);
+        outline-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .hero-media-desktop:hover::before {
+        opacity: 0.3;
     }
 }
 
-/* Keyframes */
 @keyframes textShine {
     to {
         background-position: 200% center;
     }
 }
+
 @keyframes heroGlowPulse {
     0% {
         opacity: 0.15;
     }
     100% {
         opacity: 0.25;
+    }
+}
+
+@keyframes floatRealistic {
+    0%,
+    100% {
+        transform: translateY(0) rotateX(0);
+    }
+    50% {
+        transform: translateY(-15px) rotateX(1deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-media-desktop video,
+    .hero-media-desktop::before,
+    .hero .btn::after,
+    .hero h1 {
+        animation: none !important;
+        transform: none !important;
     }
 }
