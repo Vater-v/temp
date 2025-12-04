@@ -1,51 +1,39 @@
+/* =========================================
+   ФАЗА 1: Настройка, Переменные и Сброс
+   ========================================= */
+
 /* --- 1. CSS Переменные (Design Tokens) --- */
 :root {
-  /* Палитра: Вдохновлена черным велюром и красной нитью */
+  /* Палитра: Темная премиальная тема */
   --color-bg-primary: #0a0a0a; /* Глубокий черный (основа) */
-  --color-bg-secondary: #141416; /* Темный графит (для секций) */
+  --color-bg-secondary: #1a1a1a; /* Вторичный фон для секций */
 
-  --color-accent: #e62e2e; /* Красный (цвет строчки) */
-  --color-accent-hover: #c21c1c; /* Темно-красный (при наведении) */
+  --color-text-primary: #f5f5f5; /* Основной текст (почти белый) */
+  --color-text-muted: #a0a0a0; /* Вторичный текст (серый) */
 
-  --color-text-main: #ffffff; /* Белый (основной текст) */
-  --color-text-muted: #a3a3a3; /* Серый (второстепенный текст) */
+  --color-accent: #e53935; /* Акцентный цвет (красный) */
 
-  /* Спецэффекты (хром и стекло) */
-  --gradient-chrome: linear-gradient(180deg, #fff 0%, #dcdcdc 100%);
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --color-border: #333333; /* Цвет границ */
+  --color-success: #4caf50; /* Успешное действие / галочки */
+  --color-rating: #ffd700; /* Цвет звезд рейтинга */
 
-  /* Типографика */
-  --font-main: "Inter", system-ui, -apple-system, sans-serif;
+  /* Типографика и Радиусы */
+  --font-family-base: "Inter", sans-serif;
 
-  /* Размеры */
-  --container-width: 1280px;
-  --header-height: 80px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
 }
 
 /* --- 2. Сброс стилей (Reset) --- */
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+  box-sizing: border-box; /* Учитывать padding и border в ширине */
 }
 
-/* Базовые настройки страницы */
-html {
-  scroll-behavior: smooth; /* Плавная прокрутка к якорям */
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: var(--font-main);
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-main);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased; /* Улучшенное сглаживание шрифтов */
-}
-
-/* Сброс отступов для текста и списков */
+/* Обнуление отступов для структурных элементов */
+body,
 h1,
 h2,
 h3,
@@ -54,37 +42,44 @@ h5,
 h6,
 p,
 ul,
+ol,
 figure,
 blockquote {
   margin: 0;
   padding: 0;
 }
 
-/* Сброс маркеров списка */
-ul {
+/* Убираем маркеры у списков */
+ul,
+ol {
   list-style: none;
 }
 
-/* Сброс ссылок */
+/* Сброс стилей ссылок */
 a {
   text-decoration: none;
   color: inherit;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease; /* Добавим небольшую плавность по умолчанию */
 }
 
-/* Адаптивные медиа-элементы */
+/* Адаптивное поведение медиа-контента */
 img,
 video {
   display: block;
   max-width: 100%;
   height: auto;
-  object-fit: cover; /* Чтобы картинки заполняли блоки красиво */
 }
 
-/* Элементы форм */
-button,
-input,
-textarea,
-select {
-  font-family: inherit;
+/* --- 3. Базовые настройки страницы --- */
+html {
+  scroll-behavior: smooth; /* Плавная прокрутка к якорям */
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased; /* Четкие шрифты на macOS/iOS */
+  min-height: 100vh;
 }
