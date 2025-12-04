@@ -1,167 +1,203 @@
 /* -------------------------------- */
 /* --- layout/container.css    ---- */
-/* --- Ultimate Edition v5.0   ---- */
 /* -------------------------------- */
 
 /* =========================================
-   1. MAIN CONTAINER (Smart Wrapper)
+   1. MAIN CONTAINER
    ========================================= */
 .container {
-    /* 1. Ширина: берем из переменных, по дефолту 1280px.
-       min(100%...) гарантирует, что контейнер не будет шире экрана. */
-    width: min(100%, var(--container-width, 1280px));
+  width: min(100%, var(--container-width, 1280px));
+  margin-inline: auto;
+  padding-inline: max(
+    clamp(16px, 5vw, 60px),
+    env(safe-area-inset-inline-start),
+    env(safe-area-inset-inline-end)
+  );
+  position: relative;
 
-    /* 2. Центрирование */
-    margin-inline: auto;
+  /* Container Queries */
+  container-type: inline-size;
+  container-name: main-wrapper;
 
-    /* 3. Умные отступы (Safe Area + Fluid):
-       Используем max(), чтобы выбрать наибольшее значение между:
-       - Адаптивным отступом (clamp: от 20px до 40px)
-       - Безопасными зонами устройства (env: для iPhone "челки")
-    */
-    padding-inline: max(
-        clamp(20px, 5vw, 40px),
-        env(safe-area-inset-inline-start),
-        env(safe-area-inset-inline-end)
-    );
-
-    /* 4. [NEXT-GEN] Container Queries
-       Позволяет компонентам внутри (например, карточкам) 
-       адаптироваться к ширине этого контейнера, а не всего экрана. */
-    container-type: inline-size;
-    container-name: main-wrapper;
-
-    position: relative;
+  /* Performance */
+  contain: layout style;
 }
 
-/* --- Вариации контейнеров --- */
-
-/* Узкий (для текста, статей, политик конфиденциальности) */
 .container-narrow {
-    --container-width: 860px;
+  --container-width: 860px;
 }
 
-/* На всю ширину (для сложных фонов или слайдеров) */
 .container-fluid {
-    width: 100%;
-    max-width: 100%;
-    padding-inline: max(20px, env(safe-area-inset-inline-start));
+  width: 100%;
+  max-width: 100%;
+  padding-inline: max(16px, env(safe-area-inset-inline-start));
 }
 
 /* =========================================
-   2. SECTIONS (Vertical Rhythm)
+   2. SECTIONS
    ========================================= */
 section {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
+  padding-block: var(--section-spacing, 80px);
 
-    /* Адаптивные отступы сверху/снизу (из variables.css) */
-    padding-block: var(--section-spacing, 80px);
+  isolation: isolate;
+  overflow: clip;
 
-    /* Изоляция контекста наложения (z-index внутри не перекроет хедер) */
-    isolation: isolate;
-
-    /* overflow: clip — современная замена hidden. 
-       Обрезает вылеты (тени, круги), но НЕ ломает position: sticky */
-    overflow: clip;
+  /* Rendering Performance */
+  contain: layout paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 800px;
 }
 
-/* Утилита для удаления отступов (склейка секций) */
+/* Disable lazy-rendering for Hero/First section */
+section.hero,
+section:first-of-type {
+  content-visibility: visible;
+  contain: none;
+  contain-intrinsic-size: none;
+}
+
 section.no-padding {
-    padding-block: 0;
+  padding-block: 0;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  section {
+    padding-block: clamp(30px, 5vh, 40px);
+  }
 }
 
 /* =========================================
-   3. SMART GRID SYSTEMS
+   3. GRID SYSTEMS
    ========================================= */
-
-/* --- 3.1. Адаптивная автоматическая сетка (Auto-Fit) --- */
 .grid-container {
-    display: grid;
-    width: 100%;
+  display: grid;
+  width: 100%;
 
-    /* Локальные переменные для быстрой настройки "на лету" */
-    --grid-min: 280px;
-    --grid-gap-local: var(--grid-gap, 30px);
+  --grid-min: 280px;
+  --grid-gap-local: var(--grid-gap, clamp(20px, 4vw, 40px));
 
-    /* Магическая формула:
-       min(100%, var(--grid-min)) — предотвращает гориз. скролл 
-       на экранах уже 280px (старые SE, Fold в сложенном виде) */
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(min(100%, var(--grid-min)), 1fr)
-    );
-
-    gap: var(--grid-gap-local);
-    align-items: stretch; /* Карточки всегда одной высоты */
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--grid-min)), 1fr)
+  );
+  gap: var(--grid-gap-local);
+  align-items: stretch;
 }
 
-/* --- Модификаторы сетки --- */
 .grid-dense {
-    --grid-min: 160px; /* Для логотипов, икон */
-    --grid-gap-local: 16px;
+  --grid-min: 160px;
+  --grid-gap-local: 16px;
 }
 
 .grid-wide {
-    --grid-min: 400px; /* Для крупных промо-блоков */
+  --grid-min: 400px;
 }
 
-/* --- 3.2. Жесткие сетки (Explicit Grids) --- */
-/* Используем там, где на десктопе нужен строгий порядок (например, Отзывы) */
+/* Mobile Optimization: Force 1 column */
+@media (max-width: 640px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    --grid-gap-local: 24px;
+  }
+
+  .grid-dense {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+}
+
+/* Desktop Explicit Grids */
 @media (min-width: 1024px) {
-    .grid-cols-2 {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--grid-gap, 30px);
-    }
-    .grid-cols-3 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--grid-gap, 30px);
-    }
-    .grid-cols-4 {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-    }
-    /* Сайдбар справа */
-    .grid-sidebar-right {
-        display: grid;
-        grid-template-columns: 1fr 350px;
-        gap: 40px;
-    }
+  .grid-cols-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--grid-gap, 40px);
+  }
+  .grid-cols-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--grid-gap, 30px);
+  }
+  .grid-cols-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .grid-sidebar-right {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 60px;
+  }
 }
 
 /* =========================================
-   4. LAYOUT UTILITIES (Helpers)
+   4. LAYOUT UTILITIES & UX
    ========================================= */
-
-/* Центрирование всего */
 .flex-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Разброс по краям (Header, Footer) */
 .flex-between {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-/* Вертикальный стек (умные отступы между элементами) */
 .stack {
-    display: flex;
-    flex-direction: column;
-    gap: var(--stack-gap, 24px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, 24px);
 }
 
-/* Группа элементов (кнопки, теги) */
 .group {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Horizontal Scroll Snap (Mobile UX) */
+.scroll-x-container {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  /* Shadow compensation */
+  padding-bottom: 20px;
+  margin-bottom: -20px;
+}
+
+.scroll-x-container::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-x-container > * {
+  flex-shrink: 0;
+  width: 85%;
+  max-width: 320px;
+  scroll-snap-align: center;
+}
+
+@media (min-width: 1024px) {
+  .scroll-x-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    overflow-x: visible;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    width: 100%;
+  }
+  .scroll-x-container > * {
+    width: auto;
+    max-width: none;
+  }
 }
