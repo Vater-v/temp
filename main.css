@@ -762,75 +762,113 @@ a {
   font-style: italic;
 }
 
-/* --- GALLERY & REVIEWS (Слайдеры) --- */
+/* --- GALLERY (Галерея) --- */
 .gallery {
-  padding-bottom: 40px;
+  padding-bottom: 60px;
 }
 
-/* Общие стили для горизонтальных скролл-контейнеров */
-.gallery__carousel,
-.reviews__list {
+/* Контейнер слайдера/сетки */
+.gallery__carousel {
   display: flex;
+  gap: 16px;
+
+  /* Настройки скролла для мобилок */
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  gap: 15px;
-  padding: 0 20px 20px 20px; /* Нижний паддинг, чтобы тень не обрезалась */
+
+  /* Отступы, чтобы тени не обрезались и контент не прилипал к краям */
+  padding: 10px 20px 30px 20px;
+
+  /* Скрываем скроллбар, но оставляем функционал */
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
 
-.gallery__carousel::-webkit-scrollbar,
-.reviews__list::-webkit-scrollbar {
+.gallery__carousel::-webkit-scrollbar {
   display: none;
 }
 
+/* Слайд */
 .gallery__slide {
-  flex: 0 0 85%; /* Слайд занимает 85% ширины экрана, видно край следующего */
-  scroll-snap-align: center;
+  /* На мобильном показываем кусочек следующего слайда, 
+     чтобы побудить листать (80% вместо 85%) */
+  flex: 0 0 80%;
+  scroll-snap-align: start; /* Привязка к левому краю, а не к центру */
+  position: relative;
 }
 
+/* Картинка */
 .gallery__image {
   width: 100%;
+  height: 100%;
   border-radius: var(--radius);
   object-fit: cover;
+  display: block;
+  box-shadow: var(--shadow-md);
+  /* Универсальная пропорция, чтобы карточки были ровными */
   aspect-ratio: 3 / 4;
-  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition);
 }
 
+/* Кнопки навигации (видны только на мобильном/планшете) */
 .gallery__controls {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  margin-top: 10px;
+  margin-top: -10px; /* Чуть подтянем вверх */
 }
 
-.gallery__nav-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 2px solid var(--color-black);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition);
-  background: transparent;
-}
+/* --- DESTOP ВЕРСИЯ (от 1024px) --- */
+@media (min-width: 1024px) {
+  /* Превращаем слайдер в красивую сетку */
+  .gallery__carousel {
+    display: grid;
+    /* 4 колонки */
+    grid-template-columns: repeat(4, 1fr);
+    /* Автоматические ряды */
+    grid-auto-rows: 300px;
+    gap: 24px;
 
-.gallery__nav-btn:hover {
-  background-color: var(--color-black);
-  color: var(--color-white);
-}
+    overflow: visible; /* Убираем скролл */
+    scroll-snap-type: none;
+    padding: 0 20px; /* Убираем лишние отступы скролла */
+  }
 
-.gallery__nav-btn:active {
-  transform: scale(0.95);
-}
+  .gallery__slide {
+    flex: unset; /* Сбрасываем flex */
+    width: auto;
+  }
 
-.gallery__controls-text {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-gray);
+  .gallery__image {
+    aspect-ratio: unset; /* Картинка заполняет ячейку сетки */
+    height: 100%;
+  }
+
+  /* Эффект BENTO GRID (делаем первую фотку большой) */
+  .gallery__slide:nth-child(1) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  /* Можно сделать широкой 7-ю фотку (коллаж) для красоты */
+  .gallery__slide:nth-child(7) {
+    grid-column: span 2;
+  }
+
+  /* Hover эффект для ПК */
+  .gallery__image:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-lg);
+    z-index: 2;
+    position: relative;
+  }
+
+  /* Скрываем кнопки управления на ПК, они не нужны для сетки */
+  .gallery__controls {
+    display: none;
+  }
 }
 
 /* --- REVIEWS --- */

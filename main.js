@@ -92,12 +92,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!slider || !prevBtn || !nextBtn) return;
 
     const scrollSlider = (direction) => {
+      // Проверяем, активен ли режим слайдера (grid или flex)
+      // Если grid (на ПК), то скроллить нечего
+      const style = window.getComputedStyle(slider);
+      if (style.display === "grid") return;
+
       const slide = slider.querySelector(".gallery__slide");
       if (!slide) return;
 
-      // Вычисляем ширину прокрутки: ширина слайда + gap
       const slideWidth = slide.offsetWidth;
-      const style = window.getComputedStyle(slider);
+      // Получаем актуальный gap
       const gap = parseInt(style.columnGap || style.gap || 0);
       const scrollAmount = slideWidth + gap;
 
