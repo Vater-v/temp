@@ -623,7 +623,7 @@ p {
 }
 
 /* ======================================================================
-   Phase 5: Шапка и Навигация
+   Phase 5: Шапка и Навигация (Dark Luxury Final)
 ====================================================================== */
 
 /* 25. Шапка (.header) */
@@ -632,19 +632,41 @@ p {
   top: 0;
   width: 100%;
   z-index: 1000;
-  /* Используем эффект темного стекла для шапки */
-  background-color: rgba(10, 10, 10, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--color-border);
+  height: 80px;
+
+  /* Исходное состояние: Полная прозрачность для Hero-секции */
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+
+  /* Плавный переход всех свойств */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 26. Контейнер Шапки (.header__container) */
+/* Состояние при скролле (класс добавляется через JS) */
+.header.is-scrolled {
+  background-color: rgba(10, 10, 10, 0.85); /* Глубокий черный */
+
+  /* Эффект дорогого стекла: размытие + насыщенность */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+
+  /* Тонкий блик сверху и тень снизу */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  height: 70px; /* Элегантное уменьшение высоты */
+}
+
+/* 26. Контейнер Шапки */
 .header__container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 70px; /* Фиксированная высота */
+  height: 100%;
+  transition: height 0.4s ease;
 }
 
 /* 27. Логотип (.logo) */
@@ -652,54 +674,129 @@ p {
 .logo-footer {
   font-weight: 900;
   font-size: 24px;
+  letter-spacing: -0.03em; /* Плотный "кернинг" как у авто-брендов */
+  position: relative;
+  z-index: 1101; /* Поверх мобильного меню */
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), text-shadow 0.3s;
 }
 
-/* 28. Десктопная Навигация (.nav--desktop .nav__list) */
-.nav__list {
-  display: flex;
+.logo:hover {
+  transform: scale(1.05);
+  /* Легкое белое свечение */
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
+/* 28. Десктопная Навигация */
 .nav--desktop .nav__list {
-  gap: 30px;
+  display: flex;
+  gap: 40px;
+  align-items: center;
 }
 
 /* 29. Ссылки Навигации (.nav__link) */
 .nav__link {
   color: var(--color-text-muted);
   font-weight: 500;
-  transition: color 0.3s;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  padding: 8px 0;
+  position: relative;
+  transition: color 0.3s ease;
 }
 
 .nav__link:hover {
   color: var(--color-text-primary);
 }
 
-/* 30. Кнопка Бургера (.burger-btn) */
-.burger-btn,
-.close-menu-btn {
-  background: none;
-  border: none;
+/* Спортивное подчеркивание из центра с неоновым эффектом */
+.nav__link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px var(--color-accent); /* Красное свечение */
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 2px;
+}
+
+.nav__link:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* 30. Кнопка Бургера (CSS-Анимация вместо SVG) */
+.burger-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   cursor: pointer;
   padding: 8px;
+  width: 44px;
+  height: 44px;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  z-index: 1101;
+  transition: all 0.3s ease;
 }
 
-/* 31. Мобильное Меню Оверлей (.mobile-menu-overlay) */
+.burger-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Линии бургера */
+.burger-line {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: currentColor;
+  border-radius: 2px;
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+    opacity 0.3s;
+}
+
+/* Превращение в крестик (класс .is-active) */
+.burger-btn.is-active .burger-line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.burger-btn.is-active .burger-line:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+.burger-btn.is-active .burger-line:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* 31. Мобильное Меню Оверлей */
 .mobile-menu-overlay {
   position: fixed;
   inset: 0;
   z-index: 1100;
-  /* Начальное состояние (скрыто) */
+
+  /* Глубокий обсидиановый фон */
+  background: rgba(5, 5, 5, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  /* Анимация появления */
   transform: translateX(100%);
   visibility: hidden;
-  transition: transform 0.3s ease-out, visibility 0.3s;
-  overflow-y: auto;
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), visibility 0.5s;
+
   display: flex;
   flex-direction: column;
+  padding-top: 80px; /* Отступ под шапку */
 }
 
-/* Состояние "Открыто" (управляется JS через атрибут aria-hidden) */
 .mobile-menu-overlay[aria-hidden="false"] {
   transform: translateX(0);
   visibility: visible;
@@ -707,32 +804,73 @@ p {
 
 /* 32. Внутренности Мобильного Меню */
 .mobile-menu__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.nav--mobile {
-  flex-grow: 1;
+  display: none; /* Скрываем дубликат логотипа, так как основной логотип теперь сверху */
 }
 
 .nav--mobile .nav__list {
   flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
 }
 
-.nav--mobile .nav__item a {
+.nav--mobile .nav__item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Каскадная анимация (Stagger) при открытии */
+.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(1) {
+  transition-delay: 0.1s;
+  opacity: 1;
+  transform: translateY(0);
+}
+.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(2) {
+  transition-delay: 0.15s;
+  opacity: 1;
+  transform: translateY(0);
+}
+.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(3) {
+  transition-delay: 0.2s;
+  opacity: 1;
+  transform: translateY(0);
+}
+.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(4) {
+  transition-delay: 0.25s;
+  opacity: 1;
+  transform: translateY(0);
+}
+.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(5) {
+  transition-delay: 0.3s;
+  opacity: 1;
+  transform: translateY(0);
+}
+.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(6) {
+  transition-delay: 0.35s;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nav--mobile .nav__link {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  padding: 10px;
   display: block;
-  padding: 16px 20px;
-  font-size: 18px;
-  font-weight: 500;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Подсветка при нажатии пальцем */
+.nav--mobile .nav__link:active {
+  color: var(--color-accent);
+  transform: scale(0.95);
 }
 
 .mobile-menu__footer {
-  padding: 20px;
-  border-top: 1px solid var(--color-border);
+  margin-top: auto;
+  padding: 40px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .mobile-menu__footer .btn {
