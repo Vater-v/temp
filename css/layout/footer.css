@@ -1,73 +1,62 @@
-/* -------------------------------- */
-/* --- layout/footer.css       ---- */
-/* --- Ultimate Edition vFinal ---- */
-/* -------------------------------- */
+/* layout/footer.css */
 
 .footer {
-    position: relative;
-    z-index: 10;
-    overflow: hidden; /* Скрываем вылеты свечения */
-
-    /* Глубокий, дорогой фон: Градиент уходит в чистый черный к низу */
-    background: linear-gradient(to bottom, #1a1a1a 0%, #050505 100%);
-
-    /* [SMART PADDING] Учитываем вырез iPhone (Safe Area) */
-    padding: 80px 0 max(40px, env(safe-area-inset-bottom));
-
-    font-size: 15px;
-    color: var(--text-secondary);
-
-    /* Подготовка для анимации бордера */
-    border-top: 1px solid rgba(255, 255, 255, 0.02);
-
-    /* Изоляция контекста наложения */
-    isolation: isolate;
+  position: relative;
+  z-index: 10;
+  overflow: clip;
+  background: linear-gradient(to bottom, #1a1a1a 0%, #050505 100%);
+  padding-top: clamp(60px, 8vh, 100px);
+  padding-bottom: max(40px, env(safe-area-inset-bottom));
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  font-size: 15px;
+  color: var(--text-secondary);
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
+  contain: layout paint style;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 400px;
+  isolation: isolate;
 }
 
-/* --- Эффект 1: Живой Лазер (Animated Border) --- */
 .footer::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-
-    /* Градиент с жесткими переходами для эффекта луча */
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.1) 40%,
-        var(--accent-color) 50%,
-        rgba(255, 255, 255, 0.1) 60%,
-        transparent 100%
-    );
-    background-size: 200% 100%;
-
-    /* Свечение луча */
-    box-shadow: 0 1px 15px rgba(229, 57, 53, 0.6);
-    z-index: 2;
-
-    /* Бесконечная анимация движения света (6 секунд) */
-    animation: footerLaser 6s ease-in-out infinite;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 40%,
+    var(--accent-color) 50%,
+    rgba(255, 255, 255, 0.1) 60%,
+    transparent 100%
+  );
+  opacity: 0.5;
+  z-index: 2;
+  transform: translateX(-50%);
+  will-change: transform;
+  animation: footerLaserGPU 6s linear infinite;
+  pointer-events: none;
 }
 
-@keyframes footerLaser {
-    0% {
-        background-position: 100% 0;
-        opacity: 0.5;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        background-position: -100% 0;
-        opacity: 0.5;
-    }
+@keyframes footerLaserGPU {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
-/* --- Эффект 2: Атмосферное "Дыхание" снизу --- */
 .footer::after {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .footer::after {
+    display: block;
     content: "";
     position: absolute;
     bottom: -150px;
@@ -75,161 +64,167 @@
     transform: translateX(-50%);
     width: 80%;
     height: 350px;
-
     background: radial-gradient(circle, var(--accent-color), transparent 70%);
     filter: blur(120px);
-    opacity: 0.08; /* Деликатная подсветка */
+    opacity: 0.08;
     pointer-events: none;
     z-index: 0;
+  }
 }
 
-/* --- Сетка Контента (Grid System) --- */
 .footer-content {
-    position: relative;
-    z-index: 2;
-    /* Используем Grid для четкой структуры */
-    display: grid;
-    grid-template-columns: 1fr; /* Mobile: 1 колонка */
-    gap: 50px;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
 }
 
-/* --- Логотип (Chrome Effect) --- */
 .logo-footer {
-    display: inline-block;
-    font-family: var(--font-main);
-    font-weight: 900;
-    font-size: 1.8rem;
-    text-transform: uppercase;
-    letter-spacing: -0.02em;
-    margin-bottom: 24px;
-
-    /* Металлический градиент */
-    background: linear-gradient(135deg, #ffffff 20%, #777777 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
-    transition: transform 0.3s ease;
-    cursor: default;
+  display: inline-block;
+  font-family: var(--font-main);
+  font-weight: 900;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #ffffff 20%, #777777 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
 }
 
-.logo-footer:hover {
-    transform: scale(1.02);
-}
-
-/* --- Блок Контактов (Левая колонка) --- */
 .contacts {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
 }
 
 .contact-item {
-    position: relative;
-    font-size: 1.05rem;
-    font-weight: 500;
-    color: #a0a0a0;
-    padding: 6px 0;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    display: flex;
-    align-items: center;
+  position: relative;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #a0a0a0;
+  padding: 10px 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease, transform 0.3s ease, padding-left 0.3s ease;
 }
 
-/* Интерактив: Сдвиг + Красная точка */
-.contact-item:hover {
-    color: #fff;
-    padding-left: 15px; /* Сдвиг вправо */
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+.contact-item:active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  padding-left: 10px;
+  border-radius: 8px;
 }
 
 .contact-item::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%) scale(0);
-    width: 6px;
-    height: 6px;
-    background-color: var(--accent-color);
-    border-radius: 50%;
-    box-shadow: 0 0 10px var(--accent-color);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scale(0);
+  width: 6px;
+  height: 6px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-color);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.contact-item:hover::before {
-    transform: translateY(-50%) scale(1);
-}
-
-/* Доступность (Keyboard Focus) */
-.contact-item:focus-visible {
-    outline: none;
-    color: #fff;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
-    padding-left: 10px;
-}
-
-/* --- Мессенджеры (Glass Pill) --- */
 .messengers {
-    margin-top: 24px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #888;
-
-    /* Стекло */
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 14px 28px;
-    border-radius: 50px;
-
-    backdrop-filter: blur(6px);
-    transition: all 0.3s ease;
-    cursor: default;
+  margin-top: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px 20px;
+  border-radius: 50px;
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
 }
 
-.messengers:hover {
+.messengers:active {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(0.98);
+}
+
+.legal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.legal p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0;
+  order: 3;
+}
+
+.legal a {
+  position: relative;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 8px 0;
+  display: block;
+  width: fit-content;
+  transition: color 0.3s ease;
+}
+
+.legal a:active {
+  color: #fff;
+}
+
+@media (hover: hover) {
+  .contact-item {
+    padding: 6px 0;
+    width: auto;
+  }
+
+  .contact-item:hover {
+    color: #fff;
+    padding-left: 15px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    background: transparent;
+  }
+
+  .contact-item:hover::before {
+    transform: translateY(-50%) scale(1);
+  }
+
+  .messengers {
+    width: auto;
+  }
+
+  .messengers:hover {
     background: rgba(255, 255, 255, 0.06);
     border-color: rgba(255, 255, 255, 0.2);
     color: #ccc;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
     transform: translateY(-2px);
-}
+  }
 
-/* --- Юридический блок (Правая колонка) --- */
-.legal {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding-top: 30px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.legal p {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.3);
-    margin: 0;
-}
-
-.legal a {
-    position: relative;
-    font-size: 14px;
-    color: var(--text-secondary);
-    width: fit-content;
-    text-decoration: none;
+  .legal a {
+    padding: 0;
     padding-bottom: 2px;
-    transition: color 0.3s ease;
-}
+  }
 
-/* Анимированное подчеркивание (рисование слева направо) */
-.legal a::after {
+  .legal a::after {
     content: "";
     position: absolute;
     left: 0;
@@ -237,79 +232,85 @@
     width: 100%;
     height: 1px;
     background-color: var(--accent-color);
-    box-shadow: 0 0 6px var(--accent-color);
-
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
+  }
 
-.legal a:hover {
+  .legal a:hover {
     color: #fff;
-}
+  }
 
-.legal a:hover::after {
+  .legal a:hover::after {
     transform: scaleX(1);
     transform-origin: left;
+  }
 }
 
-/* =========================================
-   TABLET ADAPTATION (iPad)
-   ========================================= */
 @media (min-width: 640px) {
-    .footer-content {
-        /* На планшете уже можно разделить на 2 колонки */
-        grid-template-columns: 1fr 1fr;
-        align-items: start;
-    }
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    text-align: left;
+  }
 
-    .legal {
-        border-top: none;
-        padding-top: 0;
-        align-items: flex-end; /* Прижимаем вправо */
-        text-align: right;
-    }
+  .contacts,
+  .legal {
+    align-items: flex-start;
+  }
+
+  .legal {
+    border-top: none;
+    padding-top: 0;
+    align-items: flex-end;
+    text-align: right;
+  }
 }
 
-/* =========================================
-   DESKTOP ADAPTATION (PC)
-   ========================================= */
 @media (min-width: 1024px) {
-    .footer {
-        padding: 100px 0 60px;
-    }
+  .footer {
+    padding: 100px 0 60px;
+  }
 
-    .footer-content {
-        /* На ПК делаем левую часть шире */
-        grid-template-columns: 1.2fr 1fr;
-        gap: 80px;
-        /* Выравниваем юридический блок по низу контактов */
-        align-items: flex-end;
-    }
+  .footer-content {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: flex-end;
+  }
 
-    .contacts {
-        max-width: 100%;
-    }
+  .legal {
+    height: 100%;
+    justify-content: flex-end;
+    flex-direction: column;
+  }
 
-    .legal {
-        justify-content: flex-end;
-        height: 100%;
-    }
+  .legal a {
+    order: 1;
+    margin-left: 30px;
+    margin-bottom: 5px;
+    display: inline-block;
+  }
 
-    /* Инверсия порядка на ПК: ссылки важнее копирайта */
-    .legal a {
-        order: 1;
-        margin-left: 30px;
-        margin-bottom: 5px;
-    }
+  .legal p {
+    order: 2;
+    margin-top: 20px;
+  }
 
-    .legal p {
-        order: 2;
-        margin-top: 20px;
-    }
+  .legal {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
 
-    /* Ссылки в строку */
-    .legal {
-        flex-direction: column; /* Оставляем колонку, но переупорядочиваем внутри */
-    }
+@media (prefers-reduced-motion: reduce) {
+  .footer::before {
+    animation: none;
+  }
+
+  .contact-item,
+  .legal a,
+  .messengers {
+    transition: none;
+    transform: none !important;
+  }
 }
