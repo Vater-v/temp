@@ -1664,453 +1664,458 @@ section {
 }
 
 /* ======================================================================
-   Phase 7: Форма Заказа (Ultimate Driver's Edition)
+   Phase 7: Форма Заказа (Ultimate Driver's Edition: Final Mix)
+   Tech: :has(), :user-valid, Gradient Borders, Spotlight UX
 ====================================================================== */
+@layer components {
+  /* --- 63. Макет Секции (.order-section) --- */
+  .order-section {
+    position: relative;
+    padding-block: var(--space-section);
+    overflow: hidden;
+    /* Оптимизация: изолируем перерисовку слоев */
+    isolation: isolate;
+    contain: paint;
 
-/* --- 63. Макет Секции Заказа --- */
-.order-section {
-  position: relative;
-  /* Скрываем вылеты декоративного свечения */
-  overflow: hidden;
-}
+    /* Ambient Glow: Глубокое атмосферное свечение */
+    background-image: radial-gradient(
+      circle at 80% 20%,
+      color-mix(in srgb, var(--color-accent), transparent 94%) 0%,
+      transparent 60%
+    );
+  }
 
-/* Атмосферное фоновое свечение (Ambient Glow) за формой */
-.order-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: -10%;
-  width: 800px;
-  height: 800px;
-  background: radial-gradient(
-    circle,
-    rgba(229, 57, 53, 0.06) 0%,
-    transparent 60%
-  );
-  filter: blur(60px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.order__layout {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  gap: 50px;
-}
-
-/* Медиа (левая часть) */
-.order__media .section-title {
-  text-align: left;
-}
-
-.order__subtitle {
-  color: var(--color-text-muted);
-  margin-bottom: 40px;
-  font-size: 1.125rem;
-  line-height: 1.6;
-}
-
-.order-image {
-  border-radius: var(--radius-lg);
-  /* Глубокая тень для объема */
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Десктоп: Липкое позиционирование и сетка */
-@media (min-width: 992px) {
   .order__layout {
-    grid-template-columns: 1fr 480px;
-    align-items: start;
-    gap: 60px;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 50px;
   }
 
+  /* Sticky Layout для десктопов */
+  @media (min-width: 992px) {
+    .order__layout {
+      grid-template-columns: 1fr 480px;
+      align-items: start;
+      gap: 60px;
+    }
+
+    .order__form-container {
+      position: sticky;
+      /* Учитываем высоту хедера + отступ */
+      top: calc(var(--header-height) + 24px);
+      z-index: 10;
+    }
+  }
+
+  /* --- 64. Контейнер Формы (Cockpit Panel) --- */
   .order__form-container {
-    position: sticky;
-    top: 100px; /* Отступ от верха экрана */
-    z-index: 10;
+    padding: 40px;
+    border-radius: 24px;
+
+    /* TECH: Gradient Border Trick (без лишних div)
+       1. Фон контента (padding-box)
+       2. Фон границы (border-box) - виден только там, где прозрачный border
+    */
+    background: linear-gradient(rgba(15, 15, 15, 0.9), rgba(15, 15, 15, 0.95))
+        padding-box,
+      linear-gradient(145deg, rgba(255, 255, 255, 0.15), var(--color-accent))
+        border-box;
+
+    border: 1px solid transparent;
+
+    backdrop-filter: blur(24px) saturate(120%);
+    -webkit-backdrop-filter: blur(24px) saturate(120%);
+
+    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    transition: transform 0.3s var(--ease-luxury, ease);
   }
-}
 
-/* --- 64. Контейнер Формы (Cockpit Panel) --- */
-.order__form-container {
-  padding: 40px;
-  border-radius: 24px; /* Мягкие современные углы */
-
-  /* Эффект темного стекла */
-  background: rgba(15, 15, 15, 0.75);
-  backdrop-filter: blur(24px) saturate(120%);
-  -webkit-backdrop-filter: blur(24px) saturate(120%);
-
-  /* Сложная система границ и теней */
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6),
-    /* Тень падения */ inset 0 1px 0 rgba(255, 255, 255, 0.1); /* Блик на грани сверху */
-
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* --- 65. Блок Цены --- */
-.price-block {
-  padding-bottom: 25px;
-  margin-bottom: 30px;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.15); /* Стильный пунктирный шов */
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* 66. Детали Цены */
-.label-discount {
-  align-self: flex-start;
-  background: linear-gradient(135deg, var(--color-accent), #b71c1c);
-  color: white;
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  box-shadow: 0 4px 15px rgba(229, 57, 53, 0.3);
-}
-
-.price-values {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  margin-top: 5px;
-}
-
-.old-price {
-  color: rgba(255, 255, 255, 0.3);
-  text-decoration: line-through;
-  font-size: 20px;
-  font-weight: 500;
-}
-
-.new-price {
-  font-size: 42px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  line-height: 1;
-
-  /* Эффект Хрома (Металлик) */
-  background-image: linear-gradient(
-    135deg,
-    #ffffff 0%,
-    #e0e0e0 45%,
-    #ffffff 50%,
-    #a0a0a0 60%,
-    #ffffff 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-
-  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
-}
-
-/* --- 67-68. Лейблы и Группы --- */
-.form-group,
-fieldset {
-  margin: 0 0 28px 0;
-  padding: 0;
-  border: none;
-}
-
-.form-label,
-.input-label,
-legend {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-text-muted);
-}
-
-/* --- 69-70. Поля Ввода (Recessed Cockpit Style) --- */
-.input-group {
-  margin-bottom: 20px;
-}
-
-input[type="text"],
-input[type="tel"],
-select {
-  width: 100%;
-  height: 56px; /* Удобный размер для пальца */
-  padding: 0 20px;
-
-  /* Темный фон + Внутренняя тень = Эффект ниши */
-  background-color: rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
-
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-
-  color: var(--color-text-primary);
-  font-family: var(--font-family-base);
-  font-size: 16px;
-  font-weight: 500;
-
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  appearance: none; /* Убираем дефолтные стили браузера */
-}
-
-/* Placeholder */
-input::placeholder {
-  color: rgba(255, 255, 255, 0.2);
-  font-weight: 400;
-}
-
-/* Состояние фокуса: "Включение подсветки" */
-input:focus,
-select:focus {
-  outline: none;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-color: var(--color-accent);
-  /* Неоновое свечение */
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8),
-    /* Сохраняем глубину */ 0 0 0 1px var(--color-accent),
-    0 0 20px rgba(229, 57, 53, 0.15);
-  transform: translateY(-1px);
-}
-
-/* --- 71. Кастомный Select --- */
-.select-wrapper {
-  position: relative;
-}
-
-/* Минималистичная стрелка */
-.select-wrapper::after {
-  content: "";
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 10px;
-  height: 6px;
-  background-color: var(--color-text-muted);
-  clip-path: polygon(0 0, 100% 0, 50% 100%); /* Треугольник */
-  pointer-events: none;
-  transition: transform 0.3s ease, background-color 0.3s;
-}
-
-.select-wrapper:focus-within::after {
-  transform: translateY(-50%) rotate(180deg);
-  background-color: var(--color-accent);
-}
-
-/* --- 72-76. Радио-Карточки (Interactive Switches) --- */
-.radio-group input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* Базовый стиль карточки */
-.radio-group label {
-  display: flex;
-  align-items: center;
-  position: relative;
-  cursor: pointer;
-
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 16px 20px;
-
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  overflow: hidden;
-}
-
-/* Hover */
-.radio-group label:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-}
-
-/* Checked (Активное состояние) */
-.radio-group input[type="radio"]:checked + label {
-  background: linear-gradient(
-    90deg,
-    rgba(229, 57, 53, 0.15) 0%,
-    rgba(229, 57, 53, 0.02) 100%
-  );
-  border-color: var(--color-accent);
-  box-shadow: 0 4px 20px rgba(229, 57, 53, 0.2),
-    inset 0 0 0 1px rgba(229, 57, 53, 0.2);
-}
-
-/* Анимированная галочка при выборе */
-.radio-group label::after {
-  content: "✔";
-  position: absolute;
-  top: 10px;
-  right: 10px;
-
-  width: 18px;
-  height: 18px;
-  background: var(--color-accent);
-  border-radius: 50%;
-  color: white;
-  font-size: 10px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  opacity: 0;
-  transform: scale(0.5);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.radio-group input[type="radio"]:checked + label::after {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Специфика для Цветов */
-.radio-group--colors {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-
-.radio-group--colors label {
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  gap: 10px;
-  padding: 20px 10px;
-}
-
-.color-preview {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
-}
-
-/* Увеличение кружка при выборе */
-.radio-group--colors input:checked + label .color-preview {
-  transform: scale(1.15);
-  border-color: #fff;
-  box-shadow: 0 0 15px rgba(229, 57, 53, 0.4);
-}
-
-/* Специфика для Комплектов */
-.radio-group--kits {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.radio-group--kits label {
-  justify-content: space-between;
-}
-
-.kit-name {
-  font-weight: 500;
-  font-size: 15px;
-  color: var(--color-text-primary);
-}
-
-.kit-price-tag {
-  font-family: monospace;
-  font-weight: 700;
-  font-size: 14px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 4px 10px;
-  border-radius: 4px;
-  color: var(--color-text-muted);
-  transition: all 0.3s;
-}
-
-.radio-group--kits input:checked + label .kit-price-tag {
-  background: var(--color-accent);
-  color: white;
-  box-shadow: 0 2px 8px rgba(229, 57, 53, 0.4);
-}
-
-/* --- 77. Кнопка и Футер Формы --- */
-.order-form .btn-large {
-  width: 100%;
-  margin-top: 10px;
-  height: 64px; /* Массивная кнопка */
-  font-size: 18px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  /* Агрессивная тень кнопки */
-  box-shadow: 0 10px 30px rgba(229, 57, 53, 0.25);
-}
-
-.order-form .btn-large:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 50px rgba(229, 57, 53, 0.4);
-}
-
-.form-privacy {
-  margin-top: 20px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
-  text-align: center;
-  line-height: 1.5;
-}
-
-.form-privacy a {
-  color: rgba(255, 255, 255, 0.6);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  transition: color 0.2s;
-}
-
-.form-privacy a:hover {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-.guarantees {
-  margin-top: 30px;
-  padding-top: 25px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  font-size: 13px;
-  color: var(--color-text-muted);
-}
-
-.guarantees p {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 6px;
-  margin: 0;
-}
-
-.guarantees strong {
-  color: var(--color-text-primary);
-  font-size: 14px;
-}
-
-/* Мобильная адаптация гарантий */
-@media (max-width: 500px) {
-  .guarantees {
-    grid-template-columns: 1fr;
-  }
-  .guarantees p {
-    flex-direction: row;
-    text-align: left;
+  /* --- 65. Блок Цены --- */
+  .price-block {
+    display: flex;
+    flex-direction: column;
     gap: 12px;
+    padding-bottom: 25px;
+    margin-bottom: 30px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  }
+
+  .label-discount {
+    align-self: flex-start;
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent), black 20%)
+    );
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 15px
+      color-mix(in srgb, var(--color-accent), transparent 60%);
+  }
+
+  .price-values {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .old-price {
+    color: var(--color-text-muted);
+    text-decoration: line-through;
+    font-size: 1.25rem;
+  }
+
+  .new-price {
+    font-size: 2.5rem; /* ~40px */
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1;
+
+    /* Эффект хромированного текста */
+    background: linear-gradient(180deg, #ffffff 0%, #b0b0b0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.15));
+  }
+
+  /* --- 67. Группы и Лейблы (:has Power) --- */
+  .form-group {
+    margin: 0 0 32px 0;
+    border: none;
+    padding: 0;
+  }
+
+  .form-label,
+  legend {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    transition: color 0.3s ease;
+  }
+
+  /* Подсветка заголовка группы при фокусе внутри */
+  .form-group:focus-within legend,
+  .input-group:focus-within .input-label {
+    color: var(--color-accent);
+    text-shadow: 0 0 12px
+      color-mix(in srgb, var(--color-accent), transparent 60%);
+  }
+
+  /* Окраска заголовка в красный при ошибке внутри группы */
+  .form-group:has(:user-invalid) legend,
+  .input-group:has(:user-invalid) .input-label {
+    color: var(--palette-crimson-500);
+  }
+
+  /* --- 69. Поля Ввода (Smart Inputs) --- */
+  .input-group {
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  input:not([type="radio"]):not([type="checkbox"]),
+  select {
+    width: 100%;
+    height: 60px; /* Удобно для пальца */
+    padding: 0 20px;
+
+    /* Reset */
+    appearance: none;
+    background-color: rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+
+    color: var(--color-text-primary);
+    font-size: 16px; /* Fix iOS zoom */
+    font-family: inherit;
+    font-weight: 500;
+    caret-color: var(--color-accent);
+
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+    font-weight: 400;
+  }
+
+  /* State: Focus */
+  input:not([type="radio"]):not([type="checkbox"]):focus,
+  select:focus {
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8),
+      0 0 0 1px var(--color-accent),
+      0 0 20px color-mix(in srgb, var(--color-accent), transparent 80%);
+  }
+
+  /* State: User-Valid / User-Invalid ("Вежливая" валидация) */
+  /* Ошибка показывается только ПОСЛЕ того, как пользователь покинул поле */
+  input:not(:placeholder-shown):user-invalid {
+    border-color: var(--palette-crimson-500);
+    box-shadow: 0 0 0 1px var(--palette-crimson-500);
+    animation: shake 0.4s ease-in-out;
+  }
+
+  /* Успех показывается, если поле заполнено и верно */
+  input:not(:placeholder-shown):user-valid {
+    border-color: var(--color-success);
+    box-shadow: 0 0 0 1px var(--color-success);
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-4px);
+    }
+    75% {
+      transform: translateX(4px);
+    }
+  }
+
+  /* Custom Select Arrow */
+  .select-wrapper {
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      translate: 0 -50%;
+      width: 10px;
+      aspect-ratio: 1.5/1;
+      background-color: var(--color-text-muted);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      pointer-events: none;
+      transition: 0.3s ease;
+    }
+    &:focus-within::after {
+      background-color: var(--color-accent);
+      rotate: 180deg;
+    }
+  }
+
+  /* --- 72. Радио Карточки (Ultimate :has Logic) --- */
+
+  .radio-group {
+    display: grid;
+    gap: 15px;
+  }
+
+  /* Скрываем нативный инпут, но оставляем доступным для клавиатуры */
+  .radio-group input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    accent-color: var(--color-accent);
+  }
+
+  /* Базовый стиль карточки */
+  .radio-group label {
+    position: relative;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s var(--ease-luxury);
+  }
+
+  /* Hover (только на устройствах с мышью) */
+  @media (hover: hover) {
+    .radio-group label:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-2px);
+    }
+  }
+
+  /* === Spotlight Effect Logic (Прожектор) === */
+
+  /* 1. Если в группе есть выбранный элемент, затемняем ВСЕ лейблы */
+  .radio-group:has(input:checked) label {
+    opacity: 0.5;
+    filter: grayscale(0.8);
+  }
+
+  /* 2. ...КРОМЕ выбранного (возвращаем яркость) */
+  /* Используем input:checked + label (для старой верстки) или label:has(:checked) */
+  .radio-group input:checked + label {
+    opacity: 1;
+    filter: none;
+    transform: scale(1.02);
+
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-accent), transparent 85%) 0%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    border-color: var(--color-accent);
+    box-shadow: 0 4px 20px
+        color-mix(in srgb, var(--color-accent), transparent 80%),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-accent), transparent 70%);
+
+    z-index: 1;
+  }
+
+  /* Индикатор-галочка */
+  .radio-group label::before {
+    content: "✔";
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 900;
+    display: grid;
+    place-items: center;
+
+    /* Скрыто по умолчанию */
+    opacity: 0;
+    transform: scale(0.5) rotate(-45deg);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+
+  /* Показываем галочку при выборе */
+  .radio-group input:checked + label::before {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  /* Специфика для Цветов */
+  .radio-group--colors {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .radio-group--colors label {
+    flex-direction: column;
+    text-align: center;
+    padding-block: 24px;
+  }
+
+  .color-preview {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s;
+    margin-bottom: 8px;
+  }
+
+  /* Увеличиваем превью при выборе */
+  .radio-group--colors input:checked + label .color-preview {
+    transform: scale(1.15);
+    border-color: white;
+    box-shadow: 0 0 15px
+      color-mix(in srgb, var(--color-accent), transparent 50%);
+  }
+
+  /* Специфика для Комплектов */
+  .radio-group--kits label {
+    justify-content: space-between;
+  }
+
+  .kit-price-tag {
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    transition: 0.3s;
+    /* Сдвигаем влево, чтобы не наезжать на галочку */
+    margin-right: 24px;
+  }
+
+  .radio-group input:checked + label .kit-price-tag {
+    background: var(--color-accent);
+    color: white;
+  }
+
+  /* --- 77. Кнопка и Футер --- */
+  .order-form .btn-large {
+    width: 100%;
+    margin-top: 15px;
+    height: 64px;
+    font-size: 1.125rem;
+    text-transform: uppercase;
+    box-shadow: 0 10px 30px
+      color-mix(in srgb, var(--color-accent), transparent 75%);
+  }
+
+  .order-form .btn-large:hover {
+    box-shadow: 0 20px 50px
+      color-mix(in srgb, var(--color-accent), transparent 60%);
+  }
+
+  .form-privacy {
+    margin-top: 20px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .form-privacy a:hover {
+    color: var(--color-accent);
+  }
+
+  .guarantees {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    font-size: 13px;
+    color: var(--color-text-muted);
+  }
+
+  .guarantees p {
+    text-align: center;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  @media (max-width: 500px) {
+    .guarantees {
+      grid-template-columns: 1fr;
+    }
+    .guarantees p {
+      flex-direction: row;
+      text-align: left;
+    }
   }
 }
 
