@@ -861,41 +861,61 @@
 }
 
 /* ======================================================================
-   Phase 5: Шапка и Навигация (Dark Luxury Final)
+   Phase 5: Шапка и Навигация (Ultimate Native Edition 2025)
+   Tech: Scroll-Timeline, @starting-style, Logical Props
 ====================================================================== */
 
-/* 25. Шапка (.header) */
+/* 25. Анимация состояния Шапки (Keyframes) */
+/* Мы описываем, как шапка должна выглядеть в конце скролла.
+   Браузер сам рассчитает промежуточные кадры. */
+@keyframes header-scroll-state {
+  to {
+    background-color: rgba(5, 5, 5, 0.85); /* Deep Obsidian */
+    /* Насыщенный блюр для эффекта дорогого стекла */
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    /* Плавное уменьшение высоты */
+    block-size: 70px;
+  }
+}
+
+/* Основной класс Шапки */
 .header {
   position: sticky;
   top: 0;
-  width: 100%;
   z-index: 1000;
-  height: 80px;
 
-  /* Исходное состояние: Полная прозрачность для Hero-секции */
+  /* Логические свойства размеров */
+  inline-size: 100%;
+  block-size: var(--header-height, 80px);
+
+  /* Исходное состояние (Прозрачное) */
   background-color: transparent;
   border-bottom: 1px solid transparent;
   backdrop-filter: blur(0px);
   -webkit-backdrop-filter: blur(0px);
 
-  /* Плавный переход всех свойств */
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* --- CORE TECHNOLOGY: Scroll-Driven Animation --- */
+  /* Привязываем прогресс анимации к скроллу страницы (root) */
+  animation: header-scroll-state linear forwards;
+  animation-timeline: scroll(root);
+  /* Анимация начнется на 0px и закончится, когда прокрутим 150px */
+  animation-range: 0px 150px;
+
+  will-change: background-color, block-size, backdrop-filter;
 }
 
-/* Состояние при скролле (класс добавляется через JS) */
-.header.is-scrolled {
-  background-color: rgba(10, 10, 10, 0.85); /* Глубокий черный */
-
-  /* Эффект дорогого стекла: размытие + насыщенность */
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-
-  /* Тонкий блик сверху и тень снизу */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-
-  height: 70px; /* Элегантное уменьшение высоты */
+/* Fallback для старых браузеров (чтобы шапка не потерялась) */
+@supports not (animation-timeline: scroll()) {
+  .header {
+    background-color: var(--color-bg-primary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
 }
 
 /* 26. Контейнер Шапки */
@@ -903,24 +923,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100%;
-  transition: height 0.4s ease;
+  block-size: 100%;
 }
 
-/* 27. Логотип (.logo) */
+/* 27. Логотип */
 .logo,
 .logo-footer {
   font-weight: 900;
   font-size: 24px;
-  letter-spacing: -0.03em; /* Плотный "кернинг" как у авто-брендов */
+  letter-spacing: -0.03em;
   position: relative;
-  z-index: 1101; /* Поверх мобильного меню */
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), text-shadow 0.3s;
+  z-index: 1101;
+  text-decoration: none;
+
+  /* Плавная реакция */
+  transition: transform 0.3s var(--ease-luxury, ease), text-shadow 0.3s;
 }
 
 .logo:hover {
   transform: scale(1.05);
-  /* Легкое белое свечение */
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
@@ -929,44 +950,54 @@
   display: flex;
   gap: 40px;
   align-items: center;
+  list-style: none;
 }
 
-/* 29. Ссылки Навигации (.nav__link) */
+/* 29. Интерактивные Ссылки (Magnetic Swipe) */
 .nav__link {
   color: var(--color-text-muted);
   font-weight: 500;
   font-size: 15px;
   letter-spacing: 0.02em;
-  padding: 8px 0;
+  padding-block: 8px;
   position: relative;
   transition: color 0.3s ease;
+  text-decoration: none;
 }
 
-.nav__link:hover {
+.nav__link:hover,
+.nav__link:focus-visible {
   color: var(--color-text-primary);
+  outline: none;
 }
 
-/* Спортивное подчеркивание из центра с неоновым эффектом */
+/* Эффект: Линия выезжает слева и уезжает вправо при уходе мыши */
 .nav__link::after {
   content: "";
   position: absolute;
   bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: var(--color-accent);
-  box-shadow: 0 0 10px var(--color-accent); /* Красное свечение */
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 2px;
-}
-
-.nav__link:hover::after {
-  width: 100%;
   left: 0;
+  inline-size: 100%;
+  block-size: 2px;
+
+  background: var(--color-accent);
+  box-shadow: 0 0 10px var(--color-accent);
+  border-radius: 2px;
+
+  /* Исходное состояние: сжата вправо */
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* 30. Кнопка Бургера (CSS-Анимация вместо SVG) */
+.nav__link:hover::after,
+.nav__link:focus-visible::after {
+  /* При наведении: растет влево */
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+/* 30. Кнопка Бургера */
 .burger-btn {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -974,8 +1005,11 @@
   color: var(--color-text-primary);
   cursor: pointer;
   padding: 8px;
-  width: 44px;
-  height: 44px;
+
+  /* Увеличенная зона нажатия для пальца */
+  min-inline-size: 44px;
+  min-block-size: 44px;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -988,77 +1022,104 @@
 .burger-btn:hover {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
-/* Линии бургера */
+.burger-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .burger-line {
   display: block;
-  width: 24px;
-  height: 2px;
+  inline-size: 24px;
+  block-size: 2px;
   background-color: currentColor;
   border-radius: 2px;
   transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55),
     opacity 0.3s;
 }
 
-/* Превращение в крестик (класс .is-active) */
-.burger-btn.is-active .burger-line:nth-child(1) {
+/* Состояние "Открыто" (управляется через ARIA в JS) */
+.burger-btn[aria-expanded="true"] .burger-line:nth-child(1) {
   transform: translateY(8px) rotate(45deg);
 }
-.burger-btn.is-active .burger-line:nth-child(2) {
+.burger-btn[aria-expanded="true"] .burger-line:nth-child(2) {
   opacity: 0;
   transform: translateX(-10px);
 }
-.burger-btn.is-active .burger-line:nth-child(3) {
+.burger-btn[aria-expanded="true"] .burger-line:nth-child(3) {
   transform: translateY(-8px) rotate(-45deg);
 }
 
-/* 31. Мобильное Меню Оверлей */
+/* 31. Мобильное Меню (Next-Gen Entry Animation) */
 .mobile-menu-overlay {
   position: fixed;
   inset: 0;
   z-index: 1100;
+  padding-block-start: 80px;
 
-  /* Глубокий обсидиановый фон */
+  /* Визуал */
   background: rgba(5, 5, 5, 0.96);
+  /* Шум */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 
-  /* Анимация появления */
-  transform: translateX(100%);
-  visibility: hidden;
-  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), visibility 0.5s;
+  /* --- MAGIC: ANIMATING DISPLAY: NONE --- */
+  /* 1. Исходное скрытое состояние */
+  display: none;
+  opacity: 0;
+  transform: translateX(20px); /* Небольшой сдвиг */
 
+  /* 2. Разрешаем анимацию дискретных свойств (display) */
+  transition-behavior: allow-discrete;
+
+  /* 3. Описываем переходы */
+  transition: display 0.5s allow-discrete,
+    opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Состояние "Открыто" */
+.mobile-menu-overlay[aria-hidden="false"] {
   display: flex;
   flex-direction: column;
-  padding-top: 80px; /* Отступ под шапку */
-}
-
-.mobile-menu-overlay[aria-hidden="false"] {
+  opacity: 1;
   transform: translateX(0);
-  visibility: visible;
+
+  /* @starting-style: Описываем стили первого кадра после появления в DOM.
+     Это позволяет браузеру понять, "откуда" начинать анимацию. */
+  @starting-style {
+    opacity: 0;
+    transform: translateX(20px);
+  }
 }
 
-/* 32. Внутренности Мобильного Меню */
+/* 32. Внутренности Меню */
 .mobile-menu__header {
-  display: none; /* Скрываем дубликат логотипа, так как основной логотип теперь сверху */
+  display: none;
 }
 
 .nav--mobile .nav__list {
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  padding: 20px 0;
+  gap: 15px;
+  padding-block: 40px;
+  list-style: none;
+  margin: 0;
+  inline-size: 100%;
 }
 
+/* Каскадная анимация пунктов (Stagger Effect) */
 .nav--mobile .nav__item {
   opacity: 0;
   transform: translateY(20px);
+  /* Задержка только при появлении */
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* Каскадная анимация (Stagger) при открытии */
+/* Задержки для каждого пункта, когда меню открыто */
 .mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(1) {
   transition-delay: 0.1s;
   opacity: 1;
@@ -1090,30 +1151,45 @@
   transform: translateY(0);
 }
 
+/* Сброс стилей для начального кадра пунктов */
+@starting-style {
+  .mobile-menu-overlay[aria-hidden="false"] .nav__item {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
 .nav--mobile .nav__link {
   font-size: 24px;
   font-weight: 700;
   color: var(--color-text-primary);
-  padding: 10px;
+  padding: 12px;
   display: block;
+  text-decoration: none;
+  inline-size: 100%;
+  text-align: center;
 }
 
-/* Подсветка при нажатии пальцем */
 .nav--mobile .nav__link:active {
   color: var(--color-accent);
-  transform: scale(0.95);
+  transform: scale(0.96);
+  transition: transform 0.1s;
 }
 
 .mobile-menu__footer {
   margin-top: auto;
   padding: 40px 24px;
+  /* Учитываем Safe Area на iPhone (полоска снизу) */
+  padding-bottom: max(40px, env(safe-area-inset-bottom));
+
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.02);
 }
 
 .mobile-menu__footer .btn {
-  width: 100%;
+  inline-size: 100%;
 }
+
 /* ======================================================================
    Phase 6: Стилизация Секций (Ultimate Premium Edition)
 ====================================================================== */
