@@ -488,202 +488,183 @@
 }
 
 /* ======================================================================
-   Phase 3: Дизайн-Система: Макет и Типографика (System 2.0)
-   Architect: Summanizer | Tech: Fluid Tokens & Logical Props
+   Phase 3: Дизайн-Система: Макет и Типографика (System 2.0 Ultimate)
+   Architect: Tech Lead | Tech: Modular Scale, Fluid Rhythm, Optical Size
 ====================================================================== */
 
-/* 1. Изоляция слоев для управления каскадом (если не объявлено выше) */
 @layer theme, layout, typography;
 
 /* ======================================================================
-   LAYER: THEME (Локальные токены для Phase 3)
-   Управляем математикой адаптивности в одном месте.
+   LAYER: THEME (Mathematical Core)
+   Используем "Fluid Type Scale" с коэффициентом 1.25 (Major Third).
+   Диапазон вьюпорта: 375px -> 1440px.
 ====================================================================== */
 @layer theme {
   :root {
-    /* --- Fluid Typography Scale (Масштабируемая типографика) --- */
-    /* Формула clamp: (мин. размер, адаптивная формула, макс. размер) */
+    /* --- 1. Fluid Typography (Гармоническая шкала) --- */
+    /* База: 16px (моб) -> 18px (десктоп) */
+    --fs-base: clamp(1rem, 0.93rem + 0.31vw, 1.125rem);
 
-    /* H1: От 36px на мобильных до 72px на десктопах */
-    --fs-display: clamp(2.25rem, 1.5rem + 3.75vw, 4.5rem);
+    /* Шаг +1 (H4/Sub): 18px -> 22.5px */
+    --fs-md: clamp(1.125rem, 1.02rem + 0.52vw, 1.406rem);
 
-    /* H2: От 28px до 48px */
-    --fs-h1: clamp(1.75rem, 1.35rem + 2vw, 3rem);
+    /* Шаг +2 (H3): 22.5px -> 33.75px */
+    --fs-lg: clamp(1.406rem, 1.19rem + 1.08vw, 2.109rem);
 
-    /* H3: От 22px до 32px */
-    --fs-h2: clamp(1.375rem, 1.15rem + 1.1vw, 2rem);
+    /* Шаг +3 (H2): 28px -> 50px */
+    --fs-xl: clamp(1.758rem, 1.34rem + 2.09vw, 3.164rem);
 
-    /* Subtitle / H4: От 18px до 20px */
-    --fs-h3: clamp(1.125rem, 1.08rem + 0.22vw, 1.25rem);
+    /* Шаг +4 (H1/Display): 35px -> 76px */
+    --fs-display: clamp(2.197rem, 1.42rem + 3.89vw, 4.746rem);
 
-    /* Body: От 16px до 18px (Идеально для чтения) */
-    --fs-body: clamp(1rem, 0.96rem + 0.22vw, 1.125rem);
+    /* --- 2. Fluid Spacing (Ритм отступов) --- */
+    /* Синхронизировано с размером шрифта для вертикального ритма */
 
-    /* --- Fluid Spacing Rhythm (Ритм и Воздух) --- */
-    /* Глобальный отступ секций: растет от 60px до 120px */
-    --space-section: clamp(3.75rem, 2.5rem + 6.25vw, 7.5rem);
+    /* Мелкий отступ (внутри карточек): 16px -> 24px */
+    --space-sm: clamp(1rem, 0.85rem + 0.75vw, 1.5rem);
 
-    /* Отступ между элементами: 20px -> 40px */
-    --space-gap: clamp(1.25rem, 0.85rem + 2vw, 2.5rem);
+    /* Средний отступ (между блоками): 32px -> 64px */
+    --space-md: clamp(2rem, 1.4rem + 3vw, 4rem);
 
-    /* Боковые поля безопасности (Gutter): 20px -> 40px */
-    --layout-gutter: clamp(1.25rem, 5vw, 2.5rem);
+    /* Крупный отступ (Секции): 64px -> 128px */
+    --space-lg: clamp(4rem, 2.5rem + 7.5vw, 8rem);
 
-    /* --- Constants --- */
-    --layout-max-width: 1240px;
-    --measure-prose: 65ch; /* Золотой стандарт длины строки */
+    /* Безопасные поля (Gutter): 20px -> 60px */
+    --layout-gutter: clamp(1.25rem, 5vw, 3.75rem);
+
+    /* --- 3. Layout Constants --- */
+    --layout-max-width: 1440px; /* Шире стандартного для премиум-ощущения */
+    --measure-prose: 65ch; /* Идеальная длина строки для чтения */
+    --measure-header: 20ch; /* Макс. ширина заголовков */
   }
 }
 
 /* ======================================================================
-   LAYER: LAYOUT (Сетка и Структура)
+   LAYER: LAYOUT (Smart Grid & Container Logic)
 ====================================================================== */
 @layer layout {
-  /* 13. Универсальный Контейнер (Modern Syntax) */
+  /* Универсальный контейнер.
+     Использует margin-inline: auto для центрирования
+     и min() для адаптивности без медиа-запросов.
+  */
   .container {
-    /* Логическая ширина занимает все доступное место */
     inline-size: 100%;
-
-    /* Умная формула ширины:
-       Контент центрируется, но никогда не прилипает к краям ближе чем --layout-gutter.
-       Мы не используем padding, чтобы упростить вложенные сетки. */
-    max-inline-size: min(
-      100% - (var(--layout-gutter) * 2),
-      var(--layout-max-width)
-    );
-
-    /* Логическое центрирование (аналог margin: 0 auto) */
+    max-inline-size: var(--layout-max-width);
+    padding-inline: var(--layout-gutter);
     margin-inline: auto;
+
+    /* Предотвращение слипания на очень узких экранах */
+    width: min(100%, 100vw);
   }
 
-  /* 14. Фоны Секций (Utility approach) */
-  .bg-primary {
-    background-color: var(--color-bg-primary);
-  }
-
-  .bg-secondary {
-    background-color: var(--color-bg-secondary);
-  }
-
-  /* 15. Секции (Vertical Rhythm) */
+  /* Вертикальный ритм секций */
   section {
-    /* Логические отступы сверху и снизу */
-    padding-block: var(--space-section);
-
+    padding-block: var(--space-lg);
     position: relative;
-    z-index: 2;
+    z-index: 1;
 
-    /* ВАЖНО: Компенсация высоты фиксированной шапки для якорных ссылок (Плавный скролл) */
-    scroll-margin-block-start: var(--header-height, 80px);
-  }
-
-  /* Хелперы выравнивания (Logical Properties) */
-  .text-center {
-    text-align: center;
-  }
-  .text-start {
-    text-align: start;
-  }
-  .text-end {
-    text-align: end;
+    /* Компенсация Sticky Header для якорных ссылок */
+    scroll-margin-top: var(--header-height, 80px);
   }
 
-  /* Grid Helper */
+  /* Grid Helpers (Subgrid Ready) */
   .grid-container {
     display: grid;
-    gap: var(--space-gap);
+    gap: var(--space-md);
+    /* Если нет модификаторов, по умолчанию 1 колонка */
+    grid-template-columns: 1fr;
+  }
+
+  /* Utility Backgrounds */
+  .bg-primary {
+    background-color: var(--color-bg-canvas);
+  }
+  .bg-secondary {
+    background-color: var(--color-bg-surface);
   }
 }
 
 /* ======================================================================
-   LAYER: TYPOGRAPHY (Текст и Читаемость)
+   LAYER: TYPOGRAPHY (Optical Sizing & Readability)
 ====================================================================== */
 @layer typography {
-  /* 16. Базовые настройки заголовков */
-  :is(h1, h2, h3) {
+  /* Глобальные настройки для заголовков */
+  :is(h1, h2, h3, h4) {
     color: var(--color-text-primary);
-    font-weight: 900;
+    font-weight: 800;
+    line-height: 1.1; /* Плотный интерлиньяж для крупных кеглей */
 
-    /* Плотный интерлиньяж для заголовков ("Display" стиль) */
-    line-height: 1.1;
-
-    /* Оптическая компенсация: чем крупнее шрифт, тем плотнее буквы */
-    letter-spacing: -0.02em;
-
-    margin-block-end: 0.75em;
-
-    /* Next-Gen: Алгоритмическая балансировка строк (нет висячих предлогов) */
+    /* Алгоритмическая балансировка: строки выглядят симметрично */
     text-wrap: balance;
+
+    /* Negative Tracking для крупных заголовков (делает их "плотнее") */
+    letter-spacing: -0.025em;
+
+    margin-block-end: 0.6em;
   }
 
-  /* Применение Fluid-токенов */
   h1 {
     font-size: var(--fs-display);
+    line-height: 1.05;
   }
   h2 {
-    font-size: var(--fs-h1);
+    font-size: var(--fs-xl);
   }
   h3 {
-    font-size: var(--fs-h2);
+    font-size: var(--fs-lg);
+    font-weight: 700;
+  }
+  h4 {
+    font-size: var(--fs-md);
+    font-weight: 600;
   }
 
-  /* 17. Заголовок Секции (.section-title) */
+  /* Настройки основного текста */
+  p,
+  li,
+  dl {
+    font-size: var(--fs-base);
+    line-height: 1.65; /* Воздух для чтения */
+    color: var(--color-text-muted);
+
+    /* Pretty: предотвращает "сироты" в конце абзаца */
+    text-wrap: pretty;
+
+    margin-block-end: var(--space-sm);
+
+    /* Ограничение длины строки для комфорта глаз */
+    max-inline-size: var(--measure-prose);
+  }
+
+  /* --- Специфические классы --- */
+
+  /* Главный заголовок секции */
   .section-title {
     text-align: center;
     margin-inline: auto;
+    max-inline-size: var(--measure-header);
+    margin-block-end: var(--space-md);
 
-    /* Ограничиваем ширину, чтобы заголовок не растягивался в длинную строку на 4K */
-    max-inline-size: 18ch;
-
-    margin-block-end: var(--space-section);
-
-    /* Если после заголовка сразу идет подзаголовок, уменьшаем отступ */
-    &:has(+ .section-subtitle) {
-      margin-block-end: calc(var(--space-section) * 0.3);
-    }
+    /* Оптическая компенсация: чуть больше воздуха вокруг */
+    padding-inline: 1rem;
   }
 
-  /* 18. Основной текст (Body Copy) */
-  p {
-    font-size: var(--fs-body);
-    line-height: 1.6;
-    color: var(--color-text-muted);
-
-    margin-block-end: 1.5em;
-
-    /* Читаемость: строка не длиннее 65 символов */
-    max-inline-size: var(--measure-prose);
-
-    /* Эстетика: предотвращение "сирот" (одиночных слов на новой строке) */
-    text-wrap: pretty;
-  }
-
-  /* Исключения для Hero и интро (чуть уже для фокуса) */
-  .hero__content p {
-    max-inline-size: 55ch;
-  }
-
-  /* 19. Подзаголовки */
-  .subtitle,
-  .section-subtitle {
-    color: var(--color-text-primary);
-    font-size: var(--fs-h3);
-    line-height: 1.5;
-
-    margin-block-end: 2.5rem;
-    text-wrap: pretty;
-  }
-
+  /* Подзаголовок секции (Subtitle) */
   .section-subtitle {
     text-align: center;
     margin-inline: auto;
     max-inline-size: 50ch;
-
-    /* Слегка прозрачный для иерархии */
+    font-size: var(--fs-md);
+    color: var(--color-text-primary);
     opacity: 0.9;
+    margin-block-end: calc(var(--space-md) * 1.5);
+    font-weight: 400;
+  }
 
-    /* Дополнительный воздух снизу перед контентом */
-    margin-block-end: calc(var(--space-section) * 0.8);
+  /* Текст внутри карточек (чуть компактнее) */
+  .card-content p {
+    font-size: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
+    margin-block-end: 1.5em;
   }
 }
 
