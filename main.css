@@ -763,7 +763,19 @@ a {
     gap: 24px;
     overflow: visible;
     scroll-snap-type: none;
-    padding: 0;
+
+    /* ИЗМЕНЕНИЯ ЗДЕСЬ: Добавляем воздух и центрируем */
+    width: 100%;
+    max-width: var(
+      --container-width
+    ); /* Ограничиваем ширину (1240px) как у заголовка */
+    margin: 0 auto; /* Центрируем блок на странице */
+    padding: 0 20px; /* Добавляем защитные поля, чтобы не прилипало на узких ноутбуках */
+  }
+  .gallery .section__title {
+    max-width: 800px; /* Оптимальная ширина для чтения */
+    margin-left: auto;
+    margin-right: auto;
   }
   .gallery__slide {
     box-shadow: var(--shadow-sm);
