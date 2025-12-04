@@ -1,0 +1,1148 @@
+/* --- 1. Подключение шрифтов (Google Fonts: Montserrat) --- */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap");
+
+/* --- 2. Глобальные переменные (Настройки дизайна) --- */
+:root {
+  /* Цвета */
+  --color-accent: #e53935; /* Тот самый красный для кнопок и акцентов */
+  --color-accent-hover: #d32f2f; /* Цвет при наведении */
+  --color-black: #111111; /* Глубокий черный */
+  --color-text: #333333; /* Основной текст */
+  --color-gray: #767676; /* Второстепенный текст */
+  --color-bg-light: #f8f9fa; /* Светлый фон для секций */
+  --color-white: #ffffff;
+
+  /* Размеры и шрифты */
+  --font-main: "Montserrat", sans-serif;
+  --container-width: 1200px; /* Ширина контента */
+  --header-height: 70px;
+  --radius: 8px; /* Скругление углов */
+  --transition: 0.3s ease; /* Плавность анимаций */
+}
+
+/* --- 3. Базовый сброс (Reset) --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* Важно: padding не увеличивает размер блока */
+}
+
+html {
+  scroll-behavior: smooth; /* Плавная прокрутка к якорям */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-white);
+  overflow-x: hidden; /* Убирает горизонтальный скролл */
+}
+
+/* Сброс отступов у заголовков и списков */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+figure,
+blockquote {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none; /* Убираем точки у списков */
+}
+
+a {
+  text-decoration: none; /* Убираем подчеркивание ссылок */
+  color: inherit;
+  transition: color var(--transition);
+}
+
+img {
+  max-width: 100%; /* Картинки никогда не вылезают за родителя */
+  height: auto;
+  display: block;
+}
+
+button {
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* --- 4. Утилиты (Помощники) --- */
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto; /* Центрируем контейнер */
+  padding: 0 20px; /* Отступы по бокам для мобилок */
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+/* Базовые стили для SVG иконок */
+.icon {
+  display: inline-block;
+  fill: currentColor; /* Иконка принимает цвет текста родителя */
+}
+/* --- 5. Компоненты: Кнопки (UI) --- */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: var(--radius);
+  transition: all var(--transition);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Основная красная кнопка */
+.button--primary {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.button--primary:hover {
+  background-color: var(--color-accent-hover);
+  transform: translateY(-2px); /* Легкий подъем при наведении */
+  box-shadow: 0 4px 12px rgba(229, 57, 53, 0.3); /* Красная тень */
+}
+
+/* Увеличенная кнопка (для главного экрана) */
+.button--large {
+  padding: 16px 32px;
+  font-size: 18px;
+}
+
+/* Второстепенная кнопка (для карточек товара) */
+.button--secondary {
+  background-color: transparent;
+  border: 2px solid var(--color-black);
+  color: var(--color-black);
+}
+
+.button--secondary:hover {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+/* --- 6. Шапка сайта (Header) --- */
+.header {
+  position: sticky; /* Фиксируем шапку при скролле */
+  top: 0;
+  z-index: 100; /* Чтобы была поверх всего остального */
+  background-color: var(--color-white);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Легкая тень снизу */
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+}
+
+.header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 24px;
+  text-transform: uppercase;
+  color: var(--color-black);
+  letter-spacing: -0.5px;
+}
+
+/* Навигация (стили для Десктопа) */
+.nav__list {
+  display: flex;
+  gap: 30px;
+}
+
+.nav__link {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.nav__link:hover {
+  color: var(--color-accent);
+}
+
+/* Скрываем элементы мобильного меню по умолчанию */
+.burger-btn,
+.header__nav-header,
+.header__nav-footer {
+  display: none;
+}
+
+/* --- ВРЕМЕННЫЙ АДАПТИВ ДЛЯ ШАПКИ --- */
+/* На экранах меньше 992px (планшеты и телефоны) */
+@media (max-width: 992px) {
+  /* Скрываем обычное меню, чтобы оно не ломало вид */
+  .header__nav-wrapper {
+    display: none;
+  }
+
+  /* Скрываем кнопку заказа в шапке на мобильных (места мало) */
+  .header__actions {
+    display: none;
+  }
+
+  /* Показываем кнопку бургер-меню */
+  .burger-btn {
+    display: block;
+    width: 30px;
+    height: 20px;
+    position: relative;
+    color: var(--color-black);
+  }
+
+  /* Рисуем полоски бургера */
+  .burger-btn__line {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: currentColor;
+    position: absolute;
+    border-radius: 2px;
+  }
+  .burger-btn__line:nth-child(1) {
+    top: 0;
+  }
+  .burger-btn__line:nth-child(2) {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .burger-btn__line:nth-child(3) {
+    bottom: 0;
+  }
+}
+/* --- 7. Главный экран (Hero) --- */
+.hero {
+  padding: 40px 0 60px; /* Отступы сверху и снизу */
+  background-color: var(
+    --color-bg-light
+  ); /* Легкий серый фон, чтобы отделить от шапки */
+}
+
+.hero__container {
+  display: grid;
+  gap: 40px;
+  /* Mobile First: по умолчанию 1 колонка */
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+/* Рейтинг (Звездочки) */
+.hero__rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+.stars {
+  display: flex;
+  color: #ffc107; /* Золотой цвет для звезд */
+}
+
+/* Заголовки */
+.hero__title {
+  font-size: 32px; /* Крупный размер для мобильных */
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: var(--color-black);
+}
+
+.hero__subtitle {
+  font-size: 16px;
+  color: var(--color-text);
+  margin-bottom: 30px;
+  max-width: 500px;
+}
+
+/* Список преимуществ с галочками */
+.hero__features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.hero__features-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  color: var(--color-black);
+}
+
+.icon--check {
+  color: #4caf50; /* Зеленый цвет галочки */
+  flex-shrink: 0; /* Чтобы иконка не сжималась, если текст длинный */
+}
+
+/* Гарантия под кнопкой */
+.hero__guarantee {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--color-gray);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Картинка */
+.hero__image-wrapper {
+  position: relative;
+  /* Делаем красивую тень и скругление */
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.hero__image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+/* --- АДАПТИВ ДЛЯ DESTOP (Экраны от 992px) --- */
+@media (min-width: 992px) {
+  .hero {
+    padding: 80px 0;
+  }
+
+  .hero__container {
+    /* Включаем 2 колонки: Текст | Картинка */
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+
+  .hero__title {
+    font-size: 48px; /* Огромный заголовок на ПК */
+  }
+
+  .hero__subtitle {
+    font-size: 18px;
+  }
+
+  /* Порядок элементов: сначала текст (слева), потом картинка (справа).
+     В HTML у нас так и есть, так что grid сам расставит. */
+}
+/* --- 8. Общие стили для секций --- */
+.section {
+  padding: 60px 0;
+}
+
+.section__title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 40px;
+  color: var(--color-black);
+}
+
+/* --- 9. Секция "Качество" (Детали) --- */
+.feature-card {
+  display: flex;
+  flex-direction: column; /* На мобильных вертикально */
+  gap: 20px;
+  margin-bottom: 60px; /* Отступ между карточками */
+  align-items: center;
+}
+
+.feature-card:last-child {
+  margin-bottom: 0;
+}
+
+.feature-card__media {
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.feature-card__image,
+.feature-card__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.feature-card__content {
+  width: 100%;
+}
+
+.feature-card__title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--color-black);
+}
+
+.feature-card__text {
+  color: var(--color-text);
+  font-size: 16px;
+}
+
+/* Адаптив "Зиг-Заг" для планшетов и ПК */
+@media (min-width: 768px) {
+  .section__title {
+    font-size: 36px;
+    margin-bottom: 60px;
+  }
+
+  .feature-card {
+    flex-direction: row; /* В ряд */
+    gap: 60px;
+  }
+
+  /* Магия CSS: каждый четный элемент переворачиваем зеркально */
+  .feature-card:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+
+  /* Делим пространство пополам */
+  .feature-card__media,
+  .feature-card__content {
+    flex: 1;
+  }
+}
+
+/* --- 10. Секция "Дизайн" (Styles) --- */
+.styles {
+  background-color: var(--color-bg-light); /* Выделяем секцию фоном */
+}
+
+.styles__grid {
+  display: grid;
+  grid-template-columns: 1fr; /* По умолчанию 1 колонка */
+  gap: 30px;
+}
+
+.style-card {
+  background: var(--color-white);
+  padding: 20px;
+  border-radius: var(--radius);
+  text-align: center;
+  transition: transform var(--transition);
+  border: 1px solid transparent;
+}
+
+.style-card:hover {
+  transform: translateY(-5px); /* Карточка всплывает при наведении */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.style-card__media {
+  margin-bottom: 20px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  height: 300px; /* Фиксируем высоту для аккуратности */
+}
+
+.style-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.style-card__title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.style-card__text {
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: var(--color-gray);
+}
+
+/* Адаптив для карточек дизайна */
+@media (min-width: 768px) {
+  .styles__grid {
+    grid-template-columns: 1fr 1fr; /* 2 колонки */
+  }
+}
+/* --- 11. Секция "Технологии" (3 колонки) --- */
+.technology__grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile: 1 колонка */
+  gap: 40px;
+}
+
+.tech-card {
+  text-align: center;
+}
+
+.tech-card__media {
+  margin-bottom: 20px;
+  border-radius: 50%; /* Делаем картинки круглыми, как иконки */
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto; /* Центрируем круг */
+  border: 4px solid var(--color-bg-light); /* Легкая рамка */
+}
+
+.tech-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tech-card__title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.tech-card__text {
+  font-size: 14px;
+  color: var(--color-gray);
+  line-height: 1.6;
+}
+
+/* Адаптив технологий: 3 колонки на больших экранах */
+@media (min-width: 992px) {
+  .technology__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* --- 12. Секция "Видео-обзор" --- */
+.video-overview {
+  background-color: var(
+    --color-black
+  ); /* Темный фон для кинотеатрального эффекта */
+  color: var(--color-white);
+  text-align: center;
+}
+
+.video-overview .section__title {
+  color: var(--color-white); /* Перекрашиваем заголовок в белый */
+  margin-bottom: 10px;
+}
+
+.section__subtitle {
+  color: #ccc;
+  margin-bottom: 40px;
+}
+
+.video-overview__wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.video-overview__player {
+  width: 100%;
+  display: block;
+}
+
+/* --- 13. Секция "Комплектация" (Kit) --- */
+.kit {
+  background-color: var(--color-white);
+}
+
+.kit__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.kit__media {
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.kit__subtitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--color-accent); /* Выделяем красным */
+}
+
+.kit__list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.kit__item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-bg-light); /* Разделительные линии */
+}
+
+.kit__item-count {
+  font-weight: 800;
+  color: var(--color-black);
+  white-space: nowrap; /* Чтобы "2 шт." не переносилось */
+}
+
+.kit__note {
+  font-size: 14px;
+  color: var(--color-gray);
+  margin-bottom: 25px;
+  font-style: italic;
+}
+
+/* Адаптив комплектации */
+@media (min-width: 992px) {
+  .kit__layout {
+    grid-template-columns: 1fr 1fr; /* Картинка | Список */
+  }
+
+  .kit__content {
+    order: -1; /* Хитрость: текст ставим слева, картинку справа (если нужно) */
+    /* В нашем HTML картинка первая, так что оставим как есть или поменяем grid-areas */
+  }
+}
+/* --- 14. Галерея (Слайдер) --- */
+.gallery {
+  padding-bottom: 40px;
+}
+
+.gallery__carousel {
+  display: flex;
+  overflow-x: auto; /* Разрешаем горизонтальный скролл */
+  scroll-snap-type: x mandatory; /* "Примагничивание" слайдов */
+  scroll-behavior: smooth;
+
+  /* Скрываем полосу прокрутки для красоты */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.gallery__carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.gallery__slide {
+  flex: 0 0 85%; /* На мобильном показываем 85% слайда, чтобы было видно следующий */
+  margin-right: 15px;
+  scroll-snap-align: center; /* Слайд всегда встает по центру */
+}
+
+.gallery__image {
+  width: 100%;
+  height: 300px; /* Фиксированная высота для ровного ряда */
+  object-fit: cover;
+  border-radius: var(--radius);
+}
+
+/* Кнопки управления галереей */
+.gallery__controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.gallery__nav-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--color-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.gallery__nav-btn:hover {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+.gallery__controls-text {
+  font-size: 14px;
+  color: var(--color-gray);
+  font-weight: 500;
+}
+
+/* Адаптив Галереи */
+@media (min-width: 768px) {
+  .gallery__slide {
+    flex: 0 0 45%; /* На планшете 2 слайда */
+  }
+}
+
+@media (min-width: 992px) {
+  .gallery__slide {
+    flex: 0 0 30%; /* На ПК 3 слайда */
+  }
+}
+
+/* --- 15. Отзывы (Reviews) --- */
+.reviews {
+  background-color: var(--color-bg-light);
+}
+
+.reviews__list {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 30px; /* Место для тени или скроллбара */
+  scrollbar-width: none;
+}
+
+.reviews__list::-webkit-scrollbar {
+  display: none;
+}
+
+.review-card {
+  flex: 0 0 300px; /* Фиксированная ширина карточки */
+  background: var(--color-white);
+  padding: 25px;
+  border-radius: var(--radius);
+  scroll-snap-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.review-card__rating {
+  margin-bottom: 15px;
+  color: #ffc107;
+}
+
+.review-card__quote {
+  flex-grow: 1; /* Растягиваем цитату, чтобы автор был всегда внизу */
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text);
+  margin-bottom: 20px;
+}
+
+.review-card__author {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-black);
+}
+/* --- 16. FAQ (Аккордеон) --- */
+.accordion__item {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.accordion__button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  text-align: left;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--color-black);
+}
+
+.accordion__button:hover {
+  color: var(--color-accent);
+}
+
+.accordion__icon {
+  transition: transform var(--transition);
+}
+
+/* Когда JS добавит атрибут aria-expanded="true", иконка повернется */
+.accordion__button[aria-expanded="true"] .accordion__icon {
+  transform: rotate(45deg); /* Плюс превращается в крестик */
+  color: var(--color-accent);
+}
+
+.accordion__content-inner {
+  padding-bottom: 20px;
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+/* --- 17. Секция Заказа (Order) --- */
+.order {
+  padding-bottom: 100px; /* Отступ снизу для Sticky Bar на мобилках */
+}
+
+.order__container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+
+.order__title {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 15px;
+  color: var(--color-black);
+}
+
+.order__subtitle {
+  margin-bottom: 30px;
+  color: var(--color-gray);
+}
+
+/* Карточка формы */
+.order-form {
+  background: var(--color-white);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f0f0f0;
+}
+
+.order-form__header {
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.order-form__badge {
+  display: inline-block;
+  background-color: #ffebee; /* Светло-красный фон */
+  color: var(--color-accent);
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.price-block__old {
+  color: var(--color-gray);
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.price-block__new {
+  color: var(--color-black);
+  font-size: 28px;
+  font-weight: 800;
+}
+
+/* --- 18. Кастомные Радио-кнопки (Магия CSS) --- */
+.form__fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 25px 0;
+}
+
+.form__legend {
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: block;
+  width: 100%;
+}
+
+.radio-group {
+  display: flex;
+  gap: 15px;
+}
+
+/* Стили для выбора цвета */
+.radio-group--colors .radio-group__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px;
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  transition: var(--transition);
+  background-color: var(--color-bg-light);
+}
+
+/* Цветные кружочки */
+.radio-group__swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+}
+.radio-group__swatch--red {
+  background-color: #b71c1c;
+}
+.radio-group__swatch--black {
+  background-color: #000;
+}
+
+/* Состояние: Выбрано (Checked) */
+.radio-group__input:checked + .radio-group__label {
+  border-color: var(--color-accent); /* Красная рамка активного элемента */
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Стили для выбора комплекта (Карточки) */
+.radio-group--options {
+  flex-direction: column; /* Одна под другой */
+}
+
+.radio-group__label--option {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 15px;
+  background-color: var(--color-bg-light);
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition);
+}
+
+/* Поля ввода (Input) */
+.form__group {
+  margin-bottom: 15px;
+}
+
+.form__label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-gray);
+}
+
+.form__input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form__input:focus {
+  outline: none;
+  border-color: var(--color-black);
+}
+
+.form__submit {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.form__privacy {
+  font-size: 11px;
+  text-align: center;
+  color: #999;
+  margin-top: 10px;
+}
+
+.order-form__footer {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  font-size: 13px;
+}
+
+/* --- 19. Footer --- */
+.footer {
+  background-color: #1a1a1a;
+  color: #fff;
+  padding: 40px 0 100px; /* Место под стики-бар */
+}
+
+.footer__container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  text-align: center;
+}
+
+.footer__logo {
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.footer__link {
+  color: #ccc;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.footer__link:hover {
+  color: #fff;
+}
+
+.footer__socials {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* --- 20. Sticky Bar (Мобильная полоска) --- */
+.sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--color-white);
+  padding: 15px 0;
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+  z-index: 90;
+  /* Будет скрываться JS-ом, когда видна форма */
+  transition: transform 0.3s;
+}
+
+.sticky-bar.is-hidden {
+  transform: translateY(100%);
+}
+
+.sticky-bar__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sticky-bar__price-new {
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--color-black);
+}
+
+.sticky-bar__price-old {
+  font-size: 12px;
+  color: var(--color-gray);
+  display: block;
+}
+
+/* --- 21. Модальное окно (Success) --- */
+.modal {
+  display: none; /* Скрыто по умолчанию */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.is-visible {
+  display: flex; /* Показываем flex-ом, чтобы центрировать */
+}
+
+.modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.modal__content {
+  position: relative;
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  z-index: 201;
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal__icon-wrapper {
+  width: 60px;
+  height: 60px;
+  background-color: #e8f5e9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: #4caf50;
+}
+
+.modal__close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: #999;
+}
+
+/* --- АДАПТИВ FORM & FOOTER (Desktop) --- */
+@media (min-width: 992px) {
+  .order__container {
+    grid-template-columns: 1fr 400px; /* Картинка широкая, форма 400px */
+  }
+
+  .sticky-bar {
+    display: none; /* На ПК стики бар не нужен */
+  }
+
+  .footer {
+    padding-bottom: 40px;
+  }
+
+  .footer__container {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    align-items: flex-start;
+  }
+}
