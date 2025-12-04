@@ -187,161 +187,219 @@
 }
 
 /* ======================================================================
-   Phase 2: Утилитарные Классы и Визуальные Эффекты (Ultimate Premium)
-   Architecture: Houdini Engine + GPU Compositor
+   Phase 2: Утилитарные Классы и Визуальные Эффекты (State of the Art 2025)
+   Architecture: Houdini Engine + P3 OKLCH Gamut + GPU Compositor
 ====================================================================== */
 @layer effects {
-  /* --- 0. Houdini: Регистрация типизированных свойств --- */
-  /* Позволяет браузеру математически интерполировать угол градиента.
-     Результат: идеально плавное вращение света на металле. */
+  /* ==================================================================
+     0. HOUDINI ENGINE (Typified Properties)
+     Регистрация свойств для математической интерполяции на GPU.
+  ================================================================== */
+
+  /* Позволяет анимировать угол градиента идеально плавно (без рывков). */
   @property --shimmer-angle {
     syntax: "<angle>";
     initial-value: 135deg;
     inherits: false;
   }
 
-  /* --- 1. Металлы и Текстуры (Liquid Chrome) --- */
+  /* ==================================================================
+     1. МЕТАЛЛЫ И ТЕКСТУРЫ (Liquid P3 Chrome)
+     Используем OKLCH для доступа к P3-цветам (более яркий белый).
+  ================================================================== */
+
   .text-chrome {
+    /* Локальные токены для металла в P3 Gamut */
+    --metal-highlight: oklch(1 0 0); /* Максимально яркий белый */
+    --metal-shadow: oklch(
+      0.75 0.01 260
+    ); /* Холодный серебряный (подтон Obsidian) */
+
     background-image: linear-gradient(
       var(--shimmer-angle),
-      #ffffff 0%,
-      #c0c0c0 30%,
-      #ffffff 50%,
-      #c0c0c0 70%,
-      #ffffff 100%
+      var(--metal-highlight) 0%,
+      var(--metal-shadow) 30%,
+      var(--metal-highlight) 50%,
+      var(--metal-shadow) 70%,
+      var(--metal-highlight) 100%
     );
     background-size: 100% auto;
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
+    -webkit-text-fill-color: transparent;
 
-    /* Тень создает отрыв от фона */
-    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.15);
+    /* Тень через Relative Color Syntax (RCS): берем цвет хайлайта и добавляем прозрачность */
+    text-shadow: 0 2px 15px oklch(from var(--metal-highlight) l c h / 0.2);
 
-    /* Анимация вращения угла (Houdini) */
+    /* Анимация через Houdini */
     animation: chromeRotate 8s linear infinite;
-    will-change: --shimmer-angle;
+    will-change: --shimmer-angle; /* Оптимизация GPU */
 
-    /* Вложенность для выделения текста */
+    /* Native Nesting: Улучшенное выделение текста */
     &::selection {
-      -webkit-text-fill-color: #fff;
+      -webkit-text-fill-color: oklch(1 0 0);
+      background-color: var(--color-accent);
     }
   }
 
   @keyframes chromeRotate {
     to {
-      --shimmer-angle: 495deg;
-    } /* 135 + 360 */
+      --shimmer-angle: 495deg; /* 135 + 360 */
+    }
   }
 
-  /* --- 2. Кинематографичный Шум (Performance Optimized) --- */
+  /* ==================================================================
+     2. КИНЕМАТОГРАФИЧНЫЙ ШУМ (Performance Isolated)
+     Используем contain: strict для максимальной изоляции перерисовок.
+  ================================================================== */
+
   .fx-noise {
     position: relative;
-    /* Создает новый контекст наложения: фильтры не вызовут ре-рендер страницы */
+    /* Фильтры и анимации внутри не повлияют на остальную страницу */
     isolation: isolate;
 
     &::after {
       content: "";
       position: absolute;
       inset: 0;
+      /* Ставим под контент, но внутри изолированного стека */
       z-index: -1;
       opacity: 0.04;
 
-      /* SVG-шум (легче PNG) */
+      /* Легковесный SVG-шум */
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
 
       mix-blend-mode: overlay;
       pointer-events: none;
-      /* Гарантируем, что шум не выйдет за границы контейнера */
-      contain: paint;
+
+      /* Максимальная изоляция (2025): браузер знает, что этот элемент не влияет на layout/size/paint других */
+      contain: strict;
+      will-change: opacity;
     }
   }
 
-  /* --- 3. Стекломорфизм 3.0 (Bevel & Depth) --- */
-  /* Единая логика для всех стеклянных элементов */
+  /* ==================================================================
+     3. СТЕКЛОМОРФИЗМ 4.0 (P3 Depth & Bevel)
+     OKLCH + RCS для реалистичных теней, бликов и насыщенности.
+  ================================================================== */
+
   [class*="glass-"] {
-    backdrop-filter: blur(var(--glass-blur, 12px));
-    -webkit-backdrop-filter: blur(var(--glass-blur, 12px));
+    /* Базовые токены для системы освещения стекла (P3) */
+    --_glass-highlight-color: oklch(1 0 0);
+    --_glass-shadow-color: oklch(0.05 0.01 260); /* Глубокий Obsidian */
+
+    /* Насыщенный блюр для эффекта "дорогой оптики" (убирает серость) */
+    --_filter: blur(var(--glass-blur, 16px)) saturate(160%);
+    backdrop-filter: var(--_filter);
+    -webkit-backdrop-filter: var(--_filter); /* Safari */
     border-radius: var(--radius-lg);
 
-    /* Аппаратное ускорение для устранения мерцания на Safari */
+    /* Аппаратное ускорение (Safari/Chrome) для устранения мерцания фильтров */
     transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
 
-    /* Сложная система теней для эффекта фаски (объема) */
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, var(--glass-highlight, 0.1)),
-      inset 0 0 0 1px rgba(255, 255, 255, var(--glass-border, 0.05)),
-      0 10px 30px -5px rgba(0, 0, 0, 0.5);
+    /* Изоляция перерисовки фильтра */
+    contain: paint;
+
+    /* Система теней (Bevel Effect) на базе RCS */
+    box-shadow:
+      /* Блик на верхней грани (Highlight) */ inset 0 1px 0 0
+        oklch(
+          from var(--_glass-highlight-color) l c h /
+            var(--glass-highlight-opacity, 0.12)
+        ),
+      /* Тонкая обводка для четкости (Border) */ inset 0 0 0 1px
+        oklch(
+          from var(--_glass-highlight-color) l c h /
+            var(--glass-border-opacity, 0.06)
+        ),
+      /* Глубокая атмосферная тень (Drop Shadow) */ 0 20px 50px -10px oklch(from
+            var(--_glass-shadow-color) l c h / 0.6);
   }
+
+  /* --- Варианты Стекла --- */
 
   /* Светлая панель (Основная) */
   .glass-panel {
-    --glass-blur: 16px;
-    --glass-highlight: 0.15;
-    background: rgba(255, 255, 255, 0.03);
+    --glass-blur: 20px;
+    --glass-highlight-opacity: 0.15;
+    /* RCS: Белый цвет с минимальной непрозрачностью */
+    background: oklch(1 0 0 / 0.04);
   }
 
-  /* Интерактивное стекло (Карточки) */
+  /* Интерактивное стекло (Карточки/Кнопки) */
   .glass-ghost {
-    --glass-blur: 8px;
-    --glass-border: 0.08;
-    background: rgba(255, 255, 255, 0.02);
-    transition: background 0.3s ease,
-      transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    --glass-blur: 12px;
+    --glass-border-opacity: 0.08;
+    background: oklch(1 0 0 / 0.02);
+    transition: background 0.3s ease, transform 0.3s var(--ease-luxury, ease),
+      box-shadow 0.3s ease;
 
     @media (hover: hover) {
       &:hover {
-        background: rgba(255, 255, 255, 0.06);
-        --glass-border: 0.2;
+        background: oklch(1 0 0 / 0.08);
+        --glass-border-opacity: 0.2; /* Рамка становится ярче */
       }
     }
   }
 
-  /* Темное стекло (Obsidian) */
+  /* Темное стекло (Obsidian / HUD) */
   .glass-obsidian {
-    --glass-blur: 24px;
-    --glass-highlight: 0.12;
-    background: rgba(8, 8, 8, 0.85);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.8);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      0 40px 80px rgba(0, 0, 0, 0.7);
+    --glass-blur: 30px;
+    --glass-highlight-opacity: 0.1;
+    /* RCS: Используем базовый токен Obsidian для создания глубокого темного стекла */
+    background: oklch(from var(--seed-obsidian) l c h / 0.88);
+
+    /* Усиленная тень для модальных окон и важных элементов */
+    box-shadow: inset 0 1px 0 0 oklch(1 0 0 / 0.1),
+      inset 0 0 0 1px oklch(1 0 0 / 0.08), 0 50px 100px -20px oklch(0 0 0 / 0.8);
   }
 
-  /* --- 4. Интерактивные Анимации (Touch-Safe GPU) --- */
+  /* ==================================================================
+     4. ИНТЕРАКТИВНЫЕ АНИМАЦИИ (Touch-Safe GPU)
+     Разделение логики для мыши (Hover) и тач-устройств (Active).
+  ================================================================== */
 
-  /* Блик и Зум работают ТОЛЬКО если есть мышь. 
-     Это предотвращает "залипание" эффектов на телефонах. */
   @media (hover: hover) and (pointer: fine) {
     /* 4.1. Luxury Sheen (Скользящий блик) */
     .fx-sheen {
       position: relative;
       overflow: hidden;
       isolation: isolate;
-      transition: transform 0.3s var(--ease-luxury, ease), box-shadow 0.3s ease;
+      /* Плавная инерция при наведении */
+      transition: transform 0.4s var(--ease-luxury, ease),
+        box-shadow 0.4s var(--ease-luxury, ease);
 
       &::before {
         content: "";
         position: absolute;
         inset: 0;
         z-index: 2;
-        /* GPU-смещение: эффективнее для батареи, чем left/top */
-        transform: skewX(-20deg) translate3d(-150%, 0, 0);
+
+        /* GPU-смещение (transform): самый производительный способ анимации движения */
+        transform: skewX(-25deg) translate3d(-150%, 0, 0);
+        will-change: transform;
+
+        /* OKLCH градиент: обеспечивает более плавный переход в прозрачность, чем RGB */
         background: linear-gradient(
           90deg,
-          transparent 0%,
-          rgba(255, 255, 255, 0.2) 50%,
-          transparent 100%
+          oklch(1 0 0 / 0) 0%,
+          oklch(1 0 0 / 0.25) 50%,
+          oklch(1 0 0 / 0) 100%
         );
         pointer-events: none;
-        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        /* "Дорогая", медленная инерция блика */
+        transition: transform 0.8s var(--ease-luxury, ease);
       }
 
+      /* Улучшенный эффект подъема (Lift) - если он не определен в glass-ghost:hover */
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+      }
 
-        &::before {
-          transform: skewX(-20deg) translate3d(150%, 0, 0);
-        }
+      &:hover::before {
+        transform: skewX(-25deg) translate3d(150%, 0, 0);
       }
     }
 
@@ -349,21 +407,25 @@
     .hover-zoom {
       overflow: hidden;
       border-radius: inherit;
-      /* Фикс: маска обрезает изображение по радиусу родителя в Safari */
-      mask-image: -webkit-radial-gradient(white, black);
+      /* Фикс для Safari: маска обрезает дочерний элемент по радиусу родителя */
+      mask-image: radial-gradient(white, black);
+      -webkit-mask-image: radial-gradient(white, black);
       display: block;
 
       & img,
       & video {
-        transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-          filter 0.5s ease;
-        will-change: transform;
+        /* Увеличиваем длительность для кинематографичности */
+        transition: transform 1s
+            var(--ease-luxury, cubic-bezier(0.22, 1, 0.36, 1)),
+          filter 0.7s ease;
+        will-change: transform, filter;
       }
 
       &:hover img,
       &:hover video {
-        transform: scale(1.06); /* Дорогой, плавный зум */
-        filter: contrast(1.05) brightness(1.1);
+        transform: scale(1.05);
+        /* Улучшаем картинку: больше контраста и яркости для "дорогого" вида (HDR effect) */
+        filter: contrast(1.08) brightness(1.05);
       }
     }
   }
@@ -377,36 +439,50 @@
     }
   }
 
-  /* --- 5. Дополнительные эффекты --- */
+  /* ==================================================================
+     5. ДОПОЛНИТЕЛЬНЫЕ ЭФФЕКТЫ
+  ================================================================== */
+
   .glow-ambient {
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.15),
-      0 0 40px rgba(255, 255, 255, 0.05);
+    /* RCS: Свечение основано на P3 белом */
+    text-shadow: 0 0 20px oklch(1 0 0 / 0.2), 0 0 50px oklch(1 0 0 / 0.1);
   }
 
   .no-scrollbar {
-    scrollbar-width: none;
+    scrollbar-width: none; /* Firefox */
     &::-webkit-scrollbar {
-      display: none;
+      display: none; /* Chrome/Safari */
     }
   }
 
-  /* --- 6. Доступность (Reduced Motion) --- */
+  /* ==================================================================
+     6. ДОСТУПНОСТЬ (Reduced Motion)
+  ================================================================== */
+
   @media (prefers-reduced-motion: reduce) {
     .text-chrome {
       animation: none;
-      /* Статичный красивый градиент */
-      background-image: linear-gradient(135deg, #fff 30%, #a0a0a0 100%);
+      /* Статичный градиент (Fallback) с использованием OKLCH */
+      background-image: linear-gradient(
+        135deg,
+        oklch(1 0 0) 30%,
+        oklch(0.75 0.01 260) 100%
+      );
     }
 
-    .fx-sheen::before {
+    /* Убираем движущийся блик и шум */
+    .fx-sheen::before,
+    .fx-noise::after {
       display: none;
     }
 
+    /* Глобальный сброс анимаций (дублируется из слоя Base для надежности) */
     *,
     *::before,
     *::after {
       transition-duration: 0.01ms !important;
       animation-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
 }
