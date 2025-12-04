@@ -250,6 +250,7 @@ a {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   /* Fix для Safari (скругление маски) */
   -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
 }
 
 .fx-sheen::before {
@@ -326,16 +327,17 @@ a {
 }
 
 /* ======================================================================
-   Phase 3: Макет и Типографика
+   Phase 3: Макет и Типографика (Ultimate Premium Fluid)
 ====================================================================== */
 
-/* 13. Контейнер (.container) */
+/* 13. Универсальный Контейнер (.container) */
 .container {
-  max-width: 1240px; /* 1200px + padding */
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 20px;
-  padding-right: 20px;
+  width: 100%;
+  max-width: 1240px; /* Стандартная ширина контента */
+  margin-inline: auto; /* Центрирование по горизонтали */
+
+  /* Адаптивные поля: минимум 20px, но на больших мониторах больше "воздуха" */
+  padding-inline: clamp(1.25rem, 5vw, 2.5rem);
 }
 
 /* 14. Фоны Секций */
@@ -347,80 +349,111 @@ a {
   background-color: var(--color-bg-secondary);
 }
 
-/* 15. Отступы Секций */
+/* 15. Отступы Секций (Fluid Spacing) */
 section {
-  padding-top: 60px;
-  padding-bottom: 60px;
-  /* Контент секции должен быть над шумом */
+  /* Отступ плавно растет от 60px на мобильных до 120px на 4K экранах */
+  padding-block: clamp(60px, 10vh, 120px);
+
+  /* Контент секции должен быть над слоем "шума" */
   position: relative;
   z-index: 2;
+
+  /* ВАЖНО: Компенсация высоты фиксированной шапки для якорных ссылок */
+  scroll-margin-top: 80px;
 }
 
-@media (min-width: 768px) {
-  section {
-    padding-top: 100px;
-    padding-bottom: 100px;
-  }
-}
-
-/* 16. Заголовки (H1, H2, H3) */
+/* 16. Премиальная Типографика: Заголовки */
 h1,
 h2,
 h3 {
   font-weight: 900;
-  line-height: 1.2;
-  margin-bottom: 1rem;
+  /* Плотный интерлиньяж для крупных заголовков выглядит дороже и собраннее */
+  line-height: 1.1;
+  margin-bottom: 0.75em;
+  color: var(--color-text-primary);
+
+  /* Premium Touch: Легкое сужение трекинга для массивных шрифтов */
+  letter-spacing: -0.02em;
+
+  /* Магия CSS: Авто-балансировка строк, убирает висячие предлоги и одинокие слова */
+  text-wrap: balance;
 }
 
+/* H1: Fluid Size от 36px до 60px */
 h1 {
-  font-size: 36px;
+  font-size: clamp(2.25rem, 5vw + 1rem, 3.75rem);
 }
 
+/* H2: Fluid Size от 28px до 42px */
 h2 {
-  font-size: 28px;
+  font-size: clamp(1.75rem, 4vw + 0.5rem, 2.625rem);
 }
 
+/* H3: Fluid Size от 22px до 28px */
 h3 {
-  font-size: 22px;
+  font-size: clamp(1.375rem, 2vw + 0.5rem, 1.75rem);
   font-weight: 700;
-}
-
-@media (min-width: 768px) {
-  h1 {
-    font-size: 48px;
-  }
-
-  h2 {
-    font-size: 36px;
-  }
-
-  h3 {
-    font-size: 24px;
-  }
+  /* Для H3 чуть больше воздуха в строках */
+  line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 /* 17. Заголовок Секции (.section-title) */
 .section-title {
   text-align: center;
-  margin-bottom: 40px;
+  /* Адаптивный отступ снизу */
+  margin-bottom: clamp(40px, 6vw, 80px);
+
+  /* Центрируем блок и ограничиваем ширину, чтобы заголовок не растягивался в одну строку */
+  margin-inline: auto;
+  max-width: 20ch;
 }
 
-@media (min-width: 768px) {
-  .section-title {
-    margin-bottom: 60px;
-  }
+/* 18. Текст и Подзаголовки */
+p {
+  /* Золотой стандарт читаемости: строка не длиннее 65-70 символов */
+  max-width: 65ch;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-muted); /* Чуть приглушенный цвет для комфорта глаз */
 }
 
-/* 18. Подзаголовки (.subtitle, .section-subtitle) */
+/* Исключение для Hero и вводных блоков - там текст может быть чуть уже для фокуса */
+.hero__content p,
+.text-content p {
+  max-width: 60ch;
+}
+
+/* Стили подзаголовков */
 .subtitle,
 .section-subtitle {
-  color: var(--color-text-muted);
-  font-size: 18px;
-  margin-bottom: 1.5rem;
+  color: var(--color-text-primary); /* Чуть ярче обычного текста */
+  /* Шрифт от 16px до 19px */
+  font-size: clamp(1rem, 1.5vw, 1.1875rem);
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+
+  /* pretty предотвращает "сирот" (одиночные слова) в конце абзаца */
+  text-wrap: pretty;
 }
 
 .section-subtitle {
   text-align: center;
+  margin-inline: auto;
+  max-width: 50ch; /* Подзаголовки секций компактнее */
+
+  /* Если подзаголовок идет сразу после заголовка, подтягиваем их ближе */
+  margin-top: calc(clamp(40px, 6vw, 80px) * -0.6);
+}
+
+/* Вспомогательные классы */
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
 }
 
 /* ======================================================================
