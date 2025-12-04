@@ -776,50 +776,48 @@
 
 /* ======================================================================
    Phase 4: Компоненты (Ultimate Edition 2025)
-   Tech: @layer, :where(), Oklab Color-Mix, Logical Props, Cap Units
+   Architect: Summanizer | Tech: :where, :has, OKLCH, Grid Anim, Container Paint
 ====================================================================== */
 @layer components {
-  /* 19. Базовый Компонент Кнопки (.btn)
-     Используем :where() для нулевой специфичности. 
-     Это позволяет легко переопределять стили в модификаторах и медиа-запросах.
-  */
+  /* ==================================================================
+     1. УНИВЕРСАЛЬНАЯ КНОПКА (.btn)
+     Concept: Zero Specificity Base + Rich Interactivity
+  ================================================================== */
   :where(.btn) {
-    /* --- Local Scope Tokens (Настройки по умолчанию) --- */
-    --btn-height: 56px; /* Оптимально для тач-интерфейсов */
+    /* --- Local Tokens (Легко переопределить в темах) --- */
+    --btn-height: 56px;
     --btn-radius: var(--radius-md);
-    --btn-gap: 0.6em; /* Отступ между иконкой и текстом */
-
-    /* Цветовая логика (по умолчанию прозрачная) */
-    --btn-base-bg: transparent;
+    --btn-gap: 0.6em;
+    --btn-padding: 28px;
+    --btn-bg: transparent;
     --btn-text: inherit;
     --btn-border: transparent;
     --btn-shadow: none;
 
-    /* Физика анимации: "Дорогая" инерция */
+    /* Physics: "Дорогая" инерция */
     --btn-ease: cubic-bezier(0.25, 0.8, 0.25, 1);
 
-    /* --- Layout & Logical Props --- */
+    /* --- Layout --- */
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--btn-gap);
 
-    /* Гарантируем минимальную высоту для удобства нажатия */
     min-block-size: var(--btn-height);
-    padding-inline: 28px; /* Логический padding слева/справа */
-    padding-block: 10px; /* Логический padding сверху/снизу */
+    padding-inline: var(--btn-padding);
+    padding-block: 10px;
 
     /* --- Typography --- */
-    font-family: var(--font-family-base);
+    font-family: var(--font-primary);
     font-weight: 700;
     font-size: 1rem;
     line-height: 1.2;
     letter-spacing: 0.02em;
     text-decoration: none;
-    white-space: nowrap; /* Текст не должен переноситься */
+    white-space: nowrap;
 
-    /* --- Appearance & Engine --- */
-    background: var(--btn-base-bg);
+    /* --- Engine --- */
+    background: var(--btn-bg);
     color: var(--btn-text);
     border: 1px solid var(--btn-border);
     border-radius: var(--btn-radius);
@@ -828,120 +826,98 @@
     cursor: pointer;
     user-select: none;
     position: relative;
-    isolation: isolate; /* Новый контекст наложения для z-index */
-    touch-action: manipulation; /* Убирает задержку тапа на мобильных */
+    isolation: isolate; /* Новый контекст наложения */
+    touch-action: manipulation; /* Убирает задержку тапа на iOS */
 
     transition: transform 0.2s var(--btn-ease), background 0.3s ease,
       border-color 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
   }
 
-  /* --- States (Состояния) --- */
-
-  /* Focus Visible: Доступность для клавиатуры без ущерба дизайну */
+  /* Focus Visible: Доступность без ущерба дизайну */
   :where(.btn):focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 4px;
     box-shadow: none;
   }
 
-  /* Active: Механический отклик (кроме режима reduced-motion) */
+  /* Active: Механический отклик (сжатие) */
   @media (prefers-reduced-motion: no-preference) {
     :where(.btn):active {
       transform: scale(0.97) translateY(1px);
     }
   }
 
-  /* ================= VARIANTS (Модификаторы) ================= */
+  /* --- Варианты Кнопок --- */
 
-  /* 20. Primary Button ("Sport Mode")
-     Используем пространство OKLAB для создания сочных градиентов
-     из одного базового цвета.
-  */
+  /* Primary: "Sport Mode" (Градиент в пространстве OKLAB) */
   .btn-primary {
-    /* Единый источник правды для цвета */
     --accent-base: var(--color-accent);
 
-    /* Генерируем градиент автоматически */
+    /* Генерируем градиент автоматически из базового цвета */
     --bg-start: var(--accent-base);
-    --bg-end: color-mix(in oklab, var(--accent-base), black 10%);
-
-    /* Тень: цвет кнопки с прозрачностью 60% */
+    --bg-end: color-mix(in oklab, var(--accent-base), black 15%);
     --shadow-color: color-mix(in srgb, var(--accent-base), transparent 60%);
 
-    --btn-base-bg: linear-gradient(145deg, var(--bg-start), var(--bg-end));
+    --btn-bg: linear-gradient(145deg, var(--bg-start), var(--bg-end));
     --btn-text: #ffffff;
 
     /* Сложная тень: Блик сверху + Цветное свечение снизу */
-    --btn-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    --btn-shadow: inset 0 1px 0 oklch(1 0 0 / 0.25),
       0 4px 12px var(--shadow-color);
 
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
-  /* Hover: Осветляем градиент и поднимаем кнопку */
   .btn-primary:hover {
     --bg-start: color-mix(in oklab, var(--accent-base), white 10%);
     --bg-end: var(--accent-base);
 
     transform: translateY(-2px);
-    /* Усиливаем тень при подъеме */
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.35),
       0 8px 24px var(--shadow-color);
   }
 
-  /* Active: Затемняем */
-  .btn-primary:active {
-    --bg-start: color-mix(in oklab, var(--accent-base), black 15%);
-    --bg-end: color-mix(in oklab, var(--accent-base), black 25%);
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
-  }
-
-  /* 21. Secondary Button ("Smart Glass") 
-     Используем color-mix для точного управления прозрачностью
-  */
+  /* Secondary: "Smart Glass" */
   .btn-secondary {
-    /* База: Белый цвет с 4% непрозрачности */
-    --glass-bg: color-mix(in srgb, #ffffff, transparent 96%);
-    --glass-border: color-mix(in srgb, #ffffff, transparent 85%);
+    --glass-bg: oklch(1 0 0 / 0.04);
+    --glass-border: oklch(1 0 0 / 0.15);
 
-    --btn-base-bg: var(--glass-bg);
+    --btn-bg: var(--glass-bg);
     --btn-text: var(--color-text-primary);
     --btn-border: var(--glass-border);
 
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px oklch(0 0 0 / 0.1);
   }
 
   .btn-secondary:hover {
-    /* При наведении стекло становится плотнее (10% непрозрачности) */
-    --btn-base-bg: color-mix(in srgb, #ffffff, transparent 90%);
-    --btn-border: color-mix(in srgb, #ffffff, transparent 50%); /* Рамка ярче */
+    --btn-bg: oklch(1 0 0 / 0.1);
+    --btn-border: oklch(1 0 0 / 0.5); /* Рамка становится ярче */
     --btn-text: #ffffff;
 
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 15px oklch(0 0 0 / 0.3);
   }
 
-  /* 22. Modifiers (Sizes) */
+  /* Размеры */
   .btn-sm {
     --btn-height: 40px;
-    padding-inline: 20px;
-    font-size: 0.875rem; /* 14px */
+    --btn-padding: 20px;
+    font-size: 0.875rem;
     --btn-radius: var(--radius-sm);
   }
 
   .btn-large {
     --btn-height: 64px;
-    padding-inline: 40px;
-    font-size: 1.125rem; /* 18px */
+    --btn-padding: 40px;
+    font-size: 1.125rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
-  /* 23. Effects (.btn-glow) */
+  /* Эффекты */
   .btn-glow {
-    /* Генерируем цвет пульсации из цвета текста (currentColor) или акцента */
     animation: pulse-ring 2.5s infinite;
   }
 
@@ -951,7 +927,6 @@
         color-mix(in srgb, var(--color-accent), transparent 40%);
     }
     70% {
-      /* Растворяем тень в ноль */
       box-shadow: 0 0 0 12px transparent;
     }
     100% {
@@ -959,33 +934,344 @@
     }
   }
 
-  /* 24. Icons Alignment (Smart Cap Units) */
-  .btn svg,
-  .icon-check,
-  .icon-plus {
-    /* Высота равна высоте заглавной буквы шрифта (Cap Height) 
-       Это обеспечивает идеальное визуальное выравнивание. */
+  /* Фикс иконок внутри кнопок (выравнивание по Cap Height) */
+  :where(.btn svg, .icon-check, .icon-plus) {
     block-size: 1.2cap;
     inline-size: auto;
     aspect-ratio: 1/1;
-
-    /* Fallback для старых браузеров */
-    min-block-size: 1.2em;
-
-    flex-shrink: 0;
     fill: none;
     display: block;
+    flex-shrink: 0;
   }
 
-  /* Рейтинг (Звезды) */
-  .rating-stars {
-    color: var(--color-rating);
+  /* ==================================================================
+     2. УНИВЕРСАЛЬНАЯ КАРТОЧКА (.card)
+     Obsidian Glass Aesthetic. База для Отзывов, Стилей, Фичей.
+  ================================================================== */
+  :where(.card) {
+    --card-bg: oklch(from var(--seed-obsidian) l c h / 0.6);
+    --card-border: oklch(1 0 0 / 0.08);
+    --card-radius: var(--radius-lg);
+    --card-padding: 2rem;
+
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    padding: var(--card-padding);
+
+    /* Performance: Изолируем перерисовку тяжелых фильтров */
+    contain: paint;
+    isolation: isolate;
+
+    /* Плавная анимация */
+    transition: transform 0.4s var(--ease-luxury, ease), border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  /* Hover State: Подъем и подсветка */
+  @media (hover: hover) {
+    :where(.card):hover {
+      --card-border: oklch(1 0 0 / 0.2);
+      transform: translateY(-8px);
+      box-shadow: inset 0 1px 0 0 oklch(1 0 0 / 0.1),
+        0 20px 60px -10px oklch(0 0 0 / 0.5);
+      z-index: 10;
+    }
+  }
+
+  /* ==================================================================
+     3. ФОРМЫ И INPUTS (.input, .select)
+     Next-Gen Validation & Feedback
+  ================================================================== */
+  :where(.input, .select, textarea) {
+    /* --- Settings --- */
+    --input-height: 60px;
+    --input-bg: oklch(0 0 0 / 0.4);
+    --input-border: oklch(1 0 0 / 0.1);
+    --input-radius: 12px;
+    --input-placeholder: oklch(1 0 0 / 0.25);
+
+    width: 100%;
+    min-block-size: var(--input-height);
+    padding-inline: 20px;
+
+    /* Reset */
+    appearance: none;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: var(--input-radius);
+
+    /* Typography */
+    font-family: inherit;
+    font-size: 16px; /* 16px предотвращает авто-зум на iOS */
+    font-weight: 500;
+    color: var(--color-text-primary);
+    caret-color: var(--color-accent);
+
+    box-shadow: inset 0 2px 4px oklch(0 0 0 / 0.5);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  :where(textarea) {
+    padding-block: 16px;
+    min-block-size: 120px;
+    resize: vertical;
+  }
+
+  :where(.input, .select, textarea)::placeholder {
+    color: var(--input-placeholder);
+    font-weight: 400;
+  }
+
+  /* Focus State: Neon Glow */
+  :where(.input, .select, textarea):focus {
+    outline: none;
+    background-color: oklch(0 0 0 / 0.6);
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+
+    box-shadow: inset 0 2px 4px oklch(0 0 0 / 0.8),
+      0 0 0 1px var(--color-accent),
+      0 0 20px color-mix(in srgb, var(--color-accent), transparent 80%);
+  }
+
+  /* Кастомная стрелка Select */
+  .select-wrapper {
+    position: relative;
+    display: grid;
+    align-items: center;
+  }
+
+  .select-wrapper::after {
+    content: "";
+    position: absolute;
+    right: 20px;
+    width: 0.8em;
+    height: 0.5em;
+    background-color: var(--color-text-muted);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    pointer-events: none;
+    transition: 0.3s ease;
+  }
+
+  /* :has() - Вращаем стрелку при фокусе селекта */
+  .select-wrapper:has(select:focus)::after {
+    background-color: var(--color-accent);
+    rotate: 180deg;
+  }
+
+  /* --- Валидация (Вежливая) --- */
+
+  /* Ошибка: Показываем только если юзер уже взаимодействовал с полем (:placeholder-shown) */
+  :where(.input, .select, textarea):not(:placeholder-shown):user-invalid {
+    --error-color: oklch(0.58 0.23 28); /* Vivid Crimson */
+    border-color: var(--error-color);
+    box-shadow: 0 0 0 1px var(--error-color);
+    animation: input-shake 0.4s ease-in-out;
+  }
+
+  /* Успех */
+  :where(.input, .select, textarea):not(:placeholder-shown):user-valid {
+    border-color: var(--color-success);
+    box-shadow: 0 0 0 1px var(--color-success);
+  }
+
+  @keyframes input-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-4px);
+    }
+    75% {
+      transform: translateX(4px);
+    }
+  }
+
+  /* ==================================================================
+     4. BADGES & TAGS (.badge)
+     Unified component for prices, discounts, and status.
+  ================================================================== */
+  :where(.badge) {
     display: inline-flex;
-    gap: 0.1em;
-    /* Золотое свечение */
-    filter: drop-shadow(
-      0 0 4px color-mix(in srgb, var(--color-rating), transparent 50%)
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+
+    border-radius: 99px; /* Pill */
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* Variant: Accent (Filled) */
+  .badge-accent {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      color-mix(in srgb, var(--color-accent), black 20%)
     );
+    color: white;
+    box-shadow: 0 4px 15px
+      color-mix(in srgb, var(--color-accent), transparent 60%);
+  }
+
+  /* Variant: Ghost (Glassy) */
+  .badge-ghost {
+    background: oklch(1 0 0 / 0.1);
+    color: var(--color-text-primary);
+    backdrop-filter: blur(4px);
+    border: 1px solid oklch(1 0 0 / 0.05);
+  }
+
+  /* Variant: Outline */
+  .badge-outline {
+    background: transparent;
+    border: 1px solid currentColor;
+  }
+
+  /* ==================================================================
+     5. АККОРДЕОН / FAQ (.accordion-item)
+     Pure CSS Animation using Grid Rows trick.
+  ================================================================== */
+  :where(.accordion-item) {
+    background: oklch(1 0 0 / 0.02);
+    border: 1px solid oklch(1 0 0 / 0.05);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  :where(.accordion-item):hover {
+    background: oklch(1 0 0 / 0.04);
+    border-color: oklch(1 0 0 / 0.1);
+  }
+
+  /* Header */
+  .accordion-header button {
+    width: 100%;
+    text-align: left;
+    padding: 24px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: none;
+    border: none;
+    color: var(--color-text-primary);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  /* Icon Logic */
+  .accordion-header .icon-plus {
+    transition: transform 0.3s var(--ease-luxury, ease);
+  }
+
+  .accordion-header button[aria-expanded="true"] .icon-plus {
+    transform: rotate(45deg);
+    stroke: var(--color-accent);
+  }
+
+  /* Content Animation (The Grid Trick) */
+  .accordion-content {
+    display: grid;
+    /* По умолчанию скрыто (высота 0) */
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s var(--ease-luxury, ease);
+  }
+
+  /* Внутренний контейнер обязателен для работы трюка */
+  .accordion-content > div,
+  .accordion-content > p {
+    overflow: hidden;
+  }
+
+  /* Состояние "Открыто" */
+  /* Используем :has() для реакции на атрибут кнопки */
+  :where(.accordion-item):has(button[aria-expanded="true"]) .accordion-content {
+    grid-template-rows: 1fr;
+    border-top: 1px solid oklch(1 0 0 / 0.05);
+  }
+
+  .accordion-content p {
+    padding: 24px;
+    padding-top: 16px;
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  /* ==================================================================
+     6. CSS TOOLTIP ([data-tooltip])
+     Lightweight tooltip helper.
+  ================================================================== */
+  [data-tooltip] {
+    position: relative;
+    cursor: help;
+  }
+
+  /* Body */
+  [data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, 10px) scale(0.95);
+
+    width: max-content;
+    max-width: 250px;
+    padding: 8px 12px;
+
+    background: oklch(0.12 0.02 260); /* Deep Obsidian */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid oklch(1 0 0 / 0.1);
+    box-shadow: 0 10px 30px oklch(0 0 0 / 0.5);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 100;
+
+    transition: all 0.2s var(--ease-luxury, ease);
+  }
+
+  /* Arrow */
+  [data-tooltip]::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border: 6px solid transparent;
+    border-top-color: oklch(0.12 0.02 260);
+
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+  }
+
+  /* Reveal */
+  [data-tooltip]:hover::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -10px) scale(1);
+  }
+
+  [data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -4px);
   }
 }
 
