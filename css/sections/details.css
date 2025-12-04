@@ -1,352 +1,284 @@
-/* -------------------------------- */
-/* --- sections/details.css    ---- */
-/* --- Ultimate Edition vFinal ---- */
-/* -------------------------------- */
+/* sections/details.css */
 
 .details {
-    position: relative;
-    /* overflow: clip — современный стандарт, не ломает position: sticky */
-    overflow: clip;
-
-    /* Инициализация счетчика */
-    counter-reset: details-counter;
-
-    /* Глубокий, кинематографичный фон */
-    background: radial-gradient(
-        circle at 50% 30%,
-        #2a2a2a 0%,
-        var(--bg-secondary) 70%,
-        #050505 100%
-    );
-
-    /* Изоляция контекста наложения для корректной работы mix-blend-mode */
-    isolation: isolate;
-
-    /* Оптимизация рендеринга */
-    content-visibility: auto;
-    contain-intrinsic-size: 800px;
+  position: relative;
+  overflow: clip;
+  counter-reset: details-counter;
+  background: radial-gradient(
+    circle at 50% 30%,
+    #2a2a2a 0%,
+    var(--bg-secondary) 70%,
+    #050505 100%
+  );
+  isolation: isolate;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 800px;
 }
 
-/* --- 1. Ambient Light (Живое дыхание фона) --- */
 .details::before {
-    content: "";
-    position: absolute;
-    top: -10%;
-    right: -10%;
-    width: 70vw;
-    height: 70vw;
+  content: "";
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  z-index: 0;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(circle, var(--accent-color), transparent 65%);
+  filter: blur(80px);
+  opacity: 0.05;
+  pointer-events: none;
+  transform: translateZ(0);
+}
 
-    background: radial-gradient(circle, var(--accent-color), transparent 65%);
+@media (min-width: 1024px) {
+  .details::before {
     filter: blur(120px);
-    opacity: 0.05;
-    z-index: 0;
-    pointer-events: none;
-
-    /* Медленная пульсация света */
     animation: ambientPulse 10s ease-in-out infinite alternate;
+  }
 }
 
 @keyframes ambientPulse {
-    0% {
-        transform: scale(1) translate(0, 0);
-        opacity: 0.05;
-    }
-    100% {
-        transform: scale(1.1) translate(-20px, 20px);
-        opacity: 0.1;
-    }
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.05;
+  }
+  100% {
+    transform: scale(1.1) translate(-20px, 20px);
+    opacity: 0.1;
+  }
 }
 
-/* --- 2. Блок контента (Row) --- */
 .content-block {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-
-    /* Адаптивные отступы */
-    gap: clamp(40px, 6vw, 80px);
-    margin-bottom: clamp(100px, 15vw, 180px);
-
-    /* Увеличение счетчика */
-    counter-increment: details-counter;
-
-    /* Плавность для JS-фолбеков или ховеров */
-    transition: transform 0.6s var(--ease-smooth), opacity 0.6s ease;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 80px;
+  counter-increment: details-counter;
+  contain: layout;
 }
 
 .content-block:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
-/* --- 3. Scroll-Driven Animation (Native) --- */
-/* Блоки выплывают и масштабируются при скролле */
 @supports (animation-timeline: view()) {
-    .content-block {
-        opacity: 0;
-        transform: translateY(40px) scale(0.96);
-        animation: revealOnScroll 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-        animation-timeline: view();
-        /* Анимация проигрывается, когда блок входит в видимую область на 10-30% */
-        animation-range: entry 10% cover 30%;
-    }
+  .content-block {
+    opacity: 0;
+    animation: revealOnScroll 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-timeline: view();
+    animation-range: entry 5% cover 25%;
+  }
 }
 
 @keyframes revealOnScroll {
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* --- 4. Медиа-контейнер (Картинка/Видео) --- */
 .content-block .media-wrapper {
-    position: relative;
-    border-radius: var(--radius-lg);
-
-    /* Стеклянная граница */
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: var(--bg-card);
-    overflow: hidden;
-
-    /* Сложная тень с красным рефлексом (Branded Shadow) */
-    box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-        0 40px 80px -20px rgba(var(--clr-red-rgb), 0.05);
-
-    transition: transform 0.6s var(--ease-smooth),
-        box-shadow 0.6s var(--ease-smooth), border-color 0.6s ease;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.6s var(--ease-smooth), box-shadow 0.6s ease;
 }
 
-/* Эффект блика (Sheen), пробегающего по стеклу */
-.content-block .media-wrapper::before {
+.content-block img,
+.content-block video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.95);
+  transform: translateZ(0);
+  transition: transform 0.6s ease;
+}
+
+.text-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0;
+}
+
+.text-content::before {
+  content: "0" counter(details-counter);
+  position: absolute;
+  top: -2.5rem;
+  left: 0;
+  z-index: -1;
+  font-family: var(--font-main);
+  font-size: 6rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #fff;
+  opacity: 0.1;
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: normal;
+}
+
+.text-content h3 {
+  position: relative;
+  margin-bottom: 16px;
+  padding-left: 20px;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  line-height: 1.1;
+  color: #fff;
+  text-wrap: balance;
+  background: linear-gradient(135deg, #fff 30%, #999 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-content h3::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--accent-color), transparent);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(229, 57, 53, 0.4);
+}
+
+.text-content p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+/* Desktop Adaptation */
+@media (min-width: 1024px) {
+  .content-block {
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(80px, 8vw, 140px);
+    margin-bottom: 150px;
+  }
+
+  .content-block.reverse {
+    flex-direction: row-reverse;
+  }
+
+  @supports (animation-timeline: view()) {
+    .content-block {
+      transform: translateY(40px) scale(0.96);
+    }
+  }
+
+  .media-wrapper,
+  .text-content {
+    flex: 1;
+    width: 50%;
+  }
+
+  .text-content {
+    padding: 20px 0;
+  }
+
+  .media-wrapper {
+    aspect-ratio: 16 / 10;
+    box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.7),
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+      0 40px 80px -20px rgba(var(--clr-red-rgb), 0.05);
+  }
+
+  .content-block .media-wrapper::before {
     content: "";
     position: absolute;
     top: 0;
     left: -100%;
+    z-index: 2;
     width: 50%;
     height: 100%;
-
     background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255, 255, 255, 0.15),
-        transparent
+      120deg,
+      transparent,
+      rgba(255, 255, 255, 0.15),
+      transparent
     );
     transform: skewX(-25deg);
     pointer-events: none;
-    z-index: 2;
     transition: left 0.7s ease;
-}
+  }
 
-/* Изображение внутри */
-.content-block img,
-.content-block video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .content-block:hover .media-wrapper::before {
+    left: 150%;
+  }
 
-    filter: brightness(0.95) contrast(1.05);
-    transform: scale(1.01); /* Убираем субпиксельные артефакты */
-
-    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), filter 0.6s ease;
-}
-
-/* --- 5. Взаимодействие (Hover) --- */
-@media (hover: hover) {
-    /* При наведении на блок картинка "оживает" */
-    .content-block:hover .media-wrapper {
-        transform: translateY(-10px);
-        /* Тень становится глубже и краснее */
-        box-shadow: 0 40px 90px -20px rgba(0, 0, 0, 0.8),
-            0 0 0 1px rgba(255, 255, 255, 0.15) inset,
-            0 50px 100px -20px rgba(var(--clr-red-rgb), 0.15);
-        border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    /* Запуск блика */
-    .content-block:hover .media-wrapper::before {
-        left: 150%;
-    }
-
-    /* Кинематографичный зум */
-    .content-block:hover img,
-    .content-block:hover video {
-        transform: scale(1.08);
-        filter: brightness(1.1) contrast(1.1);
-    }
-}
-
-/* --- 6. Текстовая часть --- */
-.text-content {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 20px 0;
-}
-
-/* Ghost Typography (Цифры 01, 02) */
-.text-content::before {
-    content: "0" counter(details-counter);
-    position: absolute;
-    top: -3.5rem;
-    left: -10px;
-    z-index: -1;
-
-    font-family: var(--font-main);
-    font-weight: 900;
-    font-size: clamp(6rem, 15vw, 12rem);
-    line-height: 1;
-
-    /* Эффект гравировки: прозрачность + режим наложения */
+  .text-content::before {
+    top: -4rem;
+    left: -50px;
+    font-size: clamp(8rem, 12vw, 12rem);
     color: transparent;
     -webkit-text-stroke: 2px rgba(255, 255, 255, 0.05);
-    mix-blend-mode: overlay;
-
-    pointer-events: none;
-    user-select: none;
-
-    /* Параллакс при наведении */
-    transition: transform 0.8s var(--ease-smooth), opacity 0.8s ease;
     opacity: 0.6;
-}
+    mix-blend-mode: overlay;
+    transition: transform 0.8s var(--ease-smooth), opacity 0.8s ease;
+  }
 
-/* Акцент на цифре при ховере */
-.content-block:hover .text-content::before {
-    transform: translateX(20px) scale(1.05);
+  .content-block.reverse .text-content::before {
+    right: -30px;
+    left: auto;
+    text-align: right;
+  }
+
+  /* Hover States */
+  .content-block:hover .media-wrapper {
+    transform: translateY(-10px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 40px 90px -20px rgba(0, 0, 0, 0.8),
+      0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+      0 50px 100px -20px rgba(var(--clr-red-rgb), 0.15);
+  }
+
+  .content-block:hover img,
+  .content-block:hover video {
+    filter: brightness(1.1);
+    transform: scale(1.08);
+  }
+
+  .content-block:hover .text-content::before {
     opacity: 0.9;
-    -webkit-text-stroke-color: rgba(255, 255, 255, 0.1);
-}
+    transform: translateX(20px) scale(1.05);
+  }
 
-/* Заголовок */
-.text-content h3 {
-    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-    margin-bottom: 24px;
-    color: #fff;
-    position: relative;
-    padding-left: 28px; /* Отступ под линию */
-    line-height: 1.1;
-    text-wrap: balance;
+  .content-block.reverse:hover .text-content::before {
+    transform: translateX(-20px) scale(1.05);
+  }
 
-    /* Металлический градиент текста */
-    background: linear-gradient(135deg, #fff 30%, #999 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: #fff; /* Fallback */
-}
-
-/* Фирменная линия (Neon Stitch) */
-.text-content h3::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 6px;
-    bottom: 6px;
-    width: 4px;
-
-    /* Градиентный "стежок", уходящий в прозрачность */
-    background: linear-gradient(to bottom, var(--accent-color), transparent);
-    border-radius: 4px;
-
-    /* Неоновое свечение */
-    box-shadow: 0 0 15px rgba(229, 57, 53, 0.5);
-
-    transform-origin: top;
-    transition: transform 0.5s var(--ease-bounce), box-shadow 0.5s ease;
-}
-
-/* Линия "наполняется" при наведении */
-.content-block:hover .text-content h3::after {
-    transform: scaleY(1.15);
+  .content-block:hover .text-content h3::after {
     box-shadow: 0 0 25px rgba(229, 57, 53, 0.9);
+    transform: scaleY(1.15);
+  }
 }
 
-/* Описание */
-.text-content p {
-    font-size: 1.125rem;
-    line-height: 1.7;
-    color: var(--text-secondary);
-    max-width: 55ch;
-    text-wrap: pretty;
-    transition: color 0.3s ease;
-}
-
-.content-block:hover .text-content p {
-    color: #e0e0e0;
-}
-
-/* =========================================
-   DESKTOP ADAPTATION (Zig-Zag / Шахматка)
-   ========================================= */
-@media (min-width: 1024px) {
-    .content-block {
-        flex-direction: row;
-        align-items: center;
-        /* Большой "дорогой" отступ */
-        gap: clamp(80px, 8vw, 140px);
-    }
-
-    .media-wrapper,
-    .text-content {
-        flex: 1;
-        width: 50%;
-    }
-
-    .media-wrapper {
-        aspect-ratio: 16 / 10;
-    }
-
-    /* --- Чередование (Zig-Zag) --- */
-    /* Reverse: Картинка слева, Текст справа -> наоборот */
-    .content-block.reverse {
-        flex-direction: row-reverse;
-    }
-
-    /* Позиционирование цифр на ПК */
-    /* Обычный блок (Текст справа) */
-    .text-content::before {
-        top: -5rem;
-        left: -50px;
-    }
-
-    /* Reverse блок (Текст слева) */
-    .content-block.reverse .text-content::before {
-        left: auto;
-        right: -30px; /* Цифра уходит в край */
-        text-align: right;
-    }
-
-    /* Параллакс для Reverse блока */
-    .content-block.reverse:hover .text-content::before {
-        transform: translateX(-20px) scale(1.05);
-    }
-}
-
-/* =========================================
-   MOBILE FIXES
-   ========================================= */
-@media (max-width: 767px) {
-    /* На мобильных цифра уходит на задний план за текст */
-    .text-content::before {
-        font-size: 8rem;
-        top: -5rem;
-        left: 0;
-        opacity: 0.2;
-        -webkit-text-stroke: 0;
-        /* Легкая заливка вместо обводки для мягкости */
-        background: linear-gradient(
-            to bottom,
-            rgba(255, 255, 255, 0.1),
-            transparent
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .content-block:hover .text-content::before {
-        transform: translateX(10px);
-    }
+@media (prefers-reduced-motion: reduce) {
+  .details::before,
+  .content-block,
+  .media-wrapper,
+  .text-content::before,
+  img,
+  video {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+  }
 }
