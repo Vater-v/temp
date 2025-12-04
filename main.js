@@ -1,6 +1,46 @@
 document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
+  /**
+   * =========================================================================
+   * 0. Активная навигация (ScrollSpy) - High Performance
+   * =========================================================================
+   */
+  const initScrollSpy = () => {
+    const sections = document.querySelectorAll("section[id]"); // Все секции с ID
+    const navLinks = document.querySelectorAll(".nav__link");
 
+    // Опции: срабатываем, когда 40% секции видно на экране
+    const observerOptions = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.4,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Удаляем активный класс у всех ссылок
+          navLinks.forEach((link) => link.classList.remove("is-current"));
+
+          // Находим ссылку, ведущую на эту секцию
+          const activeLink = document.querySelector(
+            `.nav__link[href="#${entry.target.id}"]`
+          );
+
+          if (activeLink) {
+            activeLink.classList.add("is-current");
+          }
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach((section) => {
+      observer.observe(section);
+    });
+  };
+
+  // Не забудьте вызвать функцию:
+  initScrollSpy();
   /**
    * =========================================================================
    * 1. Мобильное меню (Off-canvas Navigation)

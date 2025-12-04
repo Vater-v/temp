@@ -386,15 +386,83 @@ a {
   gap: 20px;
 }
 
+/* --- Общие стили для ссылок --- */
 .nav__link {
-  display: block;
-  font-weight: 600;
+  position: relative;
+  display: block; /* Важно для отступов */
+  font-weight: 500; /* Чуть легче, чем 600, для премиальности */
   font-size: 18px;
   color: var(--color-text);
-  padding: 5px 0;
+  padding: 10px 0; /* Увеличиваем вертикальный отступ */
+  transition: color var(--transition);
 }
-.nav__link:hover {
-  color: var(--color-accent);
+
+/* --- Эффект подчеркивания (Desktop) --- */
+@media (min-width: 1024px) {
+  .nav__link {
+    padding: 0; /* Сбрасываем лишние отступы на десктопе */
+  }
+
+  /* Псевдо-элемент для линии */
+  .nav__link::after {
+    content: "";
+    position: absolute;
+    bottom: -4px; /* Отступ линии от текста */
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-accent);
+
+    /* Производительная анимация */
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .nav__link:hover {
+    color: var(--color-black); /* Цвет текста при наведении */
+  }
+
+  /* При наведении линия растет слева направо */
+  .nav__link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Класс активного пункта (добавим через JS) */
+  .nav__link.is-current {
+    color: var(--color-black);
+  }
+  .nav__link.is-current::after {
+    transform: scaleX(1);
+    background-color: var(--color-accent);
+  }
+}
+
+/* --- Улучшение для мобильных (Mobile UX) --- */
+@media (max-width: 1023px) {
+  .nav__list {
+    gap: 10px; /* Отступы между пунктами */
+  }
+
+  .nav__link {
+    padding: 12px 15px; /* Большая зона клика */
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  /* Эффект нажатия как в приложениях */
+  .nav__link:active,
+  .nav__link:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Легкий фон */
+    color: var(--color-accent);
+  }
+
+  .nav__link.is-current {
+    background-color: rgba(229, 57, 53, 0.1); /* Легкий красный фон */
+    color: var(--color-accent);
+    font-weight: 700;
+  }
 }
 
 .header__nav-footer {
