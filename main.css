@@ -144,89 +144,81 @@ a {
    Phase 2: Утилитарные Классы и Визуальные Эффекты (Ultimate Premium)
 ====================================================================== */
 
-/* --- 1. Текстуры и Материалы --- */
+/* --- 1. Металлы и Текстуры --- */
 
-/* 5. Эффект "Хром" (.text-chrome) */
-/* Сочетает "горизонт" металла и легкий перелив */
+/* 5. Эффект "Хром" (.text-chrome)
+   Создает имитацию полированного металла с линией горизонта и живым блеском.
+*/
 .text-chrome {
-  color: #fff; /* Fallback */
   background-image: linear-gradient(
     135deg,
     #ffffff 0%,
     #e0e0e0 40%,
     #a0a0a0 50%,
-    /* "Линия горизонта" для имитации металла */ #d0d0d0 60%,
+    #e0e0e0 60%,
     #ffffff 100%
   );
   background-size: 200% auto;
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1); /* Легкая аура */
-
-  /* Очень медленная, едва заметная анимация перелива */
+  /* Легкая тень отделяет "металл" от фона */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  /* Медленная анимация перелива (едва заметная) */
   animation: chromeShine 8s linear infinite;
 }
 
 @keyframes chromeShine {
-  0% {
-    background-position: 0% center;
-  }
-  100% {
+  to {
     background-position: 200% center;
   }
 }
 
-/* 9. Эффект Шума (.fx-noise) */
+/* 9. Эффект Шума (.fx-noise)
+   Добавляет кинематографичную зернистость.
+*/
 .fx-noise {
   position: relative;
-  isolation: isolate; /* Защищает от проблем с z-index дочерних элементов */
+  isolation: isolate; /* Создает новый контекст наложения */
 }
 
 .fx-noise::after {
   content: "";
   position: absolute;
   inset: 0;
-  /* Шум через SVG для четкости на Retina экранах */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.05; /* Деликатная зернистость */
-  mix-blend-mode: overlay; /* Сохраняет глубину черного цвета */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.05; /* Деликатная прозрачность */
+  mix-blend-mode: overlay; /* Шум встраивается в цвет, а не лежит поверх */
   pointer-events: none;
   z-index: -1;
 }
 
 /* --- 2. Эффекты Стекла (Glassmorphism 2.0) --- */
-
-/* Общие свойства для стекла */
-[class^="glass-"] {
-  /* Аппаратное ускорение для плавности */
-  transform: translateZ(0);
-}
+/* Логика: Свет падает сверху-слева -> Верх/Лево светлые, Низ/Право темные */
 
 /* 6. Эффект "Стекло" (Панель) (.glass-panel) */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
-  /* Направленный свет: верх яркий, низ темный */
+  /* Направленное освещение границ */
   border-top: 1px solid rgba(255, 255, 255, 0.15);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
   border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3); /* Тень снизу */
 
   border-radius: var(--radius-lg);
-
-  /* Внутренняя тень создает ощущение толстого стекла */
+  /* Внутренняя тень (inset) придает толщину стеклу */
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 40px -10px rgba(0, 0, 0, 0.5);
+    0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 /* 7. Эффект "Стекло" (Призрак) (.glass-ghost) */
 .glass-ghost {
   background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-md);
   transition: background 0.3s ease, border-color 0.3s ease;
@@ -239,22 +231,24 @@ a {
 
 /* 8. Эффект "Стекло" (Темное/Obsidian) (.glass-obsidian) */
 .glass-obsidian {
-  background: rgba(10, 10, 10, 0.85); /* Глубокий черный глянец */
+  background: rgba(8, 8, 8, 0.85); /* Глубокий черный */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.8);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
 }
 
-/* --- 3. Интерактив и Анимации --- */
+/* --- 3. Интерактивные Анимации --- */
 
-/* 10. Эффект Блика (.fx-sheen) */
-/* Премиальный эффект пробегающего света при наведении */
+/* 10. Эффект Блика (.fx-sheen) 
+   Скользящая полоса света при наведении. Must-have для Luxury.
+*/
 .fx-sheen {
   position: relative;
-  overflow: hidden; /* Важно: удерживает блик внутри элемента */
+  overflow: hidden; /* Важно: обрезает блик */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  /* Fix для Safari (чтобы border-radius не ломался) */
+  /* Fix для Safari (скругление маски) */
   -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
@@ -262,45 +256,31 @@ a {
   content: "";
   position: absolute;
   top: 0;
-  left: -100%;
+  left: -100%; /* Старт слева */
   width: 50%;
   height: 100%;
-  /* Градиент блика: прозрачный -> белый свет -> прозрачный */
+  /* Градиент блика: прозрачный -> белый -> прозрачный */
   background: linear-gradient(
     120deg,
     transparent,
-    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0.2),
     transparent
   );
   transform: skewX(-25deg);
+  transition: none; /* Убираем transition, чтобы управлять им через keyframes или left */
   pointer-events: none;
   z-index: 2;
-  transition: none; /* Сброс для мгновенного возврата */
 }
 
 .fx-sheen:hover {
-  transform: translateY(-3px); /* Легкий подъем */
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px); /* Легкий подъем */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2);
 }
 
+/* При наведении блик пробегает слева направо */
 .fx-sheen:hover::before {
-  /* Анимация пролета */
-  animation: sheenSlide 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes sheenSlide {
-  0% {
-    left: -100%;
-    opacity: 0;
-  }
-  1% {
-    opacity: 1;
-  }
-  100% {
-    left: 200%;
-    opacity: 0;
-  }
+  left: 200%;
+  transition: left 0.7s ease-in-out;
 }
 
 /* 11. Эффект Зума (.hover-zoom) */
@@ -308,37 +288,41 @@ a {
   overflow: hidden;
   border-radius: inherit;
   display: block;
+  /* Аппаратное ускорение */
+  transform: translate3d(0, 0, 0);
 }
 
 .hover-zoom img,
 .hover-zoom video {
   transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     filter 0.6s ease;
-  will-change: transform; /* Оптимизация производительности */
   width: 100%;
   height: 100%;
   object-fit: cover;
+  will-change: transform;
 }
 
 .hover-zoom:hover img,
 .hover-zoom:hover video {
-  transform: scale(1.06); /* Благородный, не резкий зум */
-  filter: contrast(1.05); /* Легкое повышение контраста в фокусе */
+  transform: scale(1.05); /* Умеренный, дорогой зум */
+  filter: brightness(1.1); /* Легкое осветление фокуса */
 }
 
 /* 12. Свечение (.glow-ambient) */
 .glow-ambient {
   text-shadow: 0 0 15px rgba(255, 255, 255, 0.15),
-    0 0 30px rgba(255, 255, 255, 0.05);
+    0 0 30px rgba(255, 255, 255, 0.1);
 }
 
-/* --- 4. Утилиты --- */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+/* --- 4. Дополнительные Утилиты --- */
+
+/* Скрытие скроллбара (для горизонтальных слайдеров) */
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* ======================================================================
