@@ -108,23 +108,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const accordion = document.getElementById("faq-accordion");
     if (!accordion) return;
 
-    // Используем делегирование событий
     accordion.addEventListener("click", (e) => {
       const button = e.target.closest(".js-accordion-toggle");
       if (!button) return;
 
-      // Находим родительский контейнер пункта (.accordion__item)
       const item = button.closest(".accordion__item");
       if (!item) return;
 
       const isExpanded = button.getAttribute("aria-expanded") === "true";
       const shouldOpen = !isExpanded;
 
-      // Обновляем атрибут доступности на кнопке
-      button.setAttribute("aria-expanded", shouldOpen);
+      // 1. Сначала закрываем все открытые пункты (кроме текущего, если мы по нему кликнули)
+      if (shouldOpen) {
+        const openItems = accordion.querySelectorAll(
+          ".accordion__item.is-open"
+        );
+        openItems.forEach((openItem) => {
+          if (openItem !== item) {
+            openItem.classList.remove("is-open");
+            const btn = openItem.querySelector(".js-accordion-toggle");
+            if (btn) btn.setAttribute("aria-expanded", "false");
+          }
+        });
+      }
 
-      // Управляем классом состояния на родительском элементе
-      // CSS использует этот класс для анимации открытия (grid-template-rows).
+      // 2. Переключаем состояние текущего
+      button.setAttribute("aria-expanded", shouldOpen);
       if (shouldOpen) {
         item.classList.add("is-open");
       } else {

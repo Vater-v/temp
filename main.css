@@ -1127,8 +1127,56 @@ a {
   max-width: 800px;
   margin: 0 auto;
 }
+/* Убираем линии между, делаем отступы для «воздуха» */
 .accordion__item {
   border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.2s ease; /* Реакция на наведение */
+}
+
+/* UX: Подсветка всей зоны при наведении курсора */
+@media (hover: hover) {
+  .accordion__item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+}
+
+/* Скрываем контент (начальное состояние) */
+.accordion__content-inner {
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px); /* Сдвиг вверх */
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Apple-like easing */
+  padding-bottom: 20px; /* Переносим отступ сюда для плавности */
+}
+
+/* Открытое состояние */
+.accordion__item.is-open .accordion__content-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Кнопка */
+.accordion__button {
+  padding: 20px 0; /* Чуть меньше, чтобы было компактнее */
+  outline: none; /* Убираем стандартную обводку */
+}
+
+/* UX: Фокус для клавиатуры (доступность) */
+.accordion__button:focus-visible {
+  color: var(--color-accent);
+}
+.accordion__button:focus-visible .accordion__icon {
+  transform: scale(1.2); /* Легкий зум иконки при фокусе */
+}
+.accordion__icon {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  color: var(--color-gray); /* Иконка серая по умолчанию */
+}
+
+/* При открытии поворачиваем на 90 градусов (если стрелка вправо) */
+.accordion__item.is-open .accordion__icon {
+  transform: rotate(90deg);
+  color: var(--color-accent); /* Краснеет при открытии */
 }
 .accordion__title {
   margin: 0;
@@ -1149,12 +1197,6 @@ a {
   .accordion__button:hover {
     color: var(--color-accent);
   }
-}
-
-.accordion__icon {
-  transition: transform var(--transition);
-  flex-shrink: 0;
-  margin-left: 20px;
 }
 
 /* Animation logic */
