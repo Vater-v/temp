@@ -1,27 +1,8 @@
-/* =========================================
-   ФАЗА 1: Настройка, Переменные и Сброс
-   ========================================= */
+/* ======================================================================
+   Phase 1: Настройка, Переменные и Сброс Стилей
+====================================================================== */
 
-/* --- 1. CSS Переменные (:root) --- */
-:root {
-  /* Палитра */
-  --color-bg-primary: #0a0a0a;
-  --color-bg-secondary: #1a1a1a;
-  --color-text-primary: #f5f5f5;
-  --color-text-muted: #a0a0a0;
-  --color-accent: #e53935;
-  --color-border: #333333;
-  --color-success: #4caf50;
-  --color-rating: #ffd700;
-
-  /* Типографика и Радиусы */
-  --font-family-base: "Inter", sans-serif;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
-}
-
-/* --- 2. Сброс стилей (Reset) --- */
+/* 1. Сброс стилей (Reset) */
 *,
 *::before,
 *::after {
@@ -32,27 +13,19 @@ body,
 h1,
 h2,
 h3,
-h4,
-h5,
-h6,
 p,
 ul,
-ol,
 figure,
-blockquote {
+blockquote,
+figcaption {
   margin: 0;
   padding: 0;
 }
 
-ul,
-ol {
+/* Убираем стандартные стили списков там, где есть атрибут role="list" или для ul в навигации */
+ul[role="list"],
+.nav__list {
   list-style: none;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-  transition: opacity 0.2s ease;
 }
 
 img,
@@ -62,44 +35,68 @@ video {
   height: auto;
 }
 
-/* --- 3. Базовые настройки страницы --- */
-html {
-  scroll-behavior: smooth;
-  height: 100%;
-  overscroll-behavior-y: none;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* 2. Плавная прокрутка */
+html {
+  scroll-behavior: smooth;
+  /* Добавим отступ сверху для якорных ссылок, учитывая фиксированную шапку */
+  scroll-padding-top: 80px;
+}
+
+/* 3. Определение CSS-переменных */
+:root {
+  /* Цвета: Темная премиальная тема */
+  --color-bg-primary: #0a0a0a;
+  --color-bg-secondary: #1a1a1a;
+  --color-text-primary: #f5f5f5;
+  --color-text-muted: #a0a0a0;
+  --color-accent: #e53935; /* Красный акцент */
+  --color-border: #333333;
+  --color-success: #4caf50;
+  --color-rating: #ffd700;
+
+  /* Шрифты и радиусы */
+  --font-family-base: "Inter", sans-serif;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+}
+
+/* 4. Базовые стили body */
 body {
   font-family: var(--font-family-base);
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  min-height: 100dvh;
-  position: relative;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.container {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
+/* ======================================================================
+   Phase 2: Утилитарные Классы и Визуальные Эффекты
+====================================================================== */
 
-/* =========================================
-   ФАЗА 2: Утилитарные Классы и Эффекты
-   ========================================= */
-
-/* --- Эффект "Хром" --- */
+/* 5. Эффект "Хром" (.text-chrome) */
 .text-chrome {
-  background-image: linear-gradient(0deg, #a0a0a0, #ffffff, #a0a0a0);
+  background-image: linear-gradient(0deg, #a0a0a0, #ffffff 50%, #a0a0a0 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  display: inline-block;
 }
 
-/* --- Эффект "Стекло" (Панель) --- */
+/* 6. Эффект "Стекло" (Панель) (.glass-panel) */
 .glass-panel {
   background-color: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
@@ -108,16 +105,16 @@ body {
   border-radius: var(--radius-lg);
 }
 
-/* --- Эффект "Стекло" (Призрак) --- */
+/* 7. Эффект "Стекло" (Призрак) (.glass-ghost) */
 .glass-ghost {
   background-color: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
 }
 
-/* --- Эффект "Стекло" (Темное/Obsidian) --- */
+/* 8. Эффект "Стекло" (Темное) (.glass-obsidian) */
 .glass-obsidian {
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(15px);
@@ -125,70 +122,47 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* --- Эффект Шума (Noise) --- */
+/* 9. Эффект Шума (.fx-noise) */
 .fx-noise {
   position: relative;
-  overflow: hidden;
 }
 
 .fx-noise::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  /* Использование SVG для генерации шума */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 500 500' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   opacity: 0.05;
   pointer-events: none;
   z-index: 1;
 }
 
-/* --- Эффект Блика (Sheen) --- */
+/* 10. Эффект Блика (.fx-sheen) */
 .fx-sheen {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: border-color 0.3s ease;
+  /* Легкая обводка для имитации отражения */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: box-shadow 0.3s ease;
 }
 
 .fx-sheen:hover {
-  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
 }
 
-.fx-sheen::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.05) 40%,
-    rgba(255, 255, 255, 0.2) 50%,
-    rgba(255, 255, 255, 0.05) 60%,
-    transparent
-  );
-  transform: skewX(-25deg);
-  pointer-events: none;
-  transition: 0s;
-  z-index: 2;
-}
-
-.fx-sheen:hover::before {
-  left: 200%;
-  transition: 0.8s ease-in-out;
-}
-
-/* --- Эффект Зума (Hover Zoom) --- */
+/* 11. Эффект Зума при наведении (.hover-zoom) */
 .hover-zoom {
   overflow: hidden;
-  display: block;
+  /* Убедимся, что скругление родителя применяется к дочернему элементу при зуме */
+  border-radius: inherit;
 }
 
 .hover-zoom img,
 .hover-zoom video {
   transition: transform 0.3s ease-out;
-  will-change: transform;
+  /* Убедимся, что медиа заполняет контейнер */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .hover-zoom:hover img,
@@ -196,7 +170,1264 @@ body {
   transform: scale(1.05);
 }
 
-/* --- Свечение (Glow) --- */
+/* 12. Свечение (.glow-ambient) */
 .glow-ambient {
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* ======================================================================
+   Phase 3: Макет и Типографика
+====================================================================== */
+
+/* 13. Контейнер (.container) */
+.container {
+  max-width: 1240px; /* 1200px + padding */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* 14. Фоны Секций */
+.bg-primary {
+  background-color: var(--color-bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--color-bg-secondary);
+}
+
+/* 15. Отступы Секций */
+section {
+  padding-top: 60px;
+  padding-bottom: 60px;
+  /* Контент секции должен быть над шумом */
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  section {
+    padding-top: 100px;
+    padding-bottom: 100px;
+  }
+}
+
+/* 16. Заголовки (H1, H2, H3) */
+h1,
+h2,
+h3 {
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 36px;
+}
+
+h2 {
+  font-size: 28px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 48px;
+  }
+
+  h2 {
+    font-size: 36px;
+  }
+
+  h3 {
+    font-size: 24px;
+  }
+}
+
+/* 17. Заголовок Секции (.section-title) */
+.section-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    margin-bottom: 60px;
+  }
+}
+
+/* 18. Подзаголовки (.subtitle, .section-subtitle) */
+.subtitle,
+.section-subtitle {
+  color: var(--color-text-muted);
+  font-size: 18px;
+  margin-bottom: 1.5rem;
+}
+
+.section-subtitle {
+  text-align: center;
+}
+
+/* ======================================================================
+   Phase 4: Компоненты (Кнопки, Иконки)
+====================================================================== */
+
+/* 19. Базовый стиль Кнопки (.btn) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+  font-size: 16px;
+}
+
+/* 20. Основная Кнопка (.btn-primary) */
+.btn-primary {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  /* Сделаем чуть ярче */
+  background-color: #f44336;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* 21. Вторичная Кнопка (.btn-secondary) */
+.btn-secondary {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.btn-secondary:hover {
+  background-color: #333;
+  border-color: #555;
+}
+
+/* 22. Модификаторы Размера Кнопок */
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.btn-large {
+  padding: 16px 32px;
+  font-size: 18px;
+}
+
+/* 23. Свечение Кнопки (.btn-glow) */
+.btn-glow {
+  box-shadow: 0 0 15px rgba(229, 57, 53, 0.5);
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 25px rgba(229, 57, 53, 0.7);
+}
+
+/* 24. Иконки */
+.icon-check {
+  color: var(--color-success);
+  flex-shrink: 0;
+}
+
+.stars-icon,
+.rating-stars {
+  color: var(--color-rating);
+}
+
+/* ======================================================================
+   Phase 5: Шапка и Навигация
+====================================================================== */
+
+/* 25. Шапка (.header) */
+.header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  /* Используем эффект темного стекла для шапки */
+  background-color: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* 26. Контейнер Шапки (.header__container) */
+.header__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px; /* Фиксированная высота */
+}
+
+/* 27. Логотип (.logo) */
+.logo,
+.logo-footer {
+  font-weight: 900;
+  font-size: 24px;
+}
+
+/* 28. Десктопная Навигация (.nav--desktop .nav__list) */
+.nav__list {
+  display: flex;
+}
+
+.nav--desktop .nav__list {
+  gap: 30px;
+}
+
+/* 29. Ссылки Навигации (.nav__link) */
+.nav__link {
+  color: var(--color-text-muted);
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav__link:hover {
+  color: var(--color-text-primary);
+}
+
+/* 30. Кнопка Бургера (.burger-btn) */
+.burger-btn,
+.close-menu-btn {
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+}
+
+/* 31. Мобильное Меню Оверлей (.mobile-menu-overlay) */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  /* Начальное состояние (скрыто) */
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 0.3s ease-out, visibility 0.3s;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Состояние "Открыто" (управляется JS через атрибут aria-hidden) */
+.mobile-menu-overlay[aria-hidden="false"] {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+/* 32. Внутренности Мобильного Меню */
+.mobile-menu__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.nav--mobile {
+  flex-grow: 1;
+}
+
+.nav--mobile .nav__list {
+  flex-direction: column;
+}
+
+.nav--mobile .nav__item a {
+  display: block;
+  padding: 16px 20px;
+  font-size: 18px;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobile-menu__footer {
+  padding: 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+.mobile-menu__footer .btn {
+  width: 100%;
+}
+
+/* ======================================================================
+   Phase 6: Стилизация Секций
+====================================================================== */
+
+/* --- 6.1. Hero (.hero) --- */
+
+.hero {
+  padding-top: 40px;
+  padding-bottom: 60px;
+}
+
+/* 33. Макет Hero (.hero__layout) */
+.hero__layout {
+  display: grid;
+  gap: 40px;
+}
+
+@media (min-width: 1024px) {
+  /* Используем 1024px как точку перехода для Hero */
+  .hero {
+    padding-top: 80px;
+    padding-bottom: 100px;
+  }
+  .hero__layout {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    gap: 60px;
+  }
+}
+
+.hero__content {
+  /* Убедимся, что контент находится над фоновым шумом */
+  position: relative;
+  z-index: 2;
+}
+
+/* 34. Бейдж Доверия (.trust-badge) */
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 50px; /* Скругленный бейдж */
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+/* 35. Список Преимуществ (.bullets) */
+.bullets {
+  padding: 24px;
+  margin-bottom: 30px;
+}
+
+.bullets li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.bullets li:last-child {
+  margin-bottom: 0;
+}
+
+/* 36. Группа CTA (.cta-group) */
+.cta-hint {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin-top: 15px;
+}
+
+/* Медиа (Изображение) */
+@media (min-width: 1024px) {
+  .hero-img {
+    border-radius: var(--radius-lg);
+    /* Добавим легкую тень для отделения от фона */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    max-height: 70vh;
+    width: auto;
+    margin: 0 auto;
+  }
+}
+
+/* --- 6.2. Details (.details) --- */
+
+/* 37. Блок Контента (.content-block) */
+.content-block {
+  display: grid;
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.content-block:last-child {
+  margin-bottom: 0;
+}
+
+@media (min-width: 768px) {
+  .content-block {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 60px;
+  }
+
+  /* 38. Реверс Блока (.content-block.reverse) */
+  .content-block.reverse .media-wrapper {
+    order: 2;
+  }
+  .content-block.reverse .text-content {
+    order: 1;
+  }
+}
+
+/* Медиа обертка */
+.media-wrapper {
+  border-radius: var(--radius-lg);
+}
+
+/* 40. Декоративная Линия (.stitch-line) */
+.stitch-line {
+  border-left: 3px dashed var(--color-accent);
+  padding-left: 20px;
+}
+
+@media (min-width: 768px) {
+  .stitch-line {
+    padding-left: 30px;
+  }
+}
+
+/* --- 6.3. Styles (.styles) --- */
+
+/* 41. Сетка Стилей (.grid-container--styles) */
+.grid-container--styles {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid-container--styles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 42. Карточка Стиля (.style-card) */
+.style-card {
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.style-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-media {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* 43. Контент Карточки (.card-content) */
+.card-content {
+  padding: 24px;
+}
+
+.card-content .btn {
+  margin-top: 20px;
+}
+
+/* --- 6.4. Technology (.technology) --- */
+
+/* 44. Сетка Технологий (.grid-container--tech) */
+.grid-container--tech {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid-container--tech {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 45. Элемент Технологии (.tech-item) */
+.tech-item {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+}
+
+.tech-item figure {
+  margin-bottom: 20px;
+  border-radius: var(--radius-md);
+}
+
+/* --- 6.5. Video Overview (.video-overview) --- */
+
+/* 46. Обертка Видео (.video-wrapper) */
+.video-wrapper {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- 6.6. Kit (.kit) --- */
+
+/* 47. Макет Комплекта (.kit__layout) */
+.kit__layout {
+  display: grid;
+  gap: 40px;
+}
+
+@media (min-width: 768px) {
+  .kit__layout {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 60px;
+  }
+}
+
+.kit__image img {
+  border-radius: var(--radius-lg);
+}
+
+/* 48. Контейнер Списка (.kit__list-container) */
+.kit__list-container {
+  padding: 30px;
+}
+
+/* 49. Список Комплекта (.kit__list li) */
+.kit__list li {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: baseline;
+}
+
+.kit__list li:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.kit__item-count {
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-right: 10px;
+  flex-shrink: 0;
+  min-width: 50px;
+}
+
+.kit__note {
+  color: var(--color-text-muted);
+  margin-top: 20px;
+}
+
+.cta-kit {
+  margin-top: 30px;
+}
+
+/* --- 6.7. Gallery (.gallery) --- */
+
+/* 50. Мобильный Слайдер (.scroll-snap-slider) */
+.scroll-snap-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 16px;
+  /* Скрытие полосы прокрутки */
+  -ms-overflow-style: none; /* IE и Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scroll-snap-slider::-webkit-scrollbar {
+  display: none; /* Chrome, Safari и Opera */
+}
+
+/* Учет горизонтального padding контейнера для мобильного слайдера галереи */
+.gallery .scroll-snap-slider {
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+/* 51. Слайд (.slide) */
+.slide {
+  scroll-snap-align: start;
+  /* 85% ширины экрана, чтобы показать край следующего слайда */
+  flex: 0 0 85%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 3/4;
+}
+
+/* 52. Подсказка Свайпа (.swipe-hint) */
+.swipe-hint {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* 53. Десктопная Сетка (.gallery-grid-desktop) (Стилизуется в медиа-запросах в Фазе 9) */
+
+/* 54. Элементы Галереи (.gallery-item) */
+.gallery-item {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+/* --- 6.8. Reviews (.reviews) --- */
+
+/* Слайдер отзывов не требует выхода за пределы контейнера */
+.reviews-slider {
+  padding-bottom: 20px; /* Для теней карточек */
+}
+
+/* 57. Карточка Отзыва (.review-card) */
+.review-card {
+  scroll-snap-align: start;
+  flex: 0 0 90%; /* Чуть шире на мобильном */
+  max-width: 400px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+@media (min-width: 768px) {
+  .review-card {
+    flex: 0 0 400px;
+  }
+}
+
+.review-card blockquote {
+  margin: 15px 0;
+  flex-grow: 1;
+}
+
+.review-card blockquote p {
+  font-style: italic;
+}
+
+.review-card .author {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+/* --- 6.9. FAQ (.faq) --- */
+
+.accordion {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* 58. Элемент Аккордеона (.accordion-item) */
+.accordion-item {
+  margin-bottom: 15px;
+}
+
+/* 59. Кнопка Аккордеона (.accordion-header button) */
+.accordion-header button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.accordion-header button:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* 60. Иконка Плюс (.icon-plus) */
+.icon-plus {
+  transition: transform 0.3s ease-out;
+  flex-shrink: 0;
+}
+
+/* 62. Открытое Состояние (Иконка) */
+[aria-expanded="true"] .icon-plus {
+  transform: rotate(135deg); /* Превращает плюс в крестик */
+}
+
+/* 61. Контент Аккордеона (.accordion-content) */
+.accordion-content {
+  /* Начальное состояние (скрыто) - управляется JS для расчета высоты */
+  display: none;
+  overflow: hidden;
+}
+
+/* Стилизация текста внутри контента */
+.accordion-content p {
+  padding: 0 20px 20px 20px;
+  color: var(--color-text-muted);
+}
+
+/* ======================================================================
+   Phase 7: Форма Заказа (.order-section)
+====================================================================== */
+
+/* 63. Макет Секции Заказа (.order__layout) */
+.order__layout {
+  display: grid;
+  gap: 50px;
+}
+
+@media (min-width: 992px) {
+  /* Используем 992px для этой секции */
+  .order__layout {
+    grid-template-columns: 1fr 450px; /* Фиксированная ширина формы */
+    align-items: start;
+  }
+}
+
+/* Медиа часть */
+.order__media .section-title {
+  text-align: left;
+}
+
+.order__subtitle {
+  color: var(--color-text-muted);
+  margin-bottom: 30px;
+}
+
+.order-image {
+  border-radius: var(--radius-lg);
+}
+
+/* 64. Контейнер Формы (.order__form-container) */
+.order__form-container {
+  padding: 30px;
+  border-radius: var(--radius-lg);
+}
+
+/* 65. Блок Цены (.price-block) */
+.price-block {
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+/* Декоративная линия (используется класс из HTML) */
+.border-gradient-bottom {
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* 66. Детали Цены */
+.price-labels {
+  margin-bottom: 10px;
+}
+
+.label-discount {
+  background-color: var(--color-accent);
+  color: white;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.price-description {
+  color: var(--color-text-muted);
+  margin-bottom: 5px;
+}
+
+.price-values {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+}
+
+.old-price {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+  font-size: 18px;
+}
+
+.new-price {
+  font-size: 36px;
+  font-weight: 900;
+}
+
+/* 67. Группы Формы (.form-group, fieldset) */
+.form-group,
+fieldset {
+  margin-bottom: 25px;
+  border: none;
+  padding: 0;
+  margin: 0 0 25px 0;
+}
+
+/* 68. Метки (legend, .form-label, .input-label) */
+legend,
+.form-label,
+.input-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+/* 69. Поля Ввода (input[type="text"], input[type="tel"], select) */
+input[type="text"],
+input[type="tel"],
+select {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  appearance: none; /* Убираем стандартные стрелки select */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+input::placeholder {
+  color: #555;
+}
+
+/* 70. Состояние :focus */
+input[type="text"]:focus,
+input[type="tel"]:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.3);
+}
+
+/* 71. Обертка Select (.select-wrapper) */
+.select-wrapper {
+  position: relative;
+}
+
+.select-wrapper::after {
+  content: "▼";
+  font-size: 12px;
+  color: var(--color-text-muted);
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* Позволяет кликать сквозь псевдоэлемент */
+}
+
+/* 72. Кастомные Радио-Кнопки (Скрытие input) */
+.radio-group input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+/* 73. Стилизация Label Радио-Кнопок */
+.radio-group label {
+  display: block;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color 0.3s, background-color 0.3s;
+  padding: 15px;
+  background-color: var(--color-bg-primary);
+}
+
+.radio-group label:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* 74. Состояние Выбрано (Checked) */
+.radio-group input[type="radio"]:checked + label {
+  border-color: var(--color-accent);
+  background-color: rgba(229, 57, 53, 0.1);
+}
+
+/* 75. Группа Цветов (.radio-group--colors) */
+.radio-group--colors {
+  display: flex;
+  gap: 15px;
+}
+
+.radio-group--colors label {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  flex: 1;
+}
+
+.color-preview {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-size: cover;
+  margin-right: 12px;
+  border: 1px solid var(--color-border);
+}
+
+.color-preview--black {
+  background-color: #000;
+}
+
+/* 76. Группа Комплектов (.radio-group--kits) */
+.radio-group--kits {
+  display: grid;
+  gap: 15px;
+}
+
+.radio-group--kits label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kit-price-tag {
+  font-weight: 700;
+}
+
+/* 77. Прочее */
+.order-form .btn-large {
+  width: 100%;
+}
+
+.form-privacy {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: 15px;
+}
+
+.form-privacy a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.guarantees {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+  font-size: 14px;
+}
+
+.guarantees p {
+  margin-bottom: 8px;
+}
+
+/* ======================================================================
+   Phase 8: Подвал и Модальные Окна
+====================================================================== */
+
+/* 78. Подвал (.footer) */
+.footer {
+  padding: 60px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+/* 79. Контент Подвала (.footer__content) */
+.footer__content {
+  display: grid;
+  gap: 40px;
+}
+
+@media (min-width: 768px) {
+  .footer__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+/* 80. Контакты (.footer__contacts) */
+address {
+  font-style: normal;
+  margin-bottom: 20px;
+}
+
+.contact-item {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--color-text-muted);
+}
+
+.contact-item:hover {
+  color: var(--color-text-primary);
+}
+
+/* 81. Мессенджеры */
+.messengers {
+  display: flex;
+  gap: 10px;
+}
+
+.messenger-link {
+  padding: 8px 16px;
+  font-weight: 500;
+}
+
+/* 82. Юридическая информация (.footer__legal) */
+.footer__legal {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.footer__legal p {
+  margin-bottom: 10px;
+}
+
+.footer__legal a {
+  display: block;
+  margin-top: 5px;
+}
+
+.footer__legal a:hover {
+  text-decoration: underline;
+}
+
+/* 83. Фиксированная Мобильная Панель (.fixed-nav-mobile) */
+.fixed-nav-mobile {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 900;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--color-border);
+}
+
+.price-mobile {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.price-mobile .old {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.price-mobile .new {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+/* 84. Фон Модального Окна (.modal-backdrop) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  /* Начальное состояние (скрыто) */
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Состояние "Открыто" (Управляется JS/атрибутами) */
+.modal-backdrop[aria-hidden="false"] {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* 85. Окно Модалки (.modal-window) */
+.modal-window {
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  position: relative;
+  max-width: 500px;
+  width: 100%;
+  /* Анимация появления окна */
+  transform: translateY(30px);
+  transition: transform 0.3s ease;
+}
+
+.modal-backdrop[aria-hidden="false"] .modal-window {
+  transform: translateY(0);
+}
+
+/* 86. Элементы Модалки */
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.modal-icon.success {
+  color: var(--color-success);
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  margin-bottom: 16px;
+}
+
+.modal-text {
+  color: var(--color-text-muted);
+  margin-bottom: 30px;
+}
+
+/* ======================================================================
+   Phase 9: Адаптивность и Анимации
+====================================================================== */
+
+/* 87. Классы Видимости (.mobile-only, .desktop-only) */
+
+/* Базовые настройки (Mobile-First) */
+/* По умолчанию .desktop-only скрыты, .mobile-only видны */
+
+/* Медиа-запрос для десктопа (от 768px) */
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none !important;
+  }
+  .desktop-only {
+    display: block !important;
+  }
+
+  /* Уточнения для элементов, которым нужен специфичный display */
+  .nav--desktop {
+    display: block !important;
+  }
+
+  .header__actions {
+    display: flex !important;
+  }
+
+  /* 88. Адаптация Десктопной Галереи (Сложная сетка) */
+  .gallery-grid-desktop {
+    display: grid !important;
+    /* Устанавливаем сложную сетку (4 колонки) */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    /* Автоматическая высота рядов для создания эффекта "masonry" на основе контента */
+    grid-auto-rows: 200px;
+  }
+
+  /* 55. Классы Растягивания */
+  .span-col-2 {
+    grid-column: span 2;
+  }
+
+  .span-row-2 {
+    grid-row: span 2;
+  }
+}
+
+/* Дополнительный breakpoint для Hero секции */
+@media (max-width: 1023px) {
+  .hero__media-desktop {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Добавляем отступ снизу для body, чтобы контент не перекрывался панелью */
+  body {
+    padding-bottom: 80px; /* Примерная высота панели .fixed-nav-mobile */
+  }
+
+  .desktop-only.nav--desktop,
+  .desktop-only.header__actions {
+    display: none !important;
+  }
+}
+
+/* 89. Анимация Появления (Keyframes) */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 90. Класс Анимации (.animate-up) */
+.animate-up {
+  animation-name: fadeSlideUp;
+  animation-duration: 0.8s;
+  animation-timing-function: ease-out;
+  /* Сохраняет конечное состояние анимации */
+  animation-fill-mode: both;
+}
+
+/* 91. Классы Задержки */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
+.delay-400 {
+  animation-delay: 0.4s;
+}
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+/* Улучшение доступности: отключение анимаций, если пользователь предпочитает уменьшенное движение */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-up {
+    animation: none;
+    opacity: 1;
+  }
 }
