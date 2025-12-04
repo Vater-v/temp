@@ -59,7 +59,7 @@ ol {
 a {
   text-decoration: none;
   color: inherit;
-  transition: opacity 0.2s ease; /* Добавим небольшую плавность по умолчанию */
+  transition: opacity 0.2s ease;
 }
 
 /* Адаптивное поведение медиа-контента */
@@ -72,7 +72,9 @@ video {
 
 /* --- 3. Базовые настройки страницы --- */
 html {
-  scroll-behavior: smooth; /* Плавная прокрутка к якорям */
+  scroll-behavior: smooth;
+  height: 100%; /* FIX: Жесткая фиксация высоты */
+  overscroll-behavior-y: none; /* FIX: Отключает "пружину" при прокрутке */
 }
 
 body {
@@ -80,9 +82,13 @@ body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased; /* Четкие шрифты на macOS/iOS */
-  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+
+  /* FIX: Игнорирует адресную строку браузера при расчете высоты */
+  min-height: 100dvh;
+  position: relative; /* FIX: Для корректного скролла на iOS */
 }
+
 /* =========================================
    ФАЗА 2: Утилитарные Классы и Визуальные Эффекты
    ========================================= */
@@ -90,25 +96,36 @@ body {
 /* --- 1. Утилиты разметки (Layout) --- */
 .container {
   width: 100%;
-  max-width: 1280px; /* Оптимальная ширина для десктопов */
-  margin: 0 auto;    /* Центрирование по горизонтали */
-  padding: 0 20px;   /* Безопасные отступы по краям */
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 /* --- 2. Визуальные эффекты (Visual Effects) --- */
 
 /* Эффект "Хром" (.text-chrome) */
 .text-chrome {
-  /* Градиент от серого к белому и обратно к серому (имитация металла) */
   background-image: linear-gradient(0deg, #a0a0a0, #ffffff, #a0a0a0);
-  
-  /* Обрезка фона по контуру текста */
   background-clip: text;
-  -webkit-background-clip: text; /* Для Safari и Chrome */
-  
-  /* Делаем сам текст прозрачным, чтобы был виден фон-градиент */
+  -webkit-background-clip: text;
   color: transparent;
-  
-  /* Опционально: добавляем inline-block, чтобы градиент не "ломался" на некоторых блочных элементах */
   display: inline-block;
+}
+
+/* Эффект "Стекло" (Панель) */
+.glass-panel {
+  background-color: rgba(255, 255, 255, 0.05); /* Легкая белая заливка (5%) */
+  backdrop-filter: blur(10px); /* Размытие фона под элементом */
+  -webkit-backdrop-filter: blur(10px); /* Поддержка для Safari */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая полупрозрачная граница */
+  border-radius: var(--radius-lg); /* Скругление углов (16px) */
+}
+
+/* Эффект "Стекло" (Призрак) */
+.glass-ghost {
+  background-color: rgba(255, 255, 255, 0.02); /* Почти прозрачный фон (2%) */
+  backdrop-filter: blur(5px); /* Легкое размытие (5px) */
+  -webkit-backdrop-filter: blur(5px); /* Поддержка Safari */
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Очень тонкая граница */
+  border-radius: var(--radius-lg); /* Скругление углов */
 }
