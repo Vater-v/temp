@@ -2163,24 +2163,46 @@
 } /* End @layer components */
 
 /* ======================================================================
-   Phase 7: Форма Заказа (Ultimate Driver's Edition: Final Mix)
-   Tech: :has(), :user-valid, Gradient Borders, Spotlight UX
+   Phase 7: Order Section Refactor (Ultra-Premium / State of the Art 2025)
+   Tech: Houdini Borders, OKLCH P3, CSS-Only Floating Labels, Cockpit HUD, 3D Interactions
 ====================================================================== */
-@layer components {
-  /* --- 63. Макет Секции (.order-section) --- */
-  .order-section {
-    position: relative;
-    padding-block: var(--space-section);
-    overflow: hidden;
-    /* Оптимизация: изолируем перерисовку слоев */
-    isolation: isolate;
-    contain: paint;
 
-    /* Ambient Glow: Глубокое атмосферное свечение */
+/* ----------------------------------------------------------------------
+    HOUDINI ENGINE SETUP (Required outside @layer for global registration)
+    Registers the angle property for GPU-accelerated animation.
+---------------------------------------------------------------------- */
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 135deg;
+  inherits: false;
+}
+
+@keyframes rotate-border-hud {
+  to {
+    --border-angle: 495deg; /* 135 + 360 */
+  }
+}
+
+@layer components {
+  /* ==================================================================
+     1. ORDER SECTION LAYOUT & ATMOSPHERE
+  ================================================================== */
+
+  .order-section {
+    /* Ensure Container Context is active (Required for CQ layout shifts) */
+    container-type: inline-size;
+    container-name: section-context;
+
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+
+    /* Atmospheric Lighting (OKLCH P3 Ambient Glow) */
+    /* Subtle crimson glow using P3 color space */
     background-image: radial-gradient(
-      circle at 80% 20%,
-      color-mix(in srgb, var(--color-accent), transparent 94%) 0%,
-      transparent 60%
+      ellipse at 80% 0%,
+      oklch(from var(--seed-crimson) l c h / 0.08) 0%,
+      transparent 50%
     );
   }
 
@@ -2188,327 +2210,405 @@
     position: relative;
     z-index: 2;
     display: grid;
-    gap: 50px;
+    gap: var(--space-lg);
   }
 
-  /* Sticky Layout для десктопов */
-  @media (min-width: 992px) {
+  /* CQ: Layout Shift (Strictly @container, no @media) */
+  @container section-context (inline-size > 62rem) {
+    /* approx 992px */
     .order__layout {
       grid-template-columns: 1fr 480px;
       align-items: start;
-      gap: 60px;
+      gap: var(--space-xl);
     }
 
+    /* Sticky Form (The Cockpit Panel) */
     .order__form-container {
       position: sticky;
-      /* Учитываем высоту хедера + отступ */
       top: calc(var(--header-height) + 24px);
-      z-index: 10;
     }
   }
 
-  /* --- 64. Контейнер Формы (Cockpit Panel) --- */
+  /* ==================================================================
+     2. FORM CONTAINER (The Cockpit HUD Aesthetic)
+  ================================================================== */
+
   .order__form-container {
-    padding: 40px;
-    border-radius: 24px;
+    --form-padding: clamp(24px, 5vi, 40px);
+    padding: var(--form-padding);
+    border-radius: var(--radius-lg);
+    position: relative;
+    z-index: 10;
 
-    /* TECH: Gradient Border Trick (без лишних div)
-       1. Фон контента (padding-box)
-       2. Фон границы (border-box) - виден только там, где прозрачный border
-    */
-    background: linear-gradient(rgba(15, 15, 15, 0.9), rgba(15, 15, 15, 0.95))
-        padding-box,
-      linear-gradient(145deg, rgba(255, 255, 255, 0.15), var(--color-accent))
-        border-box;
+    /* Input Hygiene: Set native accent color and prevent mobile delays/zoom */
+    accent-color: var(--color-accent);
+    touch-action: manipulation;
 
+    /* 1. Ultra-Premium Glass (HUD Effect) */
+    /* Requirement: 40px Blur + Saturation for depth */
+    --_filter-hud: blur(40px) saturate(180%);
+    backdrop-filter: var(--_filter-hud);
+    -webkit-backdrop-filter: var(--_filter-hud); /* Safari */
+
+    /* 2. The Animated Houdini Border (Neon Edge) */
+    /* TECH: background-clip trick (padding-box for content, border-box for gradient) */
     border: 1px solid transparent;
 
-    backdrop-filter: blur(24px) saturate(120%);
-    -webkit-backdrop-filter: blur(24px) saturate(120%);
+    /* Define P3 Neon Gradient colors (OKLCH) */
+    --neon-highlight: oklch(1 0 0 / 0.25); /* Bright Transparent White */
+    --neon-accent: oklch(
+      from var(--seed-crimson) l c h / 0.7
+    ); /* Vivid Crimson */
+    /* Deep Obsidian Glass BG Color */
+    --bg-hud-color: oklch(from var(--seed-obsidian) l c h / 0.85);
 
-    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    background:
+      /* Layer 1: Content Background (Clipped to padding-box) */ linear-gradient(
+          var(--bg-hud-color),
+          var(--bg-hud-color)
+        )
+        padding-box,
+      /* Layer 2: Animated Border (Clipped to border-box, uses Houdini variable) */
+        linear-gradient(
+          var(--border-angle),
+          var(--neon-highlight),
+          var(--neon-accent),
+          var(--neon-highlight)
+        )
+        border-box;
 
-    transition: transform 0.3s var(--ease-luxury, ease);
+    /* Activate Houdini Animation */
+    animation: rotate-border-hud 12s linear infinite;
+    will-change: --border-angle; /* GPU Optimization */
+
+    /* 3. Shadows (Depth and Bevel) - OKLCH */
+    box-shadow: 0 60px 120px -30px oklch(0 0 0 / 0.8),
+      /* Deep drop shadow */ inset 0 1px 0 oklch(1 0 0 / 0.12); /* Top highlight (Bevel) */
+
+    /* 3D Context for Radio Card interactions */
+    transform-style: preserve-3d;
+    perspective: 1000px;
   }
 
-  /* --- 65. Блок Цены --- */
+  /* 4. Noise Texture Overlay (Tactile Depth) - Applied via pseudo-element */
+  .order__form-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    /* Requirement: Lightweight Base64 SVG Noise */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.06;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 1;
+    contain: strict; /* Optimization */
+  }
+
+  /* Ensure form content is above the noise overlay */
+  .order-form,
+  .price-block,
+  .guarantees {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Reduced Motion Fallback */
+  @media (prefers-reduced-motion: reduce) {
+    .order__form-container {
+      animation: none;
+      /* Static gradient fallback */
+      background: linear-gradient(var(--bg-hud-color), var(--bg-hud-color))
+          padding-box,
+        linear-gradient(135deg, var(--neon-highlight), var(--neon-accent))
+          border-box;
+    }
+    .order__form-container::before {
+      display: none; /* Remove noise */
+    }
+  }
+
+  /* ==================================================================
+     3. STRUCTURE & TYPOGRAPHY (Refinements)
+  ================================================================== */
   .price-block {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding-bottom: 25px;
-    margin-bottom: 30px;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    /* Ensure OKLCH border */
+    border-bottom: 1px dashed oklch(1 0 0 / 0.15);
   }
 
-  .label-discount {
-    align-self: flex-start;
-    background: linear-gradient(
-      135deg,
-      var(--color-accent),
-      color-mix(in srgb, var(--color-accent), black 20%)
-    );
-    color: white;
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    box-shadow: 0 4px 15px
-      color-mix(in srgb, var(--color-accent), transparent 60%);
-  }
-
-  .price-values {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-  }
-
-  .old-price {
-    color: var(--color-text-muted);
-    text-decoration: line-through;
-    font-size: 1.25rem;
-  }
-
-  .new-price {
-    font-size: 2.5rem; /* ~40px */
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    line-height: 1;
-
-    /* Эффект хромированного текста */
-    background: linear-gradient(180deg, #ffffff 0%, #b0b0b0 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.15));
-  }
-
-  /* --- 67. Группы и Лейблы (:has Power) --- */
   .form-group {
     margin: 0 0 32px 0;
     border: none;
     padding: 0;
   }
 
-  .form-label,
+  /* Group Legends (Fieldset Titles) */
   legend {
     display: block;
-    margin-bottom: 12px;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-text-muted);
-    transition: color 0.3s ease;
+    margin-bottom: 16px;
+    transition: color 0.3s var(--ease-luxury),
+      text-shadow 0.3s var(--ease-luxury);
   }
 
-  /* Подсветка заголовка группы при фокусе внутри */
-  .form-group:focus-within legend,
-  .input-group:focus-within .input-label {
+  /* State: Focus within group (Neon Highlight) */
+  .form-group:focus-within legend {
     color: var(--color-accent);
-    text-shadow: 0 0 12px
-      color-mix(in srgb, var(--color-accent), transparent 60%);
+    text-shadow: 0 0 15px oklch(from var(--color-accent) l c h / 0.5);
   }
 
-  /* Окраска заголовка в красный при ошибке внутри группы */
-  .form-group:has(:user-invalid) legend,
-  .input-group:has(:user-invalid) .input-label {
-    color: var(--palette-crimson-500);
-  }
+  /* ==================================================================
+     4. INPUTS & FLOATING LABELS (CSS-Only Implementation)
+    Tech: :has() / :focus-within (Handles Label-before-Input structure)
+  ================================================================== */
 
-  /* --- 69. Поля Ввода (Smart Inputs) --- */
   .input-group {
-    margin-bottom: 24px;
     position: relative;
+    margin-bottom: 24px;
   }
 
-  input:not([type="radio"]):not([type="checkbox"]),
-  select {
+  /* Base Input Styles (Refined for Cockpit Aesthetic) */
+  .order-form input:not([type="radio"]):not([type="checkbox"]),
+  .order-form select {
+    --input-height: 64px; /* Increased height for better UX */
+    --input-bg: oklch(0 0 0 / 0.35);
+    --input-border: oklch(1 0 0 / 0.12);
+    --input-radius: var(--radius-md);
+
     width: 100%;
-    height: 60px; /* Удобно для пальца */
-    padding: 0 20px;
+    min-block-size: var(--input-height);
+    padding-inline: 20px;
 
-    /* Reset */
+    /* Default padding (used by Select) */
+    padding-block: 16px;
+
     appearance: none;
-    background-color: rgba(0, 0, 0, 0.4);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: var(--input-radius);
 
-    color: var(--color-text-primary);
-    font-size: 16px; /* Fix iOS zoom */
-    font-family: inherit;
+    font-size: 16px; /* Prevents iOS zoom */
     font-weight: 500;
+    color: var(--color-text-primary);
     caret-color: var(--color-accent);
 
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Deep inset shadow for tactile depth (HUD aesthetic) */
+    box-shadow: inset 0 3px 8px oklch(0 0 0 / 0.7);
+    transition: all 0.3s var(--ease-luxury);
   }
 
-  input::placeholder {
-    color: rgba(255, 255, 255, 0.2);
-    font-weight: 400;
+  /* --- 4.1. Floating Label Logic (Input/Text/Tel) --- */
+
+  /* Adjust padding for inputs that use the floating label mechanism (.input-label) */
+  .input-group:has(.input-label) input {
+    /* CRITICAL: Extra top padding to accommodate the floated label */
+    padding-block-start: 30px;
+    padding-block-end: 10px;
   }
 
-  /* State: Focus */
-  input:not([type="radio"]):not([type="checkbox"]):focus,
-  select:focus {
+  /* Placeholder must be visually empty for :placeholder-shown detection */
+  .order-form input::placeholder {
+    color: transparent;
+  }
+
+  /* The Label Element (.input-label) */
+  .input-label {
+    position: absolute;
+    /* Initial position: Centered inside the input */
+    left: 21px; /* 20px padding + 1px border */
+    top: 50%;
+    transform: translateY(-50%);
+
+    /* Muted color when acting as placeholder */
+    color: oklch(1 0 0 / 0.6);
+    font-size: 16px;
+    font-weight: 500;
+
+    pointer-events: none;
+    /* Luxury transition for smooth movement */
+    transition: transform 0.3s var(--ease-luxury), color 0.3s var(--ease-luxury),
+      font-size 0.3s var(--ease-luxury);
+    transform-origin: left center;
+  }
+
+  /* The "Float" Trigger:
+     We use :focus-within on the parent (.input-group) as the label precedes the input.
+     1. Group has focus (:focus-within) OR
+     2. Group has input that is not empty (:has(input:not(:placeholder-shown)))
+  */
+  .input-group:focus-within .input-label,
+  .input-group:has(input:not(:placeholder-shown)) .input-label {
+    /* Move up, shrink, and brighten */
+    transform: translateY(-135%); /* Moves it into the top padding area */
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* Label color highlight on focus */
+  .input-group:focus-within .input-label {
+    color: var(--color-accent);
+  }
+
+  /* --- 4.2. Micro-interaction: Focus State (Neon Glow) --- */
+  .order-form input:not([type="radio"]):not([type="checkbox"]):focus,
+  .order-form select:focus {
     outline: none;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: oklch(0 0 0 / 0.5);
     border-color: var(--color-accent);
-    transform: translateY(-1px);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8),
+
+    /* Enhanced Glow using OKLCH P3 colors */
+    box-shadow: inset 0 3px 8px oklch(0 0 0 / 0.9),
       0 0 0 1px var(--color-accent),
-      0 0 20px color-mix(in srgb, var(--color-accent), transparent 80%);
+      /* The P3 Glow */ 0 0 30px oklch(from var(--color-accent) l c h / 0.4);
   }
 
-  /* State: User-Valid / User-Invalid ("Вежливая" валидация) */
-  /* Ошибка показывается только ПОСЛЕ того, как пользователь покинул поле */
-  input:not(:placeholder-shown):user-invalid {
-    border-color: var(--palette-crimson-500);
-    box-shadow: 0 0 0 1px var(--palette-crimson-500);
-    animation: shake 0.4s ease-in-out;
+  /* --- 4.3. Select Element Specifics (Standard Label) --- */
+  /* The Select (City) uses a standard .form-label above it in the HTML. */
+  .input-group .form-label[for="city"] {
+    display: block;
+    margin-bottom: 10px;
+    /* Adjusting inherited styles for better context */
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    transition: color 0.3s var(--ease-luxury);
+    text-transform: none;
+    letter-spacing: normal;
   }
 
-  /* Успех показывается, если поле заполнено и верно */
-  input:not(:placeholder-shown):user-valid {
-    border-color: var(--color-success);
-    box-shadow: 0 0 0 1px var(--color-success);
+  .input-group:focus-within .form-label[for="city"] {
+    color: var(--color-accent);
   }
 
-  @keyframes shake {
-    0%,
-    100% {
-      transform: translateX(0);
-    }
-    25% {
-      transform: translateX(-4px);
-    }
-    75% {
-      transform: translateX(4px);
-    }
+  .order-form select {
+    /* Reset padding for select as it doesn't use the floating label mechanism */
+    padding-block-start: 16px;
+    padding-block-end: 16px;
   }
 
-  /* Custom Select Arrow */
-  .select-wrapper {
-    position: relative;
-    &::after {
-      content: "";
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      translate: 0 -50%;
-      width: 10px;
-      aspect-ratio: 1.5/1;
-      background-color: var(--color-text-muted);
-      clip-path: polygon(0 0, 100% 0, 50% 100%);
-      pointer-events: none;
-      transition: 0.3s ease;
-    }
-    &:focus-within::after {
-      background-color: var(--color-accent);
-      rotate: 180deg;
-    }
+  /* Custom Arrow (Refined from Phase 4) */
+  .select-wrapper::after {
+    transition: 0.3s var(--ease-luxury);
   }
 
-  /* --- 72. Радио Карточки (Ultimate :has Logic) --- */
+  .select-wrapper:has(select:focus)::after {
+    background-color: var(--color-accent);
+    rotate: 180deg;
+  }
 
+  /* ==================================================================
+     5. RADIO CARDS (3D Lift, Inner Light & Spotlight UX)
+  ================================================================== */
   .radio-group {
     display: grid;
-    gap: 15px;
+    gap: 16px;
+    /* Maintain 3D context inherited from parent container */
+    transform-style: preserve-3d;
   }
 
-  /* Скрываем нативный инпут, но оставляем доступным для клавиатуры */
+  /* Hide native input (A11y friendly) */
   .radio-group input[type="radio"] {
     position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
-    accent-color: var(--color-accent);
   }
 
-  /* Базовый стиль карточки */
+  /* Base Card Style (Interactive Glass) */
   .radio-group label {
     position: relative;
     cursor: pointer;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    background: oklch(1 0 0 / 0.04);
+    border: 1px solid oklch(1 0 0 / 0.12);
+    border-radius: var(--radius-md);
     padding: 16px 20px;
     display: flex;
     align-items: center;
     gap: 15px;
-    transition: all 0.3s var(--ease-luxury);
+    transition: all 0.4s var(--ease-luxury);
+
+    /* Prepare for 3D transform */
+    transform: translateZ(0);
+    will-change: transform, background, border-color, box-shadow, opacity,
+      filter;
   }
 
-  /* Hover (только на устройствах с мышью) */
+  /* Hover State (Desktop only) */
   @media (hover: hover) {
     .radio-group label:hover {
-      background: rgba(255, 255, 255, 0.06);
-      transform: translateY(-2px);
+      background: oklch(1 0 0 / 0.08);
+      border-color: oklch(1 0 0 / 0.2);
+      /* Subtle lift on hover */
+      transform: translateY(-2px) translateZ(10px);
     }
   }
 
-  /* === Spotlight Effect Logic (Прожектор) === */
+  /* === 5.1. Spotlight Effect Logic (:has()) === */
 
-  /* 1. Если в группе есть выбранный элемент, затемняем ВСЕ лейблы */
+  /* 1. If any item is checked, dim ALL siblings */
   .radio-group:has(input:checked) label {
-    opacity: 0.5;
-    filter: grayscale(0.8);
+    opacity: 0.6;
+    filter: brightness(0.7) saturate(0.5);
+    transform: translateZ(0); /* Reset lift for unselected */
   }
 
-  /* 2. ...КРОМЕ выбранного (возвращаем яркость) */
-  /* Используем input:checked + label (для старой верстки) или label:has(:checked) */
+  /* 2. Highlight the CHECKED item (The "Hero") */
   .radio-group input:checked + label {
     opacity: 1;
     filter: none;
-    transform: scale(1.02);
 
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-accent), transparent 85%) 0%,
-      rgba(255, 255, 255, 0.01) 100%
-    );
+    /* 3D Lift Effect: Brings the card forward visually (translateZ) */
+    transform: scale(1.02) translateZ(25px);
+
     border-color: var(--color-accent);
-    box-shadow: 0 4px 20px
-        color-mix(in srgb, var(--color-accent), transparent 80%),
-      inset 0 0 0 1px color-mix(in srgb, var(--color-accent), transparent 70%);
 
-    z-index: 1;
+    /* "Inner Light" Effect (OKLCH Gradient Background) */
+    background: linear-gradient(
+      110deg,
+      oklch(from var(--color-accent) l c h / 0.15) 0%,
+      oklch(1 0 0 / 0.05) 100%
+    );
+
+    /* P3 Glow Shadow + Inset Glow (Inner Light) */
+    box-shadow: 0 15px 40px oklch(from var(--color-accent) l c h / 0.25),
+      inset 0 0 0 1px oklch(from var(--color-accent) l c h / 0.5),
+      inset 0 0 20px oklch(from var(--color-accent) l c h / 0.1);
+
+    z-index: 5;
   }
 
-  /* Индикатор-галочка */
+  /* === 5.2. Custom Indicator (Checkmark with Bouncy Animation) === */
   .radio-group label::before {
     content: "✔";
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     background: var(--color-accent);
-    color: white;
-    font-size: 10px;
+    color: oklch(var(--seed-snow));
+    font-size: 12px;
     font-weight: 900;
     display: grid;
     place-items: center;
 
-    /* Скрыто по умолчанию */
-    opacity: 0;
-    transform: scale(0.5) rotate(-45deg);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
     position: absolute;
     top: 12px;
     right: 12px;
+
+    /* Initial state (Hidden) */
+    opacity: 0;
+    transform: scale(0.5) rotate(-45deg);
+    /* Bouncy transition */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
-  /* Показываем галочку при выборе */
+  /* Reveal indicator on check */
   .radio-group input:checked + label::before {
     opacity: 1;
     transform: scale(1) rotate(0deg);
   }
 
-  /* Специфика для Цветов */
+  /* === 5.3. Specific Group Styling (Colors & Kits) === */
+
+  /* Colors (Grid Layout) */
   .radio-group--colors {
     grid-template-columns: 1fr 1fr;
   }
@@ -2520,67 +2620,77 @@
   }
 
   .color-preview {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s;
-    margin-bottom: 8px;
+    border: 3px solid oklch(1 0 0 / 0.2);
+    box-shadow: 0 5px 15px oklch(0 0 0 / 0.5);
+    transition: transform 0.3s var(--ease-luxury), border-color 0.3s,
+      box-shadow 0.3s;
+    margin-bottom: 10px;
+    background-size: cover;
   }
 
-  /* Увеличиваем превью при выборе */
+  /* Fallback for black preview */
+  .color-preview--black {
+    background-color: oklch(0.05 0 0);
+  }
+
+  /* Enlarge preview on selection */
   .radio-group--colors input:checked + label .color-preview {
     transform: scale(1.15);
-    border-color: white;
-    box-shadow: 0 0 15px
-      color-mix(in srgb, var(--color-accent), transparent 50%);
+    border-color: oklch(var(--seed-snow));
+    box-shadow: 0 0 20px oklch(from var(--color-accent) l c h / 0.4);
   }
 
-  /* Специфика для Комплектов */
+  /* Kits (Flex Layout) */
   .radio-group--kits label {
     justify-content: space-between;
   }
 
   .kit-price-tag {
-    font-family: monospace;
     font-weight: 700;
     font-size: 14px;
-    padding: 4px 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    transition: 0.3s;
-    /* Сдвигаем влево, чтобы не наезжать на галочку */
-    margin-right: 24px;
+    padding: 6px 12px;
+    background: oklch(1 0 0 / 0.1);
+    border-radius: var(--radius-sm);
+    transition: 0.3s var(--ease-luxury);
+    /* Offset to avoid overlapping the checkmark */
+    margin-right: 30px;
   }
 
   .radio-group input:checked + label .kit-price-tag {
     background: var(--color-accent);
-    color: white;
+    color: oklch(var(--seed-snow));
   }
 
-  /* --- 77. Кнопка и Футер --- */
+  /* ==================================================================
+      6. FOOTER & GUARANTEES
+    ================================================================== */
   .order-form .btn-large {
     width: 100%;
     margin-top: 15px;
-    height: 64px;
-    font-size: 1.125rem;
-    text-transform: uppercase;
-    box-shadow: 0 10px 30px
-      color-mix(in srgb, var(--color-accent), transparent 75%);
+    /* Match input height for visual consistency */
+    min-block-size: 64px;
+    /* Enhanced P3 Glow Shadow */
+    box-shadow: 0 10px 40px oklch(from var(--color-accent) l c h / 0.4);
   }
 
-  .order-form .btn-large:hover {
-    box-shadow: 0 20px 50px
-      color-mix(in srgb, var(--color-accent), transparent 60%);
+  @media (hover: hover) {
+    .order-form .btn-large:hover {
+      box-shadow: 0 20px 60px oklch(from var(--color-accent) l c h / 0.5);
+    }
   }
 
   .form-privacy {
     margin-top: 20px;
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.4);
+    color: oklch(1 0 0 / 0.4);
     text-align: center;
-    line-height: 1.5;
+  }
+
+  .form-privacy a {
+    transition: color 0.3s var(--ease-luxury);
   }
 
   .form-privacy a:hover {
@@ -2590,7 +2700,7 @@
   .guarantees {
     margin-top: 30px;
     padding-top: 25px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid oklch(1 0 0 / 0.1);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
@@ -2607,13 +2717,15 @@
     gap: 6px;
   }
 
-  @media (max-width: 500px) {
+  /* CQ: Responsive adjustment for smaller containers */
+  @container section-context (inline-size < 30rem) {
     .guarantees {
       grid-template-columns: 1fr;
     }
     .guarantees p {
       flex-direction: row;
       text-align: left;
+      justify-content: center;
     }
   }
 }
