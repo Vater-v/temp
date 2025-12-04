@@ -901,6 +901,43 @@ a {
   border-top: 1px solid var(--color-border);
 }
 
+/* --- Исправления для отзывов (Mobile UX) --- */
+
+/* Добавляем "воздух" слева, чтобы первая карточка не прилипала к экрану */
+.reviews__list {
+  scroll-padding-left: 20px;
+  padding: 10px 20px 30px 20px; /* Убедились, что padding есть */
+}
+
+/* Контейнер для точек */
+.reviews__controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Стили точек (такие же, как в галерее) */
+.reviews__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ddd;
+  margin: 0 5px;
+  transition: all 0.3s ease;
+}
+
+.reviews__dot.is-active {
+  background-color: var(--color-accent);
+  transform: scale(1.3);
+}
+
+/* Исправление звезд (если вдруг где-то остались старые стили) */
+.review-card__rating.stars {
+  display: flex; /* Выстраиваем в ряд */
+  gap: 2px;
+  margin-bottom: 15px;
+}
+
 @media (min-width: 768px) {
   .reviews__list {
     grid-auto-columns: calc(50% - 10px);

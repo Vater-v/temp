@@ -266,10 +266,59 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  /**
+   * =========================================================================
+   * 6. Слайдер Отзывов (NEW: Dots + Logic)
+   * =========================================================================
+   */
+  const initReviewsSlider = () => {
+    const sliderWrapper = document.getElementById("reviews-list");
+    const dotsContainer = document.querySelector(".js-reviews-dots");
+
+    if (!sliderWrapper || !dotsContainer) return;
+
+    const cards = sliderWrapper.querySelectorAll(".review-card");
+    if (cards.length === 0) return;
+
+    // 1. Генерируем точки
+    dotsContainer.innerHTML = "";
+    cards.forEach((_, index) => {
+      const dot = document.createElement("div");
+      dot.classList.add("reviews__dot"); // Используем отдельный класс или общий с галереей
+      if (index === 0) dot.classList.add("is-active");
+      dotsContainer.appendChild(dot);
+    });
+
+    // 2. Слушаем скролл
+    sliderWrapper.addEventListener(
+      "scroll",
+      () => {
+        const scrollLeft = sliderWrapper.scrollLeft;
+        const cardWidth = cards[0].offsetWidth;
+        const style = window.getComputedStyle(sliderWrapper);
+        const gap = parseInt(style.columnGap || style.gap || 0);
+
+        // Учитываем gap при расчете центра
+        const centerIndex = Math.round(scrollLeft / (cardWidth + gap));
+
+        const dots = document.querySelectorAll(".reviews__dot");
+        dots.forEach((dot, index) => {
+          if (index === centerIndex) {
+            dot.classList.add("is-active");
+          } else {
+            dot.classList.remove("is-active");
+          }
+        });
+      },
+      { passive: true }
+    );
+  };
+
   // --- Инициализация всех модулей ---
   initMobileMenu();
   initAccordion();
   initGallerySlider();
   initStickyBarObserver();
   initOrderForm();
+  initReviewsSlider(); // <--- Не забудьте добавить этот вызов!
 });
