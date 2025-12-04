@@ -1,6 +1,4 @@
-/* ---------------------- */
-/* --- base/reset.css --- */
-/* ---------------------- */
+/* css/base/reset.css */
 
 /* --- 1. Global & Box Model --- */
 :root {
@@ -22,51 +20,20 @@
 html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    /* scrollbar-gutter и behavior перенести/оставить в global.css, раз они там есть */
 }
 
 body {
     width: 100%;
-    line-height: 1.5; /* Оставляем как фоллбэк */
-    /* Остальное (min-height, rendering, overflow) уже есть в global.css */
+    line-height: 1.5;
 }
 
-/* Этот блок уникален для reset.css, его оставляем */
 #root,
 #__next,
 body {
     isolation: isolate;
 }
+
 /* --- 3. Typography --- */
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    overflow-wrap: break-word;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    text-wrap: balance;
-}
-
-p {
-    text-wrap: pretty;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-    text-decoration-skip-ink: auto;
-}
-
 sub,
 sup {
     font-size: 0.75em;
@@ -78,6 +45,7 @@ sup {
 sub {
     bottom: -0.25em;
 }
+
 sup {
     top: -0.5em;
 }
@@ -111,6 +79,10 @@ textarea,
 input[type="text"],
 input[type="email"],
 input[type="tel"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="url"],
 textarea {
     cursor: text;
 }
@@ -127,15 +99,6 @@ input::-webkit-search-cancel-button {
     display: none;
 }
 
-:focus-visible {
-    outline: 2px solid var(--accent-color, currentColor);
-    outline-offset: 2px;
-}
-
-:focus:not(:focus-visible) {
-    outline: none;
-}
-
 /* --- 5. Media --- */
 img,
 picture,
@@ -145,37 +108,25 @@ svg {
     display: block;
     max-width: 100%;
     height: auto;
+}
+
+img,
+picture,
+video {
     user-select: none;
     -webkit-user-drag: none;
 }
 
 img {
-    vertical-align: middle;
     font-style: italic;
-    background-color: rgba(255, 255, 255, 0.05);
 }
 
 svg {
-    pointer-events: none;
     fill: currentColor;
     flex-shrink: 0;
 }
 
-/* --- 6. Utilities & A11y --- */
+/* --- 6. Utilities --- */
 [hidden] {
     display: none !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
-    }
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
 }
