@@ -1,35 +1,34 @@
-/* ----------------------------------------------------------------- */
-/* --- utilities/helpers.css (Ultimate Edition vFinal)          ---- */
-/* --- The Swiss Army Knife: Layout, Text, FX & A11y            ---- */
-/* ----------------------------------------------------------------- */
+/* utilities/helpers.css */
 
-/* =========================================
-   1. LAYOUT PRIMITIVES (Каркас)
-   ========================================= */
-
-/* --- Flexbox Shortcuts --- */
+/* --- Layout & Positioning --- */
 .flex-center {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
 .flex-between {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-
 .flex-col {
     display: flex;
     flex-direction: column;
 }
-
 .flex-wrap {
     flex-wrap: wrap;
 }
 
-/* --- Positioning --- */
+.gap-sm {
+    gap: 8px;
+}
+.gap-md {
+    gap: 16px;
+}
+.gap-lg {
+    gap: 24px;
+}
+
 .relative {
     position: relative;
 }
@@ -42,9 +41,12 @@
 .sticky {
     position: sticky;
     top: 0;
+    z-index: var(--z-sticky, 100);
+}
+.isolate {
+    isolation: isolate;
 }
 
-/* Абсолютное центрирование (Иконки, лоадеры) */
 .absolute-center {
     position: absolute;
     top: 50%;
@@ -52,7 +54,6 @@
     transform: translate(-50%, -50%);
 }
 
-/* Растягивание на родителя */
 .inset-0 {
     position: absolute;
     inset: 0;
@@ -60,13 +61,12 @@
     height: 100%;
 }
 
-/* Растягивание на весь экран (с учетом iOS панелей) */
 .full-screen {
     width: 100vw;
+    height: 100vh;
     height: 100dvh;
 }
 
-/* --- Z-Index Layers (Маппинг на переменные) --- */
 .z-back {
     z-index: var(--z-back);
 }
@@ -86,8 +86,6 @@
     z-index: var(--z-modal);
 }
 
-/* --- Stack Pattern (Вертикальный ритм через Gap) --- */
-/* Замена margin-bottom для списков */
 .stack {
     display: flex;
     flex-direction: column;
@@ -100,11 +98,96 @@
     --stack-gap: 40px;
 }
 
-/* =========================================
-   2. TYPOGRAPHY TOOLS (Работа с текстом)
-   ========================================= */
+/* --- Mobile UX & Safe Areas --- */
+.pt-safe {
+    padding-top: max(20px, env(safe-area-inset-top));
+}
+.pb-safe {
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+}
+.pl-safe {
+    padding-left: max(20px, env(safe-area-inset-left));
+}
+.pr-safe {
+    padding-right: max(20px, env(safe-area-inset-right));
+}
 
-/* --- Alignment --- */
+.clickable {
+    position: relative;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+.clickable::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    z-index: 1;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-x-snap {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+}
+.scroll-x-snap > * {
+    scroll-snap-align: center;
+    flex-shrink: 0;
+}
+
+.user-select-none {
+    user-select: none;
+    -webkit-user-select: none;
+}
+.pointer-events-none {
+    pointer-events: none;
+}
+.pointer-events-auto {
+    pointer-events: auto;
+}
+
+/* --- Performance & Rendering --- */
+.render-lazy {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 600px;
+    contain: layout paint style;
+}
+
+.gpu {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform, opacity;
+}
+
+.aspect-video {
+    aspect-ratio: 16 / 9;
+}
+.aspect-square {
+    aspect-ratio: 1 / 1;
+}
+.aspect-portrait {
+    aspect-ratio: 3 / 4;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+.overflow-clip {
+    overflow: clip;
+}
+
+/* --- Typography --- */
 .text-center {
     text-align: center;
 }
@@ -114,163 +197,67 @@
 .text-right {
     text-align: right;
 }
-
-/* --- Transformations --- */
 .uppercase {
     text-transform: uppercase;
     letter-spacing: 0.05em;
-}
-.capitalize {
-    text-transform: capitalize;
 }
 .nowrap {
     white-space: nowrap;
 }
 
-/* --- Truncation (Троеточие) --- */
 .text-truncate {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100%;
-    display: block;
-}
-
-/* --- Line Clamp (Обрезка до N строк) --- */
-.text-truncate {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
     display: block;
 }
 
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    line-clamp: 2; /* Стандартное свойство для совместимости */
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-.line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3; /* Стандартное свойство для совместимости */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-/* --- Modern Text Features --- */
-/* Балансировка заголовков (убирает висячие слова) */
 .text-balance {
     text-wrap: balance;
 }
-/* Красивые абзацы */
 .text-pretty {
     text-wrap: pretty;
 }
 
-/* --- Premium Gradients (Утилиты) --- */
 .text-gradient-chrome {
     background: linear-gradient(135deg, #fff 30%, #a5a5a5 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    color: #fff; /* Fallback */
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    color: #fff;
+    display: inline-block;
 }
 
-.text-gradient-gold {
-    background: linear-gradient(135deg, #ffd700 0%, #ffa000 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: #ffd700;
-}
-
-/* =========================================
-   3. VISUAL FX & GLASS (Эффекты)
-   ========================================= */
-
-/* --- Backgrounds --- */
+/* --- Visual FX --- */
 .bg-primary {
     background-color: var(--bg-primary);
 }
 .bg-secondary {
     background-color: var(--bg-secondary);
 }
-.bg-transparent {
-    background-color: transparent;
-}
 
-/* --- Reusable Glassmorphism (Система Стекла) --- */
 .glass {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(30, 30, 30, 0.85);
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.glass-dark {
-    background: rgba(10, 10, 10, 0.75);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+@media (min-width: 1024px) {
+    .glass {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
 }
 
-/* --- Performance Boost --- */
-/* Включает GPU для плавности анимаций */
-.gpu {
-    transform: translateZ(0);
-    will-change: transform;
-    backface-visibility: hidden;
-}
-
-/* --- Overflow Control --- */
-.overflow-hidden {
-    overflow: hidden;
-}
-.overflow-visible {
-    overflow: visible;
-}
-.overflow-clip {
-    overflow: clip;
-} /* Безопасно для sticky */
-
-/* =========================================
-   4. INTERACTION (Взаимодействие)
-   ========================================= */
-
-/* Отключение событий мыши (сквозной клик для декора) */
-.pointer-events-none {
-    pointer-events: none;
-}
-.pointer-events-auto {
-    pointer-events: auto;
-}
-
-/* Запрет выделения текста (для кнопок и UI) */
-.user-select-none {
-    user-select: none;
-}
-
-/* UX: Расширение области клика без изменения размера элемента */
-.clickable {
-    position: relative;
-    cursor: pointer;
-}
-.clickable::after {
-    content: "";
-    position: absolute;
-    inset: -10px; /* +10px зона клика вокруг */
-    z-index: 1;
-}
-
-/* =========================================
-   5. ACCESSIBILITY & RESPONSIVE
-   ========================================= */
-
-/* --- Screen Readers Only --- */
+/* --- Responsive Utilities --- */
 .sr-only {
     position: absolute;
     width: 1px;
@@ -279,11 +266,9 @@
     margin: -1px;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
     border: 0;
 }
 
-/* --- Responsive Display --- */
 .desktop-only {
     display: none !important;
 }
@@ -298,40 +283,35 @@
     .mobile-only {
         display: none !important;
     }
-
-    /* Flex-версия для специфичных лейаутов на ПК */
     .d-flex-desktop {
         display: flex !important;
     }
 }
 
-/* =========================================
-   6. MICRO-COMPONENTS (Reusable Snippets)
-   ========================================= */
-
-/* --- Trust Badge (Звезды доверия) --- */
+/* --- Components & Animation --- */
 .trust-badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 50px;
-
     margin-bottom: 24px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-
+    transform: translateZ(0);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-.trust-badge:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.15);
+@media (min-width: 1024px) {
+    .trust-badge {
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+    .trust-badge:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.15);
+    }
 }
 
 .trust-badge .stars {
@@ -339,7 +319,6 @@
     letter-spacing: 1px;
     font-size: 14px;
 }
-
 .trust-badge .trust-text {
     font-size: 13px;
     font-weight: 700;
@@ -348,15 +327,13 @@
     letter-spacing: 0.05em;
 }
 
-/* --- JS Animation Helpers --- */
-/* Исправлено: добавлено свойство animation, чтобы элементы появлялись */
 .animate-up {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
     animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    will-change: transform, opacity;
 }
 
-/* Stagger Delays (Каскадная задержка) */
 .delay-100 {
     animation-delay: 100ms;
 }
@@ -365,4 +342,12 @@
 }
 .delay-300 {
     animation-delay: 300ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-up {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
 }
