@@ -3,17 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Премиальные Накидки для Автомобиля | VelourStyle</title>
+    <title>
+      Накидки на Сиденья Авто из Велюра (Алькантары) | VelourStyle | Скидка 33%
+    </title>
     <meta
       name="description"
-      content="Обновите салон вашего авто за 5 минут! Износостойкие велюровые накидки с идеальной посадкой. Универсальный размер, система Anti-Slip. Гарантия качества. Доставка по РФ."
+      content="Обновите салон вашего авто за 5 минут! Износостойкие велюровые накидки (аналог алькантары) с идеальной посадкой. Система Anti-Slip. Гарантия качества. Доставка по РФ."
     />
     <meta
       name="keywords"
-      content="накидки на сиденья, автомобильные чехлы, велюровые накидки, защита салона, автоаксессуары премиум, VelourStyle"
+      content="накидки на сиденья, автомобильные чехлы, велюровые накидки, алькантара, защита салона, автоаксессуары премиум, VelourStyle"
     />
-
-    <meta property="og:title" content="Премиальные Накидки VelourStyle" />
+    <meta
+      property="og:title"
+      content="Премиальные Накидки VelourStyle - Скидка 33%"
+    />
     <meta
       property="og:description"
       content="Износостойкие материалы и идеальная посадка. Обновите салон за 5 минут. Доставка по РФ."
@@ -22,218 +26,241 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="VelourStyle" />
     <meta property="og:locale" content="ru_RU" />
-
-    <link rel="preload" as="image" href="media/RedStitch_Front_Straight.webp" />
     <link rel="stylesheet" href="main.css" />
     <link rel="icon" href="favicon.ico" sizes="any" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
-      rel="stylesheet"
-    />
   </head>
-  <body>
-    <svg style="display: none" aria-hidden="true">
+  <body class="page">
+    <svg aria-hidden="true" style="display: none">
       <symbol id="star" viewBox="0 0 20 20">
         <path d="M10 1L13 7L19 8L15 13L16 19L10 16L4 19L5 13L1 8L7 7L10 1Z" />
       </symbol>
       <symbol id="check" viewBox="0 0 24 24">
         <polyline points="20 6 9 17 4 12"></polyline>
       </symbol>
+      <symbol id="plus" viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </symbol>
+      <symbol id="close" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </symbol>
+      <symbol id="arrow-left" viewBox="0 0 24 24">
+        <path d="M19 12H5M5 12L12 19M5 12L12 5" />
+      </symbol>
+      <symbol id="arrow-right" viewBox="0 0 24 24">
+        <path d="M5 12H19M19 12L12 5M19 12L12 19" />
+      </symbol>
     </svg>
 
-    <div class="app-wrapper">
-      <header class="header" id="header">
-        <div class="container header__container">
-          <a
-            href="/"
-            class="logo text-chrome"
-            aria-label="Главная страница VelourStyle"
-            >VelourStyle</a
-          >
+    <header class="header" id="header">
+      <div class="container header__container">
+        <a href="/" class="logo" aria-label="Главная страница VelourStyle"
+          >VelourStyle</a
+        >
 
-          <nav class="nav nav--desktop" aria-label="Основная навигация">
+        <div
+          class="header__nav-wrapper"
+          id="navigation-wrapper"
+          aria-hidden="true"
+        >
+          <div class="header__nav-header">
+            <span class="logo">VelourStyle</span>
+            <button
+              class="header__nav-close-btn js-menu-toggle"
+              aria-label="Закрыть меню"
+              aria-controls="navigation-wrapper"
+            >
+              <svg class="icon" width="24" height="24" aria-hidden="true">
+                <use xlink:href="#close" />
+              </svg>
+            </button>
+          </div>
+          <nav class="nav" aria-label="Основная навигация">
             <ul class="nav__list">
               <li class="nav__item">
-                <a href="#details" class="nav__link">Качество</a>
+                <a href="#details" class="nav__link js-menu-link">Качество</a>
               </li>
               <li class="nav__item">
-                <a href="#styles" class="nav__link">Дизайн</a>
+                <a href="#styles" class="nav__link js-menu-link">Дизайн</a>
               </li>
               <li class="nav__item">
-                <a href="#technology" class="nav__link">Технологии</a>
+                <a href="#technology" class="nav__link js-menu-link"
+                  >Технологии</a
+                >
               </li>
               <li class="nav__item">
-                <a href="#reviews" class="nav__link">Отзывы</a>
+                <a href="#gallery" class="nav__link js-menu-link">Галерея</a>
+              </li>
+              <li class="nav__item">
+                <a href="#reviews" class="nav__link js-menu-link">Отзывы</a>
+              </li>
+              <li class="nav__item">
+                <a href="#faq" class="nav__link js-menu-link">FAQ</a>
               </li>
             </ul>
           </nav>
-
-          <div class="header__actions">
-            <a href="#order" class="btn btn-sm fx-sheen">Заказать</a>
+          <div class="header__nav-footer">
+            <a href="#order" class="button button--primary js-menu-link"
+              >Заказать комплект</a
+            >
           </div>
-
-          <button
-            class="burger-btn mobile-only"
-            id="burgerBtn"
-            aria-label="Открыть меню"
-            aria-controls="mobile-menu"
-            aria-expanded="false"
-            onclick="toggleMenu()"
-          >
-            <span class="burger-line"></span>
-            <span class="burger-line"></span>
-            <span class="burger-line"></span>
-          </button>
         </div>
-      </header>
 
-      <main>
-        <section class="hero fx-noise" id="hero">
-          <div class="container hero__layout">
-            <div class="hero__content">
-              <div class="trust-badge glass-ghost animate-up delay-100">
-                <div class="stars-icon" aria-label="Рейтинг 5 звезд">
-                  <svg
-                    width="80"
-                    height="16"
-                    viewBox="0 0 80 16"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <use
-                      xlink:href="#star"
-                      x="0"
-                      y="2"
-                      width="16"
-                      height="16"
-                    />
-                    <use
-                      xlink:href="#star"
-                      x="16"
-                      y="2"
-                      width="16"
-                      height="16"
-                    />
-                    <use
-                      xlink:href="#star"
-                      x="32"
-                      y="2"
-                      width="16"
-                      height="16"
-                    />
-                    <use
-                      xlink:href="#star"
-                      x="48"
-                      y="2"
-                      width="16"
-                      height="16"
-                    />
-                    <use
-                      xlink:href="#star"
-                      x="64"
-                      y="2"
-                      width="16"
-                      height="16"
-                    />
-                  </svg>
-                </div>
-                <span class="trust-text">Выбор 500+ водителей</span>
-              </div>
+        <div class="header__actions">
+          <a href="#order" class="button button--primary header__cta-btn"
+            >Заказать</a
+          >
+        </div>
 
-              <h1 class="text-chrome glow-ambient animate-up delay-200">
-                Премиальный салон <br class="mobile-only" />
-                за 5 минут
-              </h1>
+        <button
+          class="burger-btn js-menu-toggle"
+          id="burgerBtn"
+          aria-label="Открыть меню"
+          aria-controls="navigation-wrapper"
+          aria-expanded="false"
+        >
+          <span class="burger-btn__line" aria-hidden="true"></span>
+          <span class="burger-btn__line" aria-hidden="true"></span>
+          <span class="burger-btn__line" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
 
-              <p class="subtitle animate-up delay-300">
-                Накидки на сиденья из износостойкого велюра с идеальной
-                посадкой.
-                <br class="desktop-only" />
-                Защита обивки и новый уровень комфорта в любую погоду.
-              </p>
-
-              <ul class="bullets glass-panel animate-up delay-400" role="list">
-                <li>
-                  <svg
-                    class="icon-check"
-                    width="20"
-                    height="20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    aria-hidden="true"
-                  >
-                    <use xlink:href="#check" />
-                  </svg>
-                  Плотный, бархатистый велюр (Класс А+)
-                </li>
-                <li>
-                  <svg
-                    class="icon-check"
-                    width="20"
-                    height="20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    aria-hidden="true"
-                  >
-                    <use xlink:href="#check" />
-                  </svg>
-                  Система Anti-Slip (не скользят, не красят кожу)
-                </li>
-                <li>
-                  <svg
-                    class="icon-check"
-                    width="20"
-                    height="20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    aria-hidden="true"
-                  >
-                    <use xlink:href="#check" />
-                  </svg>
-                  Универсальный размер (подходит для 99% авто)
-                </li>
-              </ul>
-
-              <div class="cta-group animate-up delay-500">
-                <a href="#order" class="btn btn-primary btn-glow fx-sheen"
-                  >Выбрать комплект →</a
+    <main class="main">
+      <section class="hero" id="hero">
+        <div class="container hero__container">
+          <div class="hero__content">
+            <div class="hero__rating">
+              <div class="stars" role="img" aria-label="Рейтинг 5 из 5 звезд">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  aria-hidden="true"
                 >
-                <p class="cta-hint">
-                  Гарантия 3 месяца. Оплата после проверки.
-                </p>
+                  <use xlink:href="#star" />
+                </svg>
+                <svg
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <use xlink:href="#star" />
+                </svg>
+                <svg
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <use xlink:href="#star" />
+                </svg>
+                <svg
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <use xlink:href="#star" />
+                </svg>
+                <svg
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <use xlink:href="#star" />
+                </svg>
               </div>
+              <span class="hero__rating-text">Выбор 500+ водителей</span>
             </div>
 
-            <div class="hero__media-desktop">
-              <img
-                src="media/RedStitch_Front_Straight.webp"
-                alt="Переднее кресло: фронтальный ракурс одиночного сиденья с накидкой (красная строчка)."
-                width="960"
-                height="1280"
-                class="hero-img"
-                fetchpriority="high"
-              />
+            <h1 class="hero__title">
+              Премиальный салон <br />
+              за 5 минут
+            </h1>
+
+            <p class="hero__subtitle">
+              Накидки на сиденья из износостойкого велюра (аналог Алькантары) с
+              идеальной посадкой.
+              <br />
+              Защита обивки и новый уровень комфорта в любую погоду.
+            </p>
+
+            <ul class="hero__features-list">
+              <li class="hero__features-item">
+                <svg
+                  class="icon icon--check"
+                  width="20"
+                  height="20"
+                  aria-hidden="true"
+                >
+                  <use xlink:href="#check" />
+                </svg>
+                Плотный, бархатистый велюр (Класс А+)
+              </li>
+              <li class="hero__features-item">
+                <svg
+                  class="icon icon--check"
+                  width="20"
+                  height="20"
+                  aria-hidden="true"
+                >
+                  <use xlink:href="#check" />
+                </svg>
+                Система Anti-Slip (не скользят, не красят кожу)
+              </li>
+              <li class="hero__features-item">
+                <svg
+                  class="icon icon--check"
+                  width="20"
+                  height="20"
+                  aria-hidden="true"
+                >
+                  <use xlink:href="#check" />
+                </svg>
+                Универсальный размер (подходит для 99% авто)
+              </li>
+            </ul>
+
+            <div class="hero__cta">
+              <a href="#order" class="button button--primary button--large"
+                >Заказать со скидкой 33% →</a
+              >
+              <p class="hero__guarantee">
+                Гарантия 3 месяца. Оплата после проверки.
+              </p>
             </div>
           </div>
-        </section>
 
-        <section class="details bg-secondary" id="details">
-          <div class="container">
-            <h2 class="text-chrome section-title">
-              Качество, к которому хочется прикасаться
-            </h2>
+          <div class="hero__image-wrapper">
+            <img
+              class="hero__image"
+              src="media/RedStitch_Front_Straight.webp"
+              alt="Переднее кресло автомобиля с установленной черной велюровой накидкой и красной ромбовидной строчкой."
+              width="960"
+              height="1280"
+              fetchpriority="high"
+            />
+          </div>
+        </div>
+      </section>
 
-            <article class="content-block">
-              <figure class="media-wrapper hover-zoom">
+      <section class="section details" id="details">
+        <div class="container">
+          <h2 class="section__title">
+            Качество, к которому хочется прикасаться
+          </h2>
+
+          <div class="details__grid">
+            <article class="feature-card">
+              <figure class="feature-card__media">
                 <img
+                  class="feature-card__image"
                   src="media/RedStitch_Texture_Macro.webp"
                   alt="Макро-съемка фактуры: черный велюровый материал с ромбовидной прострочкой красной нитью."
                   loading="lazy"
@@ -241,9 +268,11 @@
                   height="626"
                 />
               </figure>
-              <div class="text-content stitch-line">
-                <h3>Роскошный и Практичный Материал</h3>
-                <p>
+              <div class="feature-card__content">
+                <h3 class="feature-card__title">
+                  Роскошный и Практичный Материал
+                </h3>
+                <p class="feature-card__text">
                   Мы используем многослойный плотный велюр высшего класса (А+).
                   Накидки невероятно мягкие, бархатистые на ощупь и при этом
                   устойчивы к истиранию, заломам и выцветанию. Материал дышит
@@ -252,14 +281,15 @@
               </div>
             </article>
 
-            <article class="content-block reverse">
-              <figure class="media-wrapper hover-zoom">
+            <article class="feature-card feature-card--reversed">
+              <figure class="feature-card__media">
                 <video
+                  class="feature-card__video"
                   autoplay
                   muted
                   loop
                   playsinline
-                  loading="lazy"
+                  preload="metadata"
                   poster="media/RedStitch_Texture_Macro.webp"
                   aria-label="Макро-видео материала: крупный план черной стеганой ткани, показана мягкость фактуры и перелив ворса."
                   width="1280"
@@ -272,9 +302,9 @@
                   Ваш браузер не поддерживает видео.
                 </video>
               </figure>
-              <div class="text-content stitch-line">
-                <h3>Внимание к Деталям</h3>
-                <p>
+              <div class="feature-card__content">
+                <h3 class="feature-card__title">Внимание к Деталям</h3>
+                <p class="feature-card__text">
                   Ромбовидная строчка выполнена высокопрочными армированными
                   нитями. Это не только создает дизайн в стиле лучших
                   автоателье, но и обеспечивает структурную целостность и
@@ -283,216 +313,217 @@
               </div>
             </article>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="styles bg-primary" id="styles">
-          <div class="container">
-            <h2 class="text-chrome section-title">
-              Два дизайна для вашего интерьера
-            </h2>
-            <div class="grid-container grid-container--styles">
-              <article class="card style-card fx-sheen" data-theme="red">
-                <figure class="card-media hover-zoom">
-                  <img
-                    src="media/RedStitch_Front_Side.webp"
-                    alt="Переднее кресло: вид сбоку (от двери), комплект с красной нитью."
-                    loading="lazy"
-                    width="810"
-                    height="1080"
-                  />
-                </figure>
-                <div class="card-content">
-                  <h3>Спорт и Акцент</h3>
-                  <p>
-                    Глубокий черный цвет с контрастной красной строчкой.
-                    Идеально для тех, кто хочет добавить динамики и характера в
-                    интерьер салона.
-                  </p>
-                  <a
-                    href="#order"
-                    onclick="selectColor('red')"
-                    class="btn btn-secondary"
-                    >Выбрать этот стиль</a
-                  >
-                </div>
-              </article>
-
-              <article class="card style-card fx-sheen" data-theme="black">
-                <figure class="card-media hover-zoom">
-                  <img
-                    src="media/Black_Front_Pair_Best.webp"
-                    alt="Передний ряд: парный ракурс двух передних сидений с черными накидками."
-                    loading="lazy"
-                    width="815"
-                    height="1080"
-                  />
-                </figure>
-                <div class="card-content">
-                  <h3>Строгая Классика</h3>
-                  <p>
-                    Полностью черный комплект (Black Edition). Элегантное,
-                    сдержанное и универсальное решение, которое гармонично
-                    впишется в салон любого автомобиля.
-                  </p>
-                  <a
-                    href="#order"
-                    onclick="selectColor('black')"
-                    class="btn btn-secondary"
-                    >Выбрать этот стиль</a
-                  >
-                </div>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section class="technology bg-secondary fx-noise" id="technology">
-          <div class="container">
-            <h2 class="text-chrome section-title">Продумано до мелочей</h2>
-            <div class="grid-container grid-container--tech">
-              <article class="tech-item fx-sheen">
-                <figure class="hover-zoom">
-                  <img
-                    src="media/Tech_Lining_Comparison.webp"
-                    alt="Техническое фото изнанки: сравнение светлой и черной подкладки, видна противоскользящая текстура."
-                    loading="lazy"
-                    width="1080"
-                    height="810"
-                  />
-                </figure>
-                <h3>Система Anti-Slip</h3>
-                <p>
-                  Изнанка выполнена из специального материала с силиконовыми
-                  вкраплениями. Накидка не ерзает и не сползает. Гарантированно
-                  не окрашивает светлые кожаные салоны.
-                </p>
-              </article>
-
-              <article class="tech-item fx-sheen">
-                <figure class="hover-zoom">
-                  <img
-                    src="media/Tech_Hooks_Straps.webp"
-                    alt="Крепеж: детальное фото эластичных лент и металлических крючков на тыльной стороне."
-                    loading="lazy"
-                    width="1080"
-                    height="810"
-                  />
-                </figure>
-                <h3>Надежная Фиксация</h3>
-                <p>
-                  Продуманная система крепежа обеспечивает идеальную посадку без
-                  "волн". Используются износостойкие эластичные ленты и прочные
-                  металлические крючки.
-                </p>
-              </article>
-
-              <article class="tech-item fx-sheen">
-                <figure class="hover-zoom">
-                  <img
-                    src="media/Tech_Fixing_Washers.webp"
-                    alt="Фурнитура: пластиковые фиксирующие шайбы и застежки-молнии для монтажа."
-                    loading="lazy"
-                    width="1080"
-                    height="810"
-                  />
-                </figure>
-                <h3>Установка за 5 минут</h3>
-                <p>
-                  Пластиковые шайбы надежно фиксируют накидку между спинкой и
-                  сиденьем. Специальные молнии позволяют легко установить
-                  накидки, не снимая подголовники.
-                </p>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section class="video-overview bg-primary" id="video-overview">
-          <div class="container video-overview__container">
-            <h2 class="text-chrome section-title">Посмотрите накидки в деле</h2>
-            <p class="section-subtitle">
-              Короткий видео-обзор установленного комплекта в салоне автомобиля.
-            </p>
-            <div class="video-wrapper fx-sheen hover-zoom">
-              <video
-                controls
-                preload="metadata"
-                loading="lazy"
-                poster="media/RedStitch_Salon_Collage_v1.webp"
-                aria-label="Видео-обзор в салоне: демонстрация установленных на передние сиденья черных накидок с красной ромбовидной строчкой, тест материала на ощупь."
-                width="1280"
-                height="720"
-              >
-                <source
-                  src="media/car_interior_red_stitching.mp4"
-                  type="video/mp4"
-                />
-                Ваш браузер не поддерживает воспроизведение видео.
-              </video>
-            </div>
-          </div>
-        </section>
-
-        <section class="kit bg-secondary" id="kit">
-          <div class="container kit__container">
-            <h2 class="text-chrome section-title">
-              Что входит в полный комплект
-            </h2>
-            <div class="kit__layout">
-              <figure class="kit__image fx-sheen">
+      <section class="section styles" id="styles">
+        <div class="container">
+          <h2 class="section__title">Два дизайна для вашего интерьера</h2>
+          <div class="styles__grid">
+            <article class="style-card" data-theme="red">
+              <figure class="style-card__media">
                 <img
-                  src="media/Black_Kit_Flatlay.webp"
-                  alt="Раскладка (Flatlay): полный комплект черных накидок (передние, задние, подголовники), разложенный на плоскости."
+                  class="style-card__image"
+                  src="media/RedStitch_Front_Side.webp"
+                  alt="Переднее кресло: вид сбоку (от двери), комплект с красной нитью."
+                  loading="lazy"
+                  width="810"
+                  height="1080"
+                />
+              </figure>
+              <div class="style-card__content">
+                <h3 class="style-card__title">Спорт и Акцент</h3>
+                <p class="style-card__text">
+                  Глубокий черный цвет с контрастной красной строчкой. Идеально
+                  для тех, кто хочет добавить динамики и характера в интерьер
+                  салона.
+                </p>
+                <a
+                  href="#order"
+                  class="button button--secondary js-select-color"
+                  data-color="red"
+                  >Выбрать этот стиль</a
+                >
+              </div>
+            </article>
+
+            <article class="style-card" data-theme="black">
+              <figure class="style-card__media">
+                <img
+                  class="style-card__image"
+                  src="media/Black_Front_Pair_Best.webp"
+                  alt="Передний ряд: парный ракурс двух передних сидений с черными накидками."
+                  loading="lazy"
+                  width="815"
+                  height="1080"
+                />
+              </figure>
+              <div class="style-card__content">
+                <h3 class="style-card__title">Строгая Классика</h3>
+                <p class="style-card__text">
+                  Полностью черный комплект (Black Edition). Элегантное,
+                  сдержанное и универсальное решение, которое гармонично
+                  впишется в салон любого автомобиля.
+                </p>
+                <a
+                  href="#order"
+                  class="button button--secondary js-select-color"
+                  data-color="black"
+                  >Выбрать этот стиль</a
+                >
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section technology" id="technology">
+        <div class="container">
+          <h2 class="section__title">Продумано до мелочей</h2>
+          <div class="technology__grid">
+            <article class="tech-card">
+              <figure class="tech-card__media">
+                <img
+                  class="tech-card__image"
+                  src="media/Tech_Lining_Comparison.webp"
+                  alt="Техническое фото изнанки: сравнение светлой и черной подкладки, видна противоскользящая текстура."
                   loading="lazy"
                   width="1080"
                   height="810"
                 />
               </figure>
-              <div class="kit__list-container glass-panel">
-                <h3>Комплектация "Полный Салон":</h3>
-                <ul class="kit__list" role="list">
-                  <li>
-                    <span class="kit__item-count">2 шт.</span> Накидки на
-                    передние сиденья (спинка + сидушка)
-                  </li>
-                  <li>
-                    <span class="kit__item-count">1 шт.</span> Накидка на задний
-                    диван (цельная)
-                  </li>
-                  <li>
-                    <span class="kit__item-count">4+ шт.</span> Накидки на
-                    подголовники (передние и задние)
-                  </li>
-                  <li>
-                    <span class="kit__item-count">Набор</span> Фирменные крепежи
-                    и фурнитура
-                  </li>
-                </ul>
-                <p class="kit__note">
-                  Также доступен комплект только для передних сидений.
-                </p>
-                <a href="#order" class="btn btn-primary cta-kit fx-sheen"
-                  >Перейти к заказу</a
-                >
-              </div>
-            </div>
-          </div>
-        </section>
+              <h3 class="tech-card__title">Система Anti-Slip</h3>
+              <p class="tech-card__text">
+                Изнанка выполнена из специального материала с силиконовыми
+                вкраплениями. Накидка не ерзает и не сползает. Гарантированно не
+                окрашивает светлые кожаные салоны.
+              </p>
+            </article>
 
-        <section class="gallery bg-primary" id="gallery">
-          <div class="container">
-            <h2 class="text-chrome section-title">
-              Как это выглядит в автомобиле
-            </h2>
-          </div>
+            <article class="tech-card">
+              <figure class="tech-card__media">
+                <img
+                  class="tech-card__image"
+                  src="media/Tech_Hooks_Straps.webp"
+                  alt="Крепеж: детальное фото эластичных лент и металлических крючков на тыльной стороне."
+                  loading="lazy"
+                  width="1080"
+                  height="810"
+                />
+              </figure>
+              <h3 class="tech-card__title">Надежная Фиксация</h3>
+              <p class="tech-card__text">
+                Продуманная система крепежа обеспечивает идеальную посадку без
+                "волн". Используются износостойкие эластичные ленты и прочные
+                металлические крючки.
+              </p>
+            </article>
 
-          <div
-            class="scroll-snap-slider mobile-only"
-            role="region"
-            aria-label="Галерея изображений в салоне"
-          >
-            <div class="slide">
+            <article class="tech-card">
+              <figure class="tech-card__media">
+                <img
+                  class="tech-card__image"
+                  src="media/Tech_Fixing_Washers.webp"
+                  alt="Фурнитура: пластиковые фиксирующие шайбы и застежки-молнии для монтажа."
+                  loading="lazy"
+                  width="1080"
+                  height="810"
+                />
+              </figure>
+              <h3 class="tech-card__title">Установка за 5 минут</h3>
+              <p class="tech-card__text">
+                Пластиковые шайбы надежно фиксируют накидку между спинкой и
+                сиденьем. Специальные молнии позволяют легко установить накидки,
+                не снимая подголовники.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section video-overview" id="video-overview">
+        <div class="container video-overview__container">
+          <h2 class="section__title">Посмотрите накидки в деле</h2>
+          <p class="section__subtitle">
+            Короткий видео-обзор установленного комплекта в салоне автомобиля.
+          </p>
+          <div class="video-overview__wrapper">
+            <video
+              class="video-overview__player"
+              controls
+              preload="metadata"
+              poster="media/RedStitch_Salon_Collage_v1.webp"
+              aria-label="Видео-обзор в салоне: демонстрация установленных на передние сиденья черных накидок с красной ромбовидной строчкой, тест материала на ощупь."
+              width="1280"
+              height="720"
+            >
+              <source
+                src="media/car_interior_red_stitching.mp4"
+                type="video/mp4"
+              />
+              Ваш браузер не поддерживает воспроизведение видео.
+            </video>
+          </div>
+        </div>
+      </section>
+
+      <section class="section kit" id="kit">
+        <div class="container kit__layout">
+          <h2 class="section__title kit__title">
+            Что входит в полный комплект
+          </h2>
+          <figure class="kit__media">
+            <img
+              class="kit__image"
+              src="media/Black_Kit_Flatlay.webp"
+              alt="Раскладка (Flatlay): полный комплект черных накидок (передние, задние, подголовники), разложенный на плоскости."
+              loading="lazy"
+              width="1080"
+              height="810"
+            />
+          </figure>
+          <div class="kit__content">
+            <h3 class="kit__subtitle">Комплектация "Полный Салон":</h3>
+            <ul class="kit__list">
+              <li class="kit__item">
+                <span class="kit__item-count">2 шт.</span> Накидки на передние
+                сиденья (спинка + сидушка)
+              </li>
+              <li class="kit__item">
+                <span class="kit__item-count">1 шт.</span> Накидка на задний
+                диван (цельная)
+              </li>
+              <li class="kit__item">
+                <span class="kit__item-count">4+ шт.</span> Накидки на
+                подголовники (передние и задние)
+              </li>
+              <li class="kit__item">
+                <span class="kit__item-count">Набор</span> Фирменные крепежи и
+                фурнитура
+              </li>
+            </ul>
+            <p class="kit__note">
+              Также доступен комплект только для передних сидений.
+            </p>
+            <a href="#order" class="button button--primary">Перейти к заказу</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section gallery" id="gallery">
+        <div class="container">
+          <h2 class="section__title">Как это выглядит в автомобиле</h2>
+        </div>
+
+        <div
+          class="gallery__carousel js-gallery-slider"
+          role="region"
+          aria-label="Галерея изображений в салоне"
+        >
+          <div class="gallery__carousel-wrapper">
+            <div class="gallery__slide">
               <img
+                class="gallery__image"
                 src="media/RedStitch_Salon_Collage_v1.webp"
                 loading="lazy"
                 alt="Коллаж №1: альтернативная компоновка видов салона с комплектом 'черный + красный'."
@@ -500,8 +531,9 @@
                 height="720"
               />
             </div>
-            <div class="slide">
+            <div class="gallery__slide">
               <img
+                class="gallery__image"
                 src="media/RedStitch_Front_Side.webp"
                 loading="lazy"
                 alt="Переднее кресло: вид сбоку (от двери), комплект с красной нитью."
@@ -509,8 +541,9 @@
                 height="1080"
               />
             </div>
-            <div class="slide">
+            <div class="gallery__slide">
               <img
+                class="gallery__image"
                 src="media/Black_Rear_View.webp"
                 loading="lazy"
                 alt="Задний диван: полностью черный комплект, общий план задней части салона."
@@ -518,8 +551,9 @@
                 height="1080"
               />
             </div>
-            <div class="slide">
+            <div class="gallery__slide">
               <img
+                class="gallery__image"
                 src="media/Black_Front_Top_Angle.webp"
                 loading="lazy"
                 alt="Переднее сиденье: ракурс сверху-сбоку, черная классическая накидка, видна часть центральной консоли."
@@ -527,8 +561,9 @@
                 height="1440"
               />
             </div>
-            <div class="slide">
+            <div class="gallery__slide">
               <img
+                class="gallery__image"
                 src="media/RedStitch_Rear_View.webp"
                 loading="lazy"
                 alt="Задний ряд сидений: общий вид установленного комплекта (черный с красной строчкой)."
@@ -536,8 +571,9 @@
                 height="1280"
               />
             </div>
-            <div class="slide">
+            <div class="gallery__slide">
               <img
+                class="gallery__image"
                 src="media/RedStitch_Detail_Headrest.webp"
                 loading="lazy"
                 alt="Детализация: крупный план отдельного подголовника с красной прострочкой."
@@ -545,8 +581,9 @@
                 height="1280"
               />
             </div>
-            <div class="slide">
+            <div class="gallery__slide">
               <img
+                class="gallery__image"
                 src="media/Black_Salon_Collage.webp"
                 loading="lazy"
                 alt="Коллаж (черный комплект): совмещенные фото заднего дивана и передних кресел."
@@ -556,211 +593,174 @@
             </div>
           </div>
 
-          <div class="swipe-hint mobile-only">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              aria-hidden="true"
+          <div class="container gallery__controls">
+            <button
+              class="gallery__nav-btn gallery__nav-btn--prev js-gallery-prev"
+              aria-label="Предыдущий слайд"
             >
-              <path d="M19 12H5M5 12L12 19M5 12L12 5" />
-            </svg>
-            <span>Листайте</span>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              aria-hidden="true"
+              <svg class="icon" width="24" height="24" aria-hidden="true">
+                <use xlink:href="#arrow-left" />
+              </svg>
+            </button>
+            <span class="gallery__controls-text">Листайте галерею</span>
+            <button
+              class="gallery__nav-btn gallery__nav-btn--next js-gallery-next"
+              aria-label="Следующий слайд"
             >
-              <path d="M5 12H19M19 12L12 5M19 12L12 19" />
-            </svg>
+              <svg class="icon" width="24" height="24" aria-hidden="true">
+                <use xlink:href="#arrow-right" />
+              </svg>
+            </button>
           </div>
+        </div>
+      </section>
 
-          <div class="container gallery-grid-desktop desktop-only">
-            <img
-              class="gallery-item span-col-2 hover-zoom"
-              src="media/RedStitch_Salon_Collage_v1.webp"
-              loading="lazy"
-              alt="Коллаж №1: альтернативная компоновка видов салона с комплектом 'черный + красный'."
-              width="960"
-              height="720"
-            />
+      <section class="section reviews" id="reviews">
+        <div class="container">
+          <h2 class="section__title">Отзывы довольных покупателей</h2>
+        </div>
+        <div
+          class="container reviews__list js-reviews-slider"
+          role="region"
+          aria-label="Отзывы покупателей"
+        >
+          <figure class="review-card">
+            <div
+              class="review-card__rating"
+              role="img"
+              aria-label="Рейтинг 5 из 5"
+            >
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+            </div>
+            <blockquote class="review-card__quote">
+              <p>
+                "Не ожидал такого качества за эту цену! Салон теперь выглядит
+                как после дорогого ателье. Сидеть стало намного приятнее, и
+                самое главное – ничего не ерзает по коже. Рекомендую!"
+              </p>
+            </blockquote>
+            <figcaption class="review-card__author">
+              – Алексей В., Москва
+            </figcaption>
+          </figure>
 
-            <img
-              class="gallery-item span-row-2 hover-zoom"
-              src="media/RedStitch_Front_Side.webp"
-              loading="lazy"
-              alt="Переднее кресло: вид сбоку (от двери), комплект с красной нитью."
-              width="810"
-              height="1080"
-            />
-            <img
-              class="gallery-item span-row-2 hover-zoom"
-              src="media/Black_Rear_View.webp"
-              loading="lazy"
-              alt="Задний диван: полностью черный комплект, общий план задней части салона."
-              width="810"
-              height="1080"
-            />
+          <figure class="review-card">
+            <div
+              class="review-card__rating"
+              role="img"
+              aria-label="Рейтинг 5 из 5"
+            >
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+            </div>
+            <blockquote class="review-card__quote">
+              <p>
+                "Очень мягкие и приятные на ощупь. Зимой садиться в машину стало
+                намного комфортнее, не холодно. Установила сама за 10 минут, все
+                крепежи на месте."
+              </p>
+            </blockquote>
+            <figcaption class="review-card__author">
+              – Мария К., Санкт-Петербург
+            </figcaption>
+          </figure>
 
-            <img
-              class="gallery-item span-row-2 hover-zoom"
-              src="media/Black_Front_Top_Angle.webp"
-              loading="lazy"
-              alt="Переднее сиденье: ракурс сверху-сбоку, черная классическая накидка, видна часть центральной консоли."
-              width="1080"
-              height="1440"
-            />
+          <figure class="review-card">
+            <div
+              class="review-card__rating"
+              role="img"
+              aria-label="Рейтинг 5 из 5"
+            >
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+              <svg class="stars" width="20" height="20" aria-hidden="true">
+                <use xlink:href="#star" />
+              </svg>
+            </div>
+            <blockquote class="review-card__quote">
+              <p>
+                "Смотрится дорого! Красная строчка идеально подошла под
+                подсветку салона. Отдельный плюс за подкладку – по моей светлой
+                коже совсем не скользят и следов не оставляют!"
+              </p>
+            </blockquote>
+            <figcaption class="review-card__author">
+              – Сергей П., Казань
+            </figcaption>
+          </figure>
+        </div>
+      </section>
 
-            <img
-              class="gallery-item span-row-2 hover-zoom"
-              src="media/RedStitch_Rear_View.webp"
-              loading="lazy"
-              alt="Задний ряд сидений: общий вид установленного комплекта (черный с красной строчкой)."
-              width="960"
-              height="1280"
-            />
-            <img
-              class="gallery-item span-row-2 hover-zoom"
-              src="media/RedStitch_Detail_Headrest.webp"
-              loading="lazy"
-              alt="Детализация: крупный план отдельного подголовника с красной прострочкой."
-              width="853"
-              height="1280"
-            />
-
-            <img
-              class="gallery-item span-col-2 hover-zoom"
-              src="media/Black_Salon_Collage.webp"
-              loading="lazy"
-              alt="Коллаж (черный комплект): совмещенные фото заднего дивана и передних кресел."
-              width="960"
-              height="720"
-            />
-          </div>
-        </section>
-
-        <section class="reviews bg-secondary fx-noise" id="reviews">
-          <div class="container">
-            <h2 class="text-chrome section-title">
-              Отзывы довольных покупателей
-            </h2>
-          </div>
-          <div
-            class="scroll-snap-slider reviews-slider"
-            role="region"
-            aria-label="Слайдер отзывов"
-          >
-            <figure class="review-card glass-panel fx-sheen">
-              <div class="rating-stars" aria-label="Рейтинг 5 из 5">
-                <svg
-                  width="100"
-                  height="20"
-                  viewBox="0 0 100 20"
-                  fill="#FFD700"
-                  aria-hidden="true"
+      <section class="section faq" id="faq">
+        <div class="container">
+          <h2 class="section__title">Часто задаваемые вопросы</h2>
+          <div class="accordion" id="faq-accordion">
+            <div class="accordion__item">
+              <h3 class="accordion__title">
+                <button
+                  class="accordion__button js-accordion-toggle"
+                  aria-expanded="false"
+                  aria-controls="faq-content-1"
+                  id="faq-trigger-1"
                 >
-                  <use xlink:href="#star" x="0" y="0" />
-                  <use xlink:href="#star" x="20" y="0" />
-                  <use xlink:href="#star" x="40" y="0" />
-                  <use xlink:href="#star" x="60" y="0" />
-                  <use xlink:href="#star" x="80" y="0" />
-                </svg>
-              </div>
-              <blockquote>
-                <p>
-                  "Не ожидал такого качества за эту цену! Салон теперь выглядит
-                  как после дорогого ателье. Сидеть стало намного приятнее, и
-                  самое главное – ничего не ерзает по коже. Рекомендую!"
-                </p>
-              </blockquote>
-              <figcaption class="author">– Алексей В., Москва</figcaption>
-            </figure>
-
-            <figure class="review-card glass-panel fx-sheen">
-              <div class="rating-stars" aria-label="Рейтинг 5 из 5">
-                <svg
-                  width="100"
-                  height="20"
-                  viewBox="0 0 100 20"
-                  fill="#FFD700"
-                  aria-hidden="true"
-                >
-                  <use xlink:href="#star" x="0" y="0" />
-                  <use xlink:href="#star" x="20" y="0" />
-                  <use xlink:href="#star" x="40" y="0" />
-                  <use xlink:href="#star" x="60" y="0" />
-                  <use xlink:href="#star" x="80" y="0" />
-                </svg>
-              </div>
-              <blockquote>
-                <p>
-                  "Очень мягкие и приятные на ощупь. Зимой садиться в машину
-                  стало намного комфортнее, не холодно. Установила сама за 10
-                  минут, все крепежи на месте."
-                </p>
-              </blockquote>
-              <figcaption class="author">
-                – Мария К., Санкт-Петербург
-              </figcaption>
-            </figure>
-
-            <figure class="review-card glass-panel fx-sheen">
-              <div class="rating-stars" aria-label="Рейтинг 5 из 5">
-                <svg
-                  width="100"
-                  height="20"
-                  viewBox="0 0 100 20"
-                  fill="#FFD700"
-                  aria-hidden="true"
-                >
-                  <use xlink:href="#star" x="0" y="0" />
-                  <use xlink:href="#star" x="20" y="0" />
-                  <use xlink:href="#star" x="40" y="0" />
-                  <use xlink:href="#star" x="60" y="0" />
-                  <use xlink:href="#star" x="80" y="0" />
-                </svg>
-              </div>
-              <blockquote>
-                <p>
-                  "Смотрится дорого! Красная строчка идеально подошла под
-                  подсветку салона. Отдельный плюс за подкладку – по моей
-                  светлой коже совсем не скользят и следов не оставляют!"
-                </p>
-              </blockquote>
-              <figcaption class="author">– Сергей П., Казань</figcaption>
-            </figure>
-          </div>
-        </section>
-
-        <section class="faq bg-primary" id="faq">
-          <div class="container">
-            <h2 class="text-chrome section-title">Часто задаваемые вопросы</h2>
-            <div class="accordion" id="faq-accordion">
-              <div class="accordion-item glass-ghost">
-                <h3 class="accordion-header">
-                  <button aria-expanded="false" aria-controls="faq-content-1">
-                    <span>Подойдут ли накидки на мою машину?</span>
-                    <svg
-                      class="icon-plus"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      aria-hidden="true"
-                    >
-                      <line x1="12" y1="5" x2="12" y2="19"></line>
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                  </button>
-                </h3>
-                <div class="accordion-content" id="faq-content-1">
+                  <span class="accordion__button-text"
+                    >Подойдут ли накидки на мою машину?</span
+                  >
+                  <svg
+                    class="icon accordion__icon"
+                    width="20"
+                    height="20"
+                    aria-hidden="true"
+                  >
+                    <use xlink:href="#plus" />
+                  </svg>
+                </button>
+              </h3>
+              <div
+                class="accordion__content"
+                id="faq-content-1"
+                role="region"
+                aria-labelledby="faq-trigger-1"
+                hidden
+              >
+                <div class="accordion__content-inner">
                   <p>
                     Накидки имеют универсальный крой и подходят для 99% легковых
                     автомобилей, кроссоверов и внедорожников. Если у вас
@@ -770,29 +770,37 @@
                   </p>
                 </div>
               </div>
+            </div>
 
-              <div class="accordion-item glass-ghost">
-                <h3 class="accordion-header">
-                  <button aria-expanded="false" aria-controls="faq-content-2">
-                    <span
-                      >Не будут ли накидки красить светлый кожаный салон?</span
-                    >
-                    <svg
-                      class="icon-plus"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      aria-hidden="true"
-                    >
-                      <line x1="12" y1="5" x2="12" y2="19"></line>
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                  </button>
-                </h3>
-                <div class="accordion-content" id="faq-content-2">
+            <div class="accordion__item">
+              <h3 class="accordion__title">
+                <button
+                  class="accordion__button js-accordion-toggle"
+                  aria-expanded="false"
+                  aria-controls="faq-content-2"
+                  id="faq-trigger-2"
+                >
+                  <span class="accordion__button-text"
+                    >Не будут ли накидки красить светлый кожаный салон?</span
+                  >
+                  <svg
+                    class="icon accordion__icon"
+                    width="20"
+                    height="20"
+                    aria-hidden="true"
+                  >
+                    <use xlink:href="#plus" />
+                  </svg>
+                </button>
+              </h3>
+              <div
+                class="accordion__content"
+                id="faq-content-2"
+                role="region"
+                aria-labelledby="faq-trigger-2"
+                hidden
+              >
+                <div class="accordion__content-inner">
                   <p>
                     Нет, это исключено. Наша система Anti-Slip имеет специальную
                     защитную подкладку, которая не линяет и защищает
@@ -801,27 +809,37 @@
                   </p>
                 </div>
               </div>
+            </div>
 
-              <div class="accordion-item glass-ghost">
-                <h3 class="accordion-header">
-                  <button aria-expanded="false" aria-controls="faq-content-3">
-                    <span>Как за ними ухаживать? Можно ли стирать?</span>
-                    <svg
-                      class="icon-plus"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      aria-hidden="true"
-                    >
-                      <line x1="12" y1="5" x2="12" y2="19"></line>
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                  </button>
-                </h3>
-                <div class="accordion-content" id="faq-content-3">
+            <div class="accordion__item">
+              <h3 class="accordion__title">
+                <button
+                  class="accordion__button js-accordion-toggle"
+                  aria-expanded="false"
+                  aria-controls="faq-content-3"
+                  id="faq-trigger-3"
+                >
+                  <span class="accordion__button-text"
+                    >Как за ними ухаживать? Можно ли стирать?</span
+                  >
+                  <svg
+                    class="icon accordion__icon"
+                    width="20"
+                    height="20"
+                    aria-hidden="true"
+                  >
+                    <use xlink:href="#plus" />
+                  </svg>
+                </button>
+              </h3>
+              <div
+                class="accordion__content"
+                id="faq-content-3"
+                role="region"
+                aria-labelledby="faq-trigger-3"
+                hidden
+              >
+                <div class="accordion__content-inner">
                   <p>
                     Для повседневного ухода достаточно сухой чистки щеткой или
                     автомобильным пылесосом. При сильных загрязнениях возможна
@@ -830,30 +848,37 @@
                   </p>
                 </div>
               </div>
+            </div>
 
-              <div class="accordion-item glass-ghost">
-                <h3 class="accordion-header">
-                  <button aria-expanded="false" aria-controls="faq-content-4">
-                    <span
-                      >Не мешают ли накидки подогреву и вентиляции
-                      сидений?</span
-                    >
-                    <svg
-                      class="icon-plus"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      aria-hidden="true"
-                    >
-                      <line x1="12" y1="5" x2="12" y2="19"></line>
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                  </button>
-                </h3>
-                <div class="accordion-content" id="faq-content-4">
+            <div class="accordion__item">
+              <h3 class="accordion__title">
+                <button
+                  class="accordion__button js-accordion-toggle"
+                  aria-expanded="false"
+                  aria-controls="faq-content-4"
+                  id="faq-trigger-4"
+                >
+                  <span class="accordion__button-text"
+                    >Не мешают ли накидки подогреву и вентиляции сидений?</span
+                  >
+                  <svg
+                    class="icon accordion__icon"
+                    width="20"
+                    height="20"
+                    aria-hidden="true"
+                  >
+                    <use xlink:href="#plus" />
+                  </svg>
+                </button>
+              </h3>
+              <div
+                class="accordion__content"
+                id="faq-content-4"
+                role="region"
+                aria-labelledby="faq-trigger-4"
+                hidden
+              >
+                <div class="accordion__content-inner">
                   <p>
                     Нет. Материал имеет многослойную, но дышащую структуру,
                     которая отлично пропускает воздух и тепло. Функциональность
@@ -863,93 +888,94 @@
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section id="order" class="order-section bg-secondary fx-noise">
-          <div class="container order__layout">
-            <div class="order__media">
-              <h2 class="text-chrome section-title">
-                Обновите свой салон сегодня!
-              </h2>
-              <p class="order__subtitle">
-                Закажите премиальные накидки VelourStyle и наслаждайтесь
-                комфортом в каждой поездке.
-              </p>
-              <img
-                src="media/RedStitch_Salon_Collage_v2.webp"
-                alt="Коллаж №2: демонстрация накидок с красной нитью в интерьере (виды заднего ряда и переднего кресла)."
-                loading="lazy"
-                class="order-image fx-sheen"
-                width="1280"
-                height="954"
-              />
+      <section class="section order" id="order">
+        <div class="container order__container">
+          <div class="order__content">
+            <h2 class="order__title">Обновите свой салон сегодня!</h2>
+            <p class="order__subtitle">
+              Закажите премиальные накидки VelourStyle и наслаждайтесь комфортом
+              в каждой поездке.
+            </p>
+            <img
+              class="order__image"
+              src="media/RedStitch_Salon_Collage_v2.webp"
+              alt="Коллаж №2: демонстрация накидок с красной нитью в интерьере (виды заднего ряда и переднего кресла)."
+              loading="lazy"
+              width="1280"
+              height="954"
+            />
+          </div>
+
+          <div class="order-form" id="order-form-block">
+            <div class="order-form__header">
+              <div class="order-form__badge">
+                <span>Акция! Скидка 33%</span>
+              </div>
+              <p class="order-form__price-label">Цена за полный комплект:</p>
+              <div class="price-block">
+                <s class="price-block__old">5990 руб.</s>
+                <span class="price-block__new">3990 руб.</span>
+              </div>
             </div>
 
-            <div
-              class="order__form-container glass-obsidian"
-              id="order-form-block"
+            <form
+              class="form"
+              action="/submit-order"
+              method="POST"
+              id="main-order-form"
             >
-              <div class="price-block border-gradient-bottom">
-                <div class="price-labels">
-                  <span class="label-discount">Акция! Скидка 33%</span>
-                </div>
-                <p class="price-description">Цена за полный комплект:</p>
-                <div class="price-values">
-                  <s class="old-price">5990 руб.</s>
-                  <span class="new-price text-chrome">3990 руб.</span>
-                </div>
-              </div>
-
-              <form
-                class="order-form"
-                action="/submit-order"
-                method="POST"
-                id="main-order-form"
-              >
-                <fieldset class="form-group">
-                  <legend class="form-label">1. Выберите дизайн:</legend>
-                  <div
-                    class="radio-group radio-group--colors"
-                    id="color-selector"
-                  >
+              <fieldset class="form__fieldset">
+                <legend class="form__legend">1. Выберите дизайн:</legend>
+                <div
+                  class="radio-group radio-group--colors"
+                  id="color-selector"
+                >
+                  <div class="radio-group__item">
                     <input
+                      class="radio-group__input visually-hidden"
                       type="radio"
                       id="color-red"
                       name="color"
                       value="red"
                       checked
                     />
-                    <label for="color-red">
+                    <label class="radio-group__label" for="color-red">
                       <span
-                        class="color-preview"
-                        style="
-                          background-image: url('media/RedStitch_Texture_Macro.webp');
-                        "
+                        class="radio-group__swatch radio-group__swatch--red"
                         aria-hidden="true"
                       ></span>
-                      <span>Красная строчка</span>
+                      <span class="radio-group__text">Красная строчка</span>
                     </label>
+                  </div>
 
+                  <div class="radio-group__item">
                     <input
+                      class="radio-group__input visually-hidden"
                       type="radio"
                       id="color-black"
                       name="color"
                       value="black"
                     />
-                    <label for="color-black">
+                    <label class="radio-group__label" for="color-black">
                       <span
-                        class="color-preview color-preview--black"
+                        class="radio-group__swatch radio-group__swatch--black"
                         aria-hidden="true"
                       ></span>
-                      <span>Классика Black</span>
+                      <span class="radio-group__text">Классика Black</span>
                     </label>
                   </div>
-                </fieldset>
+                </div>
+              </fieldset>
 
-                <fieldset class="form-group">
-                  <legend class="form-label">2. Выберите комплект:</legend>
-                  <div class="radio-group radio-group--kits" id="kit-selector">
+              <fieldset class="form__fieldset">
+                <legend class="form__legend">2. Выберите комплект:</legend>
+                <div class="radio-group radio-group--options" id="kit-selector">
+                  <div class="radio-group__item">
                     <input
+                      class="radio-group__input visually-hidden"
                       type="radio"
                       id="kit-full"
                       name="kit"
@@ -957,244 +983,223 @@
                       data-price="3990"
                       checked
                     />
-                    <label for="kit-full">
-                      <span class="kit-name">Полный салон (Перед + Зад)</span>
-                      <span class="kit-price-tag">3990 ₽</span>
+                    <label
+                      class="radio-group__label radio-group__label--option"
+                      for="kit-full"
+                    >
+                      <span class="radio-group__text"
+                        >Полный салон (Перед + Зад)</span
+                      >
+                      <span class="radio-group__price">3990 ₽</span>
                     </label>
+                  </div>
 
+                  <div class="radio-group__item">
                     <input
+                      class="radio-group__input visually-hidden"
                       type="radio"
                       id="kit-front"
                       name="kit"
                       value="front"
                       data-price="2490"
                     />
-                    <label for="kit-front">
-                      <span class="kit-name">Только передние сиденья</span>
-                      <span class="kit-price-tag">2490 ₽</span>
+                    <label
+                      class="radio-group__label radio-group__label--option"
+                      for="kit-front"
+                    >
+                      <span class="radio-group__text"
+                        >Только передние сиденья</span
+                      >
+                      <span class="radio-group__price">2490 ₽</span>
                     </label>
                   </div>
-                </fieldset>
+                </div>
+              </fieldset>
 
-                <fieldset class="form-group">
-                  <legend class="form-label">3. Ваши данные:</legend>
+              <fieldset class="form__fieldset">
+                <legend class="form__legend">3. Ваши данные:</legend>
 
-                  <div class="input-group">
-                    <label class="form-label" for="city">Город доставки</label>
-                    <div class="select-wrapper">
-                      <select
-                        id="city"
-                        name="city"
-                        required
-                        aria-label="Выберите город доставки"
-                      >
-                        <option value="" disabled selected>
-                          Выберите ваш город
-                        </option>
-                        <option value="Новосибирск">
-                          Новосибирск (Доставка сегодня)
-                        </option>
-                        <option value="Бердск">Бердск</option>
-                        <option value="Кольцово">Кольцово</option>
-                        <option value="other">
-                          Другой город (Доставка по РФ)
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="input-group">
-                    <label for="name" class="input-label">Ваше имя</label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      placeholder="Иван"
-                      autocomplete="name"
+                <div class="form__group">
+                  <label class="form__label" for="city">Город доставки</label>
+                  <div class="select-wrapper">
+                    <select
+                      class="form__input form__input--select"
+                      id="city"
+                      name="city"
                       required
-                    />
-                  </div>
-
-                  <div class="input-group">
-                    <label for="phone" class="input-label"
-                      >Контактный телефон</label
+                      aria-label="Выберите город доставки"
                     >
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      placeholder="+7 (999) 000-00-00"
-                      autocomplete="tel"
-                      required
-                    />
+                      <option value="" disabled selected>
+                        Выберите ваш город
+                      </option>
+                      <option value="Новосибирск">
+                        Новосибирск (Доставка сегодня)
+                      </option>
+                      <option value="Бердск">Бердск</option>
+                      <option value="Кольцово">Кольцово</option>
+                      <option value="other">
+                        Другой город (Доставка по РФ)
+                      </option>
+                    </select>
                   </div>
-                </fieldset>
+                </div>
 
-                <button
-                  type="submit"
-                  class="btn btn-primary btn-large fx-sheen"
-                >
-                  Оформить заказ
-                </button>
-                <p class="form-privacy">
-                  Нажимая кнопку, вы соглашаетесь с
-                  <a href="/privacy-policy" target="_blank"
-                    >политикой конфиденциальности</a
-                  >.
-                </p>
-              </form>
+                <div class="form__group">
+                  <label class="form__label" for="name">Ваше имя</label>
+                  <input
+                    class="form__input"
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Иван"
+                    autocomplete="name"
+                    required
+                  />
+                </div>
 
-              <div class="guarantees">
-                <p>✓ <strong>Оплата при получении</strong> (после проверки)</p>
-                <p>✓ <strong>Гарантия 3 месяца</strong> (обмен или возврат)</p>
-                <p>✓ <strong>Быстрая доставка</strong> (СДЭК, Почта России)</p>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
+                <div class="form__group">
+                  <label class="form__label" for="phone"
+                    >Контактный телефон</label
+                  >
+                  <input
+                    class="form__input"
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="+7 (999) 000-00-00"
+                    autocomplete="tel"
+                    required
+                  />
+                </div>
+              </fieldset>
 
-      <footer class="footer bg-primary">
-        <div class="container footer__content">
-          <div class="footer__contacts">
-            <p class="logo-footer text-chrome">VelourStyle</p>
-            <address>
-              <a href="tel:+79991234567" class="contact-item">
-                +7 (999) 123-45-67
-              </a>
-              <a href="mailto:info@velour-style.ru" class="contact-item">
-                info@velour-style.ru
-              </a>
-            </address>
-            <div class="messengers">
-              <a
-                href="https://wa.me/79991234567"
-                class="messenger-link glass-ghost"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Написать в WhatsApp"
-                >WhatsApp</a
+              <button
+                class="button button--primary button--large form__submit"
+                type="submit"
               >
-              <a
-                href="https://t.me/velourstyle"
-                class="messenger-link glass-ghost"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Написать в Telegram"
-                >Telegram</a
-              >
+                Оформить заказ
+              </button>
+              <p class="form__privacy">
+                Нажимая кнопку, вы соглашаетесь с
+                <a href="/privacy-policy" target="_blank"
+                  >политикой конфиденциальности</a
+                >.
+              </p>
+            </form>
+
+            <div class="order-form__footer">
+              <p class="order-form__guarantee">
+                ✓ <strong>Оплата при получении</strong> (после проверки)
+              </p>
+              <p class="order-form__guarantee">
+                ✓ <strong>Гарантия 3 месяца</strong> (обмен или возврат)
+              </p>
+              <p class="order-form__guarantee">
+                ✓ <strong>Быстрая доставка</strong> (СДЭК, Почта России)
+              </p>
             </div>
-          </div>
-          <div class="footer__legal">
-            <p>© 2025 VelourStyle. Все права защищены.</p>
-            <a href="/privacy-policy">Политика конфиденциальности</a>
-            <a href="/terms-of-service">Пользовательское соглашение</a>
           </div>
         </div>
-      </footer>
-    </div>
-    <div
-      class="mobile-menu-overlay glass-obsidian"
-      id="mobile-menu"
-      role="dialog"
-      aria-modal="true"
-      aria-hidden="true"
-    >
-      <div class="mobile-menu__header">
-        <span class="logo text-chrome">VelourStyle</span>
-        <button class="close-menu-btn" aria-label="Закрыть меню">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__container">
+        <div class="footer__contacts">
+          <p class="logo footer__logo">VelourStyle</p>
+          <address class="footer__address">
+            <a class="footer__link" href="tel:+79991234567">
+              +7 (999) 123-45-67
+            </a>
+            <a class="footer__link" href="mailto:info@velour-style.ru">
+              info@velour-style.ru
+            </a>
+          </address>
+          <div class="footer__socials">
+            <a
+              class="footer__social-link"
+              href="https://wa.me/79991234567"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Написать в WhatsApp"
+              >WhatsApp</a
+            >
+            <a
+              class="footer__social-link"
+              href="https://t.me/velourstyle"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Написать в Telegram"
+              >Telegram</a
+            >
+          </div>
+        </div>
+        <div class="footer__legal">
+          <p class="footer__copyright">
+            © 2025 VelourStyle. Все права защищены.
+          </p>
+          <a class="footer__link" href="/privacy-policy"
+            >Политика конфиденциальности</a
           >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
+          <a class="footer__link" href="/terms-of-service"
+            >Пользовательское соглашение</a
+          >
+        </div>
       </div>
-      <nav class="nav nav--mobile" aria-label="Мобильная навигация">
-        <ul class="nav__list">
-          <li class="nav__item">
-            <a href="#details" onclick="closeMenu()">Качество</a>
-          </li>
-          <li class="nav__item">
-            <a href="#styles" onclick="closeMenu()">Дизайн</a>
-          </li>
-          <li class="nav__item">
-            <a href="#technology" onclick="closeMenu()">Технологии</a>
-          </li>
-          <li class="nav__item">
-            <a href="#gallery" onclick="closeMenu()">Галерея</a>
-          </li>
-          <li class="nav__item">
-            <a href="#reviews" onclick="closeMenu()">Отзывы</a>
-          </li>
-          <li class="nav__item">
-            <a href="#faq" onclick="closeMenu()">FAQ</a>
-          </li>
-        </ul>
-      </nav>
-      <div class="mobile-menu__footer">
-        <a href="#order" class="btn btn-primary" onclick="closeMenu()"
-          >Заказать комплект</a
+    </footer>
+
+    <aside class="sticky-bar" aria-label="Панель быстрого заказа">
+      <div class="container sticky-bar__container">
+        <div class="sticky-bar__price">
+          <s class="sticky-bar__price-old">5990</s>
+          <span class="sticky-bar__price-new">3990 ₽</span>
+        </div>
+        <a href="#order" class="button button--primary sticky-bar__cta"
+          >Заказать сейчас</a
         >
       </div>
-    </div>
-
-    <div class="fixed-nav-mobile glass-obsidian mobile-only">
-      <div class="price-mobile">
-        <s class="old">5990</s>
-        <span class="new text-chrome">3990 ₽</span>
-      </div>
-      <a href="#order" class="btn btn-primary btn-sm fx-sheen"
-        >Заказать сейчас</a
-      >
-    </div>
+    </aside>
 
     <div
-      class="modal-backdrop"
+      class="modal js-modal"
       id="modal-success"
       role="dialog"
       aria-modal="true"
       aria-hidden="true"
       aria-labelledby="modal-title"
     >
-      <div class="modal-window glass-obsidian">
+      <div class="modal__overlay js-modal-close"></div>
+      <div class="modal__content">
         <button
-          class="modal-close-btn"
-          onclick="closeModal()"
+          class="modal__close-btn js-modal-close"
           aria-label="Закрыть уведомление"
         >
-          ✕
+          <svg class="icon" width="24" height="24" aria-hidden="true">
+            <use xlink:href="#close" />
+          </svg>
         </button>
 
-        <div class="modal-icon success">
+        <div class="modal__icon-wrapper">
           <svg
+            class="icon icon--success"
             width="40"
             height="40"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
             aria-hidden="true"
           >
-            <polyline points="20 6 9 17 4 12"></polyline>
+            <use xlink:href="#check" />
           </svg>
         </div>
 
-        <h3 class="modal-title" id="modal-title">Заявка успешно отправлена!</h3>
-        <p class="modal-text">
+        <h3 class="modal__title" id="modal-title">
+          Заявка успешно отправлена!
+        </h3>
+        <p class="modal__text">
           Спасибо за ваш заказ, <span id="success-name">[Имя]</span>!<br />
           Наш менеджер свяжется с вами в течение 15 минут для подтверждения
           деталей доставки.
         </p>
 
-        <button class="btn btn-primary" onclick="closeModal()">
+        <button class="button button--primary js-modal-close">
           Отлично, жду звонка
         </button>
       </div>
