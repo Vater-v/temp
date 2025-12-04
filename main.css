@@ -1,0 +1,90 @@
+/* --- 1. CSS Переменные (Design Tokens) --- */
+:root {
+  /* Палитра: Вдохновлена черным велюром и красной нитью */
+  --color-bg-primary: #0a0a0a; /* Глубокий черный (основа) */
+  --color-bg-secondary: #141416; /* Темный графит (для секций) */
+
+  --color-accent: #e62e2e; /* Красный (цвет строчки) */
+  --color-accent-hover: #c21c1c; /* Темно-красный (при наведении) */
+
+  --color-text-main: #ffffff; /* Белый (основной текст) */
+  --color-text-muted: #a3a3a3; /* Серый (второстепенный текст) */
+
+  /* Спецэффекты (хром и стекло) */
+  --gradient-chrome: linear-gradient(180deg, #fff 0%, #dcdcdc 100%);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  /* Типографика */
+  --font-main: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Размеры */
+  --container-width: 1280px;
+  --header-height: 80px;
+}
+
+/* --- 2. Сброс стилей (Reset) --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Базовые настройки страницы */
+html {
+  scroll-behavior: smooth; /* Плавная прокрутка к якорям */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased; /* Улучшенное сглаживание шрифтов */
+}
+
+/* Сброс отступов для текста и списков */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+figure,
+blockquote {
+  margin: 0;
+  padding: 0;
+}
+
+/* Сброс маркеров списка */
+ul {
+  list-style: none;
+}
+
+/* Сброс ссылок */
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.3s ease;
+}
+
+/* Адаптивные медиа-элементы */
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover; /* Чтобы картинки заполняли блоки красиво */
+}
+
+/* Элементы форм */
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
