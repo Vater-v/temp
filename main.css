@@ -457,81 +457,169 @@ p {
 }
 
 /* ======================================================================
-   Phase 4: Компоненты (Кнопки, Иконки)
+   Phase 4: Компоненты (Кнопки, Иконки) — FINAL PREMIUM EDITION
 ====================================================================== */
 
 /* 19. Базовый стиль Кнопки (.btn) */
 .btn {
+  /* Layout & Box Model */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  text-align: center;
-  transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+  gap: 10px; /* Идеальный отступ иконки от текста */
+  padding: 14px 28px;
+
+  /* Typography */
+  font-family: var(--font-family-base);
+  font-weight: 700;
   font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  text-align: center;
+
+  /* Appearance */
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+
+  /* Tech: Изоляция контекста (важно для эффектов бликов) */
+  position: relative;
+  isolation: isolate;
+  user-select: none;
+
+  /* Physics Animation: Плавная, но уверенная (как подвеска авто) */
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* 20. Основная Кнопка (.btn-primary) */
+/* Доступность: Стильный фокус для клавиатуры */
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-bg-primary), 0 0 0 5px var(--color-accent);
+}
+
+/* Эффект нажатия (Active State) */
+.btn:active {
+  transform: scale(0.97) translateY(1px); /* Физическое вдавливание */
+}
+
+/* 20. Основная Кнопка (.btn-primary) — "Sport Mode" */
 .btn-primary {
-  background-color: var(--color-accent);
+  /* Градиент имитирует свет, падающий на лакированную поверхность */
+  background: linear-gradient(145deg, #ff5252 0%, #c62828 100%);
   color: #ffffff;
+
+  /* Inset shadow создает "фаску" (объемный край) сверху */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 4px 12px rgba(229, 57, 53, 0.3);
+
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Читаемость */
 }
 
 .btn-primary:hover {
-  /* Сделаем чуть ярче */
-  background-color: #f44336;
+  /* Смещение градиента и подъем кнопки */
+  background: linear-gradient(145deg, #ff6b6b 0%, #d32f2f 100%);
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 8px 25px rgba(229, 57, 53, 0.5);
 }
 
 .btn-primary:active {
-  transform: scale(0.98);
+  background: #b71c1c;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* 21. Вторичная Кнопка (.btn-secondary) */
+/* 21. Вторичная Кнопка (.btn-secondary) — "Toned Glass" */
 .btn-secondary {
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  /* Эффект тонированного стекла */
+  background-color: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
   color: var(--color-text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .btn-secondary:hover {
-  background-color: #333;
-  border-color: #555;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5); /* Рамка загорается */
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* 22. Модификаторы Размера Кнопок */
+.btn-secondary:active {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* 22. Модификаторы Размера */
 .btn-sm {
-  padding: 8px 16px;
+  padding: 10px 20px;
   font-size: 14px;
+  border-radius: var(--radius-sm);
 }
 
 .btn-large {
-  padding: 16px 32px;
+  padding: 18px 40px;
   font-size: 18px;
+  text-transform: uppercase; /* Придает вес CTA кнопке */
+  letter-spacing: 0.05em;
 }
 
-/* 23. Свечение Кнопки (.btn-glow) */
+/* 23. Свечение и Пульсация (.btn-glow) */
+/* Анимация пульса для привлечения внимания */
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(229, 57, 53, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(229, 57, 53, 0);
+  }
+}
+
 .btn-glow {
-  box-shadow: 0 0 15px rgba(229, 57, 53, 0.5);
+  animation: pulse-red 2.5s infinite;
 }
 
 .btn-glow:hover {
-  box-shadow: 0 0 25px rgba(229, 57, 53, 0.7);
+  animation: none; /* При наведении пульс замирает, работает hover-эффект */
+  box-shadow: 0 0 30px rgba(229, 57, 53, 0.6),
+    inset 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
-/* 24. Иконки */
-.icon-check {
-  color: var(--color-success);
+/* 24. Иконки и Индикаторы */
+/* Выравнивание иконок внутри кнопок */
+.btn svg,
+.icon-check,
+.icon-plus {
+  width: 1.25em;
+  height: 1.25em;
+  display: block;
   flex-shrink: 0;
 }
 
+/* Галочки как зеленые LED-индикаторы */
+.icon-check {
+  color: var(--color-success);
+  filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.5));
+}
+
+/* Звезды с золотым свечением */
 .stars-icon,
 .rating-stars {
   color: var(--color-rating);
+  display: inline-flex;
+  gap: 2px;
+  filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.4));
+}
+
+/* Анимация плюса в аккордеоне */
+.icon-plus {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ======================================================================
