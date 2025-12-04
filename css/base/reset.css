@@ -20,30 +20,23 @@
 
 /* --- 2. HTML & Body Core --- */
 html {
-    scrollbar-gutter: stable;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    scroll-behavior: smooth;
-    overscroll-behavior-y: none;
-    scroll-padding-top: var(--header-height, 80px);
+    /* scrollbar-gutter и behavior перенести/оставить в global.css, раз они там есть */
 }
 
 body {
-    min-height: 100dvh;
     width: 100%;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    line-height: 1.5; /* Оставляем как фоллбэк */
+    /* Остальное (min-height, rendering, overflow) уже есть в global.css */
 }
 
+/* Этот блок уникален для reset.css, его оставляем */
 #root,
 #__next,
 body {
     isolation: isolate;
 }
-
 /* --- 3. Typography --- */
 p,
 h1,
