@@ -9,7 +9,7 @@ import urllib.parse
 # --- КОНФИГУРАЦИЯ ---
 PORT = 5006
 DIRECTORY = os.path.dirname(os.path.abspath(__file__)) # Папка скрипта
-TG_BOT_TOKEN = "8317508240:AAE2ZbUFBU2WiLm_5_Clr4hFVylsTATJ0_A"  # Вставьте токен
+TG_BOT_TOKEN = ""  # Вставьте токен
 TG_CHAT_ID = "-1003163478361"       # Вставьте ID чата
 
 class Handler(http.server.SimpleHTTPRequestHandler):

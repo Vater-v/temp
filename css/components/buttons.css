@@ -1,9 +1,6 @@
-/* -------------------------------- */
-/* --- components/buttons.css  ---- */
-/* --- Performance Edition v4.0 --- */
-/* -------------------------------- */
+/* components/buttons.css */
 
-/* --- 1. Базовый класс --- */
+/* --- Core --- */
 .btn {
     position: relative;
     display: inline-flex;
@@ -11,57 +8,56 @@
     align-items: center;
     gap: 12px;
 
-    /* Логические паддинги и высота */
-    padding: 16px 32px;
+    width: 100%;
     min-height: 56px;
-    width: 100%; /* Mobile First */
+    padding: 14px 24px;
 
-    /* Типографика */
     font-family: var(--font-main);
     font-size: clamp(1rem, 4vw, 1.125rem);
     font-weight: 700;
     line-height: 1.2;
     text-align: center;
     text-decoration: none;
+    white-space: nowrap;
 
-    /* Визуал */
     border-radius: var(--radius-sm);
     border: 1px solid transparent;
 
-    /* Интерактивность */
+    contain: layout style;
+    isolation: isolate;
+    transform: translateZ(0);
+    will-change: transform, filter;
+
     cursor: pointer;
     overflow: hidden;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
 
-    /* PERFORMANCE: Анимируем только дешевые свойства */
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
         background-color 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
-
-    isolation: isolate;
-    transform: translateZ(0);
 }
 
 @media (min-width: 640px) {
     .btn {
         width: auto;
         padding: 18px 36px;
+        min-width: 160px;
     }
 }
 
-/* --- 2. Состояния --- */
+/* --- States --- */
 @media (hover: hover) {
     .btn:hover:not(:disabled) {
-        transform: translateY(-3px);
+        transform: translateY(-3px) translateZ(0);
+        z-index: 2;
     }
 }
 
 .btn:active:not(:disabled) {
-    transform: translateY(-1px) scale(0.97);
-    filter: brightness(0.95);
-    /* Мгновенный отклик при тапе */
-    transition-duration: 0.1s;
+    transform: translateY(1px) scale(0.97) translateZ(0);
+    filter: brightness(0.9);
+    transition: none;
 }
 
 .btn:focus-visible {
@@ -76,15 +72,16 @@
     cursor: not-allowed;
     filter: grayscale(0.8);
     background-color: var(--bg-card) !important;
+    box-shadow: none !important;
     pointer-events: none;
 }
 
-/* --- 3. Primary Button --- */
+/* --- Variants --- */
 .btn-primary {
     background-color: var(--accent-color);
     color: #fff;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25),
-        0 4px 15px rgba(229, 57, 53, 0.35);
+        0 4px 12px rgba(229, 57, 53, 0.3);
 }
 
 @media (hover: hover) {
@@ -95,37 +92,40 @@
     }
 }
 
-/* --- 4. Secondary Button --- */
 .btn-secondary {
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.15);
     color: var(--text-primary);
-    backdrop-filter: blur(4px);
+}
+
+@supports (backdrop-filter: blur(4px)) {
+    .btn-secondary {
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
 }
 
 @media (hover: hover) {
     .btn-secondary:hover:not(:disabled) {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: rgba(255, 255, 255, 0.15);
         border-color: #fff;
         color: #fff;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3),
-            inset 0 0 20px rgba(229, 57, 53, 0.15);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
     }
 }
 
-/* --- 5. Large CTA Button --- */
 .btn-large {
     width: 100%;
     margin-top: 20px;
-    padding: 24px;
+    padding: 22px;
     font-size: clamp(1.1rem, 5vw, 1.25rem);
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    border-radius: 18px;
+    border-radius: var(--radius-md);
     border: none;
     background: linear-gradient(135deg, #e53935 0%, #b71c1c 100%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        0 10px 30px rgba(229, 57, 53, 0.3);
+        0 8px 20px rgba(229, 57, 53, 0.3);
 }
 
 @media (hover: hover) {
@@ -135,34 +135,41 @@
     }
 }
 
-/* --- 6. Эффект блика (GPU Optimized) --- */
+/* --- Effects --- */
 .btn-primary::after,
 .btn-large::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent 0%,
-        transparent 35%,
-        rgba(255, 255, 255, 0.4) 50%,
-        transparent 65%,
-        transparent 100%
-    );
-    /* Начальная позиция */
-    transform: skewX(-20deg) translateX(-150%);
-    pointer-events: none;
-    z-index: 1;
-    will-change: transform;
+    display: none;
 }
 
-@media (hover: hover) {
+@media (min-width: 1024px) {
+    .btn-primary::after,
+    .btn-large::after {
+        display: block;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        background: linear-gradient(
+            120deg,
+            transparent 0%,
+            transparent 30%,
+            rgba(255, 255, 255, 0.5) 50%,
+            transparent 70%,
+            transparent 100%
+        );
+
+        transform: skewX(-20deg) translateX(-150%);
+        pointer-events: none;
+        z-index: 1;
+        will-change: transform;
+    }
+
     .btn-primary:hover::after,
     .btn-large:hover::after {
-        animation: btnShineRun 0.75s ease-in-out forwards;
+        animation: btnShineRun 0.75s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 }
 
@@ -171,7 +178,7 @@
         transform: skewX(-20deg) translateX(-150%);
         opacity: 0;
     }
-    10% {
+    20% {
         opacity: 1;
     }
     100% {
@@ -180,28 +187,75 @@
     }
 }
 
-/* --- 7. Пульсация --- */
 .btn-glow {
-    animation: glowPulse 3s infinite ease-in-out;
+    position: relative;
+    z-index: 1;
 }
-@keyframes glowPulse {
+
+.btn-glow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    z-index: -1;
+    opacity: 0.6;
+    transform: scale(1);
+    animation: glowPulseGPU 3s infinite cubic-bezier(0.66, 0, 0, 1);
+    will-change: transform, opacity;
+}
+
+@keyframes glowPulseGPU {
     0% {
-        box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.4);
+        transform: scale(1);
+        opacity: 0.6;
     }
-    70% {
-        box-shadow: 0 0 0 10px rgba(229, 57, 53, 0);
+    50% {
+        transform: scale(1.15);
+        opacity: 0;
     }
     100% {
-        box-shadow: 0 0 0 0 rgba(229, 57, 53, 0);
+        transform: scale(1.15);
+        opacity: 0;
     }
 }
 
-/* --- 8. Кнопка в хедере --- */
+/* --- Nav Mini Button --- */
 .btn-nav {
-    padding: 8px 20px;
+    padding: 0 20px;
+    height: 40px;
     min-height: 40px;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     font-weight: 800;
     text-transform: uppercase;
     width: auto;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 12px rgba(229, 57, 53, 0.25);
+}
+
+@media (max-width: 1023px) {
+    .btn-nav::before {
+        content: "";
+        position: absolute;
+        inset: -10px;
+        z-index: 0;
+    }
+}
+
+/* --- Accessibility --- */
+@media (prefers-reduced-motion: reduce) {
+    .btn,
+    .btn::after,
+    .btn::before {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+
+    .btn-glow {
+        box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.3);
+    }
+    .btn-glow::before {
+        display: none;
+    }
 }
