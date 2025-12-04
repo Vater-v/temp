@@ -1,61 +1,127 @@
 /* ======================================================================
-   Phase 1: Настройка, Переменные и Сброс Стилей
+   Phase 1: Глобальный Сброс (Modern Reset) и Базовые Настройки
 ====================================================================== */
 
-/* 1. Сброс стилей (Reset) */
+/* 1. Глобальный сброс box-model и отступов */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-body,
-h1,
-h2,
-h3,
-p,
-ul,
-figure,
-blockquote,
-figcaption {
+* {
   margin: 0;
   padding: 0;
+  /* Наследуем шрифты сразу для форм, чтобы не было "прыжков" стилей */
+  font: inherit;
 }
 
-/* Убираем стандартные стили списков там, где есть атрибут role="list" или для ul в навигации */
-ul[role="list"],
-.nav__list {
-  list-style: none;
+/* 2. Настройки HTML */
+html {
+  /* Плавная прокрутка с учетом фиксированной шапки */
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+
+  /* Запрет на авто-масштабирование текста в iOS при повороте экрана */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: none;
+
+  /* Гарантируем высоту */
+  height: 100%;
 }
 
+/* 3. Настройки Body */
+body {
+  /* dVH учитывает динамические панели мобильных браузеров */
+  min-height: 100dvh;
+
+  /* Оптимизация шрифтов */
+  line-height: 1.6;
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Прижатие футера (Sticky Footer) через Flexbox */
+  display: flex;
+  flex-direction: column;
+
+  /* Подключение переменных */
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+}
+
+/* Растягиваем main, чтобы футер всегда был внизу */
+main {
+  flex-grow: 1;
+}
+
+/* 4. Медиа-контент (Делаем отзывчивым и блочным) */
 img,
-video {
+picture,
+video,
+canvas,
+svg {
   display: block;
   max-width: 100%;
   height: auto;
 }
 
+/* 5. Умный сброс списков */
+/* Убираем маркеры у списков с классом или role="list" */
+ul[class],
+ol[class],
+ul[role="list"] {
+  list-style: none;
+}
+
+/* 6. Сброс форм для Темной Темы */
+/* Убираем дефолтные рамки и белый фон, наследуем цвет текста */
+input,
+button,
+textarea,
+select {
+  border: none;
+  background: transparent;
+  color: inherit;
+}
+
+/* 7. Типографика */
+/* Предотвращение переполнения контейнеров длинными словами */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* Ссылки */
 a {
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-  color: inherit;
+/* 8. Доступность (Accessibility) */
+/* Отключение анимаций для пользователей с вестибулярными нарушениями */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-/* 2. Плавная прокрутка */
-html {
-  scroll-behavior: smooth;
-  /* Добавим отступ сверху для якорных ссылок, учитывая фиксированную шапку */
-  scroll-padding-top: 80px;
-}
-
-/* 3. Определение CSS-переменных */
+/* 9. Определение CSS-переменных */
 :root {
   /* Цвета: Темная премиальная тема */
   --color-bg-primary: #0a0a0a;
@@ -72,16 +138,6 @@ html {
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 16px;
-}
-
-/* 4. Базовые стили body */
-body {
-  font-family: var(--font-family-base);
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ======================================================================
