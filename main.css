@@ -1276,333 +1276,344 @@
 }
 
 /* ======================================================================
-   Phase 5: Шапка и Навигация (Ultimate Native Edition 2025)
-   Tech: Scroll-Timeline, @starting-style, Logical Props
+   Phase 5: Шапка и Навигация (Ultimate Native Edition 2025)
+   Tech: Scroll-Timeline, @starting-style, Logical Props, OKLCH, allow-discrete
 ====================================================================== */
 
-/* 25. Анимация состояния Шапки (Keyframes) */
-/* Мы описываем, как шапка должна выглядеть в конце скролла.
-   Браузер сам рассчитает промежуточные кадры. */
-@keyframes header-scroll-state {
-  to {
-    background-color: rgba(5, 5, 5, 0.85); /* Deep Obsidian */
-    /* Насыщенный блюр для эффекта дорогого стекла */
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+@layer components {
+  /* ==================================================================
+    1. SCROLL-DRIVEN HEADER STATE (Native 2025)
+    Реализация эффекта стекла при скролле строго через CSS.
+  ================================================================== */
 
-    border-bottom-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
-
-    /* Плавное уменьшение высоты */
-    block-size: 70px;
+  /* Определение токенов для состояния "Scrolled" */
+  :root {
+    /* Deep Obsidian (почти черный с синим подтоном) */
+    --header-bg-scrolled: oklch(from var(--seed-obsidian) l c h / 0.85);
+    --header-border-scrolled: oklch(1 0 0 / 0.08);
+    /* Physics: Luxury Feel */
+    --ease-header-nav: cubic-bezier(0.2, 0.8, 0.2, 1);
   }
-}
 
-/* Основной класс Шапки */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  /* Анимация состояния Шапки (Keyframes) */
+  @keyframes header-scroll-state {
+    to {
+      background-color: var(--header-bg-scrolled);
 
-  /* Логические свойства размеров */
-  inline-size: 100%;
-  block-size: var(--header-height, 80px);
+      /* Эффект дорогого стекла (насыщенный блюр) */
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
 
-  /* Исходное состояние (Прозрачное) */
-  background-color: transparent;
-  border-bottom: 1px solid transparent;
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
+      /* Тонкая граница и сложная тень (Bevel effect) */
+      border-block-end-color: var(--header-border-scrolled);
+      box-shadow: 0 15px 40px oklch(0 0 0 / 0.5),
+        inset 0 1px 0 oklch(1 0 0 / 0.06); /* Блик сверху */
 
-  /* --- CORE TECHNOLOGY: Scroll-Driven Animation --- */
-  /* Привязываем прогресс анимации к скроллу страницы (root) */
-  animation: header-scroll-state linear forwards;
-  animation-timeline: scroll(root);
-  /* Анимация начнется на 0px и закончится, когда прокрутим 150px */
-  animation-range: 0px 150px;
+      /* Плавное уменьшение высоты (Logical Property) */
+      block-size: 64px;
+    }
+  }
 
-  will-change: background-color, block-size, backdrop-filter;
-}
-
-/* Fallback для старых браузеров (чтобы шапка не потерялась) */
-@supports not (animation-timeline: scroll()) {
+  /* Основной класс Шапки (.header) */
   .header {
-    background-color: var(--color-bg-primary);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    inset-block-start: 0; /* top: 0 */
+    z-index: 1000;
+
+    /* Logical Dimensions */
+    inline-size: 100%;
+    block-size: var(--header-height, 80px); /* Исходная высота */
+
+    /* Исходное состояние (Прозрачное) */
+    background-color: transparent;
+    border-block-end: 1px solid transparent;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+
+    /* --- CORE TECHNOLOGY: Scroll-Driven Animation (NO JS) --- */
+    /* Привязываем прогресс анимации к скроллу страницы (root) */
+    animation: header-scroll-state linear forwards;
+    animation-timeline: scroll(root);
+    /* Анимация активна в диапазоне от 0px до 120px прокрутки */
+    animation-range: 0px 120px;
+
+    /* GPU Optimization */
+    will-change: background-color, block-size, backdrop-filter, box-shadow;
   }
-}
 
-/* 26. Контейнер Шапки */
-.header__container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  block-size: 100%;
-}
+  /* Fallback для браузеров без поддержки animation-timeline */
+  @supports not (animation-timeline: scroll()) {
+    .header {
+      background-color: var(--color-bg-canvas);
+      border-block-end: 1px solid var(--color-border-dim);
+    }
+  }
 
-/* 27. Логотип */
-.logo,
-.logo-footer {
-  font-weight: 900;
-  font-size: 24px;
-  letter-spacing: -0.03em;
-  position: relative;
-  z-index: 1101;
-  text-decoration: none;
+  .header__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    block-size: 100%; /* Занимает всю высоту хедера */
+  }
 
-  /* Плавная реакция */
-  transition: transform 0.3s var(--ease-luxury, ease), text-shadow 0.3s;
-}
+  /* Логотип (Позиционирование над мобильным меню) */
+  .logo {
+    position: relative;
+    z-index: 1101;
+  }
 
-.logo:hover {
-  transform: scale(1.05);
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-}
+  /* ==================================================================
+    2. DESKTOP NAVIGATION (Magnetic Swipe Effect)
+  ================================================================== */
 
-/* 28. Десктопная Навигация */
-.nav--desktop .nav__list {
-  display: flex;
-  gap: 40px;
-  align-items: center;
-  list-style: none;
-}
+  .nav--desktop .nav__list {
+    display: flex;
+    gap: 2.5rem; /* 40px */
+    list-style: none;
+  }
 
-/* 29. Интерактивные Ссылки (Magnetic Swipe) */
-.nav__link {
-  color: var(--color-text-muted);
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: 0.02em;
-  padding-block: 8px;
-  position: relative;
-  transition: color 0.3s ease;
-  text-decoration: none;
-}
+  .nav__link {
+    color: var(--color-text-muted);
+    font-weight: 500;
+    position: relative;
+    padding-block: 0.5rem;
+    transition: color 0.3s ease;
+    text-decoration: none;
+  }
 
-.nav__link:hover,
-.nav__link:focus-visible {
-  color: var(--color-text-primary);
-  outline: none;
-}
+  .nav__link:hover,
+  .nav__link:focus-visible {
+    color: var(--color-text-primary);
+  }
 
-/* Эффект: Линия выезжает слева и уезжает вправо при уходе мыши */
-.nav__link::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  inline-size: 100%;
-  block-size: 2px;
+  /* Эффект "Magnetic Swipe": Линия появляется слева и исчезает вправо */
+  .nav__link::after {
+    content: "";
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    inline-size: 100%;
+    block-size: 2px;
 
-  background: var(--color-accent);
-  box-shadow: 0 0 10px var(--color-accent);
-  border-radius: 2px;
+    background-color: var(--color-accent);
+    /* P3 Glow (OKLCH) */
+    box-shadow: 0 0 8px oklch(from var(--color-accent) l c h / 0.5);
 
-  /* Исходное состояние: сжата вправо */
-  transform: scaleX(0);
-  transform-origin: bottom right;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
+    /* Исходное состояние: Скрыто. transform-origin определяет направление ИСЧЕЗНОВЕНИЯ. */
+    transform: scaleX(0);
+    transform-origin: bottom right; /* Исчезает вправо */
+    transition: transform 0.4s var(--ease-header-nav);
+  }
 
-.nav__link:hover::after,
-.nav__link:focus-visible::after {
-  /* При наведении: растет влево */
-  transform: scaleX(1);
-  transform-origin: bottom left;
-}
+  .nav__link:hover::after,
+  .nav__link:focus-visible::after {
+    transform: scaleX(1);
+    /* При наведении меняем origin, чтобы анимация ПОЯВИЛАСЬ слева. */
+    transform-origin: bottom left; /* Появляется слева */
+  }
 
-/* 30. Кнопка Бургера */
-.burger-btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-sm);
-  color: var(--color-text-primary);
-  cursor: pointer;
-  padding: 8px;
+  /* ==================================================================
+    3. BURGER BUTTON (CSS-Only Animation)
+  ================================================================== */
 
-  /* Увеличенная зона нажатия для пальца */
-  min-inline-size: 44px;
-  min-block-size: 44px;
+  .burger-btn {
+    background: transparent;
+    border: 1px solid var(--color-border-dim);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    padding: 0;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  z-index: 1101;
-  transition: all 0.3s ease;
-}
+    /* Accessibility (A11y): Минимальный размер тач-таргета 44x44px */
+    min-inline-size: 44px;
+    min-block-size: 44px;
 
-.burger-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.3);
-}
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
 
-.burger-btn:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
+    /* Выше оверлея */
+    z-index: 1101;
+    transition: background-color 0.3s ease;
+  }
 
-.burger-line {
-  display: block;
-  inline-size: 24px;
-  block-size: 2px;
-  background-color: currentColor;
-  border-radius: 2px;
-  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55),
-    opacity 0.3s;
-}
+  .burger-btn:hover {
+    background-color: oklch(from var(--seed-snow) l c h / 0.05);
+  }
 
-/* Состояние "Открыто" (управляется через ARIA в JS) */
-.burger-btn[aria-expanded="true"] .burger-line:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);
-}
-.burger-btn[aria-expanded="true"] .burger-line:nth-child(2) {
-  opacity: 0;
-  transform: translateX(-10px);
-}
-.burger-btn[aria-expanded="true"] .burger-line:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
-}
+  .burger-line {
+    display: block;
+    inline-size: 24px;
+    block-size: 2px;
+    background-color: var(--color-text-primary);
+    border-radius: 2px;
+    /* "Пружинистая" анимация для механического ощущения */
+    transition: transform 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6),
+      opacity 0.3s ease;
+  }
 
-/* 31. Мобильное Меню (Next-Gen Entry Animation) */
-.mobile-menu-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1100;
-  padding-block-start: 80px;
+  /* Состояние "Открыто" (Крестик X) - на базе aria-expanded */
+  /* Линия 1: Сдвиг вниз на (высота линии 2px + gap 6px) = 8px и поворот */
+  .burger-btn[aria-expanded="true"] .burger-line:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
 
-  /* Визуал */
-  background: rgba(5, 5, 5, 0.96);
-  /* Шум */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
-  /* --- MAGIC: ANIMATING DISPLAY: NONE --- */
-  /* 1. Исходное скрытое состояние */
-  display: none;
-  opacity: 0;
-  transform: translateX(20px); /* Небольшой сдвиг */
-
-  /* 2. Разрешаем анимацию дискретных свойств (display) */
-  transition-behavior: allow-discrete;
-
-  /* 3. Описываем переходы */
-  transition: display 0.5s allow-discrete,
-    opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
-    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-/* Состояние "Открыто" */
-.mobile-menu-overlay[aria-hidden="false"] {
-  display: flex;
-  flex-direction: column;
-  opacity: 1;
-  transform: translateX(0);
-
-  /* @starting-style: Описываем стили первого кадра после появления в DOM.
-     Это позволяет браузеру понять, "откуда" начинать анимацию. */
-  @starting-style {
+  /* Линия 2: Исчезновение */
+  .burger-btn[aria-expanded="true"] .burger-line:nth-child(2) {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateX(-10px);
   }
-}
 
-/* 32. Внутренности Меню */
-.mobile-menu__header {
-  display: none;
-}
+  /* Линия 3: Сдвиг вверх на 8px и поворот */
+  .burger-btn[aria-expanded="true"] .burger-line:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
 
-.nav--mobile .nav__list {
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  padding-block: 40px;
-  list-style: none;
-  margin: 0;
-  inline-size: 100%;
-}
+  /* ==================================================================
+    4. MOBILE MENU OVERLAY (Discrete Animation & Stagger)
+    Анимация display: none с помощью @starting-style и allow-discrete.
+  ================================================================== */
 
-/* Каскадная анимация пунктов (Stagger Effect) */
-.nav--mobile .nav__item {
-  opacity: 0;
-  transform: translateY(20px);
-  /* Задержка только при появлении */
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
+  .mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
 
-/* Задержки для каждого пункта, когда меню открыто */
-.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(1) {
-  transition-delay: 0.1s;
-  opacity: 1;
-  transform: translateY(0);
-}
-.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(2) {
-  transition-delay: 0.15s;
-  opacity: 1;
-  transform: translateY(0);
-}
-.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(3) {
-  transition-delay: 0.2s;
-  opacity: 1;
-  transform: translateY(0);
-}
-.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(4) {
-  transition-delay: 0.25s;
-  opacity: 1;
-  transform: translateY(0);
-}
-.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(5) {
-  transition-delay: 0.3s;
-  opacity: 1;
-  transform: translateY(0);
-}
-.mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(6) {
-  transition-delay: 0.35s;
-  opacity: 1;
-  transform: translateY(0);
-}
+    /* Visual Style: Deep Obsidian Glass */
+    background: oklch(from var(--seed-obsidian) l c h / 0.96);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
 
-/* Сброс стилей для начального кадра пунктов */
-@starting-style {
+    display: none; /* Изначально скрыто */
+    flex-direction: column;
+    /* Отступ сверху для зоны хедера */
+    padding-block-start: var(--header-height, 80px);
+    overflow-y: auto;
+
+    /* --- Animation Setup (Entry/Exit) --- */
+
+    /* Состояние для анимации выхода (Exit) */
+    opacity: 0;
+    transform: translateX(100%); /* Уезжает вправо */
+
+    /* Разрешаем анимацию дискретных свойств (display, overlay) */
+    transition: transform 0.5s var(--ease-header-nav),
+      opacity 0.5s var(--ease-header-nav), display 0.5s allow-discrete,
+      overlay 0.5s allow-discrete;
+  }
+
+  /* Состояние "Открыто" [aria-hidden="false"] */
+  .mobile-menu-overlay[aria-hidden="false"] {
+    display: flex;
+    opacity: 1;
+    transform: translateX(0);
+
+    /* @starting-style: Определяет состояние ДО появления в DOM (Анимация Входа) */
+    @starting-style {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+  }
+
+  /* ==================================================================
+     5. MOBILE MENU CONTENT & STAGGER EFFECT
+  ================================================================== */
+
+  .nav--mobile .nav__list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 2rem var(--layout-gutter);
+  }
+
+  .nav--mobile .nav__link {
+    font-size: var(--fs-xl); /* Крупный текст */
+    font-weight: 700;
+    color: var(--color-text-primary);
+    padding: 1rem;
+    display: block;
+    text-align: center;
+    border-radius: var(--radius-md);
+  }
+
+  /* Каскадная анимация (Stagger Effect) */
+  .nav--mobile .nav__item {
+    /* Исходное состояние пунктов (скрыты и сдвинуты вниз) */
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 0.4s ease, transform 0.4s var(--ease-header-nav);
+  }
+
+  /* Активация анимации при открытии меню */
   .mobile-menu-overlay[aria-hidden="false"] .nav__item {
-    opacity: 0;
-    transform: translateY(20px);
+    opacity: 1;
+    transform: translateY(0);
   }
-}
 
-.nav--mobile .nav__link {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  padding: 12px;
-  display: block;
-  text-decoration: none;
-  inline-size: 100%;
-  text-align: center;
-}
+  /* Задержки для каскада */
+  .mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(1) {
+    transition-delay: 0.1s;
+  }
+  .mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(2) {
+    transition-delay: 0.15s;
+  }
+  .mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(3) {
+    transition-delay: 0.2s;
+  }
+  .mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(4) {
+    transition-delay: 0.25s;
+  }
+  .mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(5) {
+    transition-delay: 0.3s;
+  }
+  .mobile-menu-overlay[aria-hidden="false"] .nav__item:nth-child(6) {
+    transition-delay: 0.35s;
+  }
 
-.nav--mobile .nav__link:active {
-  color: var(--color-accent);
-  transform: scale(0.96);
-  transition: transform 0.1s;
-}
+  /* @starting-style для Stagger: Гарантируем, что пункты начинают скрытыми при открытии */
+  @starting-style {
+    .mobile-menu-overlay[aria-hidden="false"] .nav__item {
+      opacity: 0;
+      transform: translateY(25px);
+    }
+  }
 
-.mobile-menu__footer {
-  margin-top: auto;
-  padding: 40px 24px;
-  /* Учитываем Safe Area на iPhone (полоска снизу) */
-  padding-bottom: max(40px, env(safe-area-inset-bottom));
+  .mobile-menu__footer {
+    margin-block-start: auto;
+    padding: 2rem var(--layout-gutter);
+    /* Учитываем Safe Area на iPhone (полоска снизу) */
+    padding-block-end: max(2rem, env(safe-area-inset-bottom));
+    border-block-start: 1px solid var(--color-border-dim);
+    background-color: oklch(from var(--seed-snow) l c h / 0.02);
+  }
 
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
-}
+  .mobile-menu__footer .btn {
+    inline-size: 100%;
+  }
 
-.mobile-menu__footer .btn {
-  inline-size: 100%;
+  /* ==================================================================
+     6. RESPONSIVE HANDLING
+  ================================================================== */
+
+  /* Переключение на мобильный вид (< 992px) */
+  @media (max-width: 991.98px) {
+    .nav--desktop,
+    .header__actions {
+      display: none;
+    }
+  }
+
+  /* Переключение на десктопный вид (>= 992px) */
+  @media (min-width: 992px) {
+    .burger-btn {
+      display: none;
+    }
+    /* Гарантируем, что мобильное меню скрыто на десктопе */
+    .mobile-menu-overlay {
+      display: none !important;
+    }
+  }
 }
 
 /* ======================================================================
