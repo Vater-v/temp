@@ -2341,15 +2341,88 @@ address {
 }
 
 /* ======================================================================
-   Phase 9: Адаптивность и Анимации
+   Phase 9: Ultimate Luxury Experience (Адаптивность, Физика, Эстетика)
 ====================================================================== */
 
-/* 87. Классы Видимости (.mobile-only, .desktop-only) */
+/* --- 9.1. Глобальные Переменные и Скроллбар --- */
+:root {
+  /* "Дорогая" кривая анимации: быстрый старт, величественное замедление */
+  --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-/* Базовые настройки (Mobile-First) */
-/* По умолчанию .desktop-only скрыты, .mobile-only видны */
+/* Кастомный скроллбар для темной темы (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 5px;
+  border: 2px solid var(--color-bg-primary); /* Отступ от края */
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #333 var(--color-bg-primary);
+}
 
-/* Медиа-запрос для десктопа (от 768px) */
+/* --- 9.2. Умное управление вводом (Touch vs Mouse) --- */
+
+/* ВАЖНО: Ховер-эффекты работают ТОЛЬКО при наличии курсора мыши.
+   Это убирает проблему "залипания" подсветки на телефонах. */
+@media (hover: hover) and (pointer: fine) {
+  .fx-sheen:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+
+  .hover-zoom:hover img,
+  .hover-zoom:hover video {
+    transform: scale(1.06);
+    filter: brightness(1.05);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .gallery-item:hover {
+    z-index: 2;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    transform: scale(1.02);
+  }
+}
+
+/* Специальная физика для пальца (Tactile Feedback) */
+@media (hover: none) {
+  .btn:active,
+  .nav__link:active,
+  .style-card:active {
+    transform: scale(0.96); /* Кнопка "пружинит" внутрь при нажатии */
+    opacity: 0.9;
+    transition: transform 0.1s;
+  }
+
+  /* Убираем подсветку тапа на Android/iOS */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* --- 9.3. Адаптивная Логика (Mobile First) --- */
+
+/* По умолчанию скрываем десктопные блоки */
+.desktop-only {
+  display: none !important;
+}
+
+/* ПЛАНШЕТЫ И ДЕСКТОПЫ (от 768px) */
 @media (min-width: 768px) {
   .mobile-only {
     display: none !important;
@@ -2358,76 +2431,127 @@ address {
     display: block !important;
   }
 
-  /* Уточнения для элементов, которым нужен специфичный display */
-  .nav--desktop {
-    display: block !important;
-  }
-
-  .header__actions {
+  /* Восстанавливаем Flex/Grid */
+  .desktop-only.nav--desktop {
     display: flex !important;
   }
-
-  /* 88. Адаптация Десктопной Галереи (Сложная сетка) */
-  .gallery-grid-desktop {
+  .desktop-only.header__actions {
+    display: flex !important;
+  }
+  .desktop-only.gallery-grid-desktop {
     display: grid !important;
-    /* Устанавливаем сложную сетку (4 колонки) */
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    /* Автоматическая высота рядов для создания эффекта "masonry" на основе контента */
-    grid-auto-rows: 200px;
   }
 
-  /* 55. Классы Растягивания */
+  /* Умная сетка галереи (Masonry) */
+  .gallery-grid-desktop {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    grid-auto-flow: dense; /* Заполняет пустоты */
+    grid-auto-rows: 240px;
+  }
+
   .span-col-2 {
     grid-column: span 2;
   }
-
   .span-row-2 {
     grid-row: span 2;
   }
+
+  /* Улучшенные шрифты для больших экранов */
+  h1 {
+    font-size: clamp(2.5rem, 4vw, 4rem);
+  }
 }
 
-/* Дополнительный breakpoint для Hero секции */
+/* БОЛЬШИЕ ЭКРАНЫ (от 1200px) */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+/* ПРОМЕЖУТОЧНЫЕ (Планшеты без места для 3D авто) */
 @media (max-width: 1023px) {
   .hero__media-desktop {
     display: none !important;
   }
+  .hero__layout {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .hero__content {
+    align-items: center;
+  }
+  .bullets {
+    text-align: left;
+  }
 }
 
+/* --- 9.4. Мобильные нюансы (iPhone Safe Area) --- */
 @media (max-width: 767px) {
-  /* Добавляем отступ снизу для body, чтобы контент не перекрывался панелью */
   body {
-    padding-bottom: 80px; /* Примерная высота панели .fixed-nav-mobile */
+    /* Отступ снизу = высота панели + системная зона iPhone */
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
   }
 
-  .desktop-only.nav--desktop,
-  .desktop-only.header__actions {
-    display: none !important;
+  .fixed-nav-mobile {
+    /* Поднимаем панель над "Home Indicator" */
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    left: 16px;
+    right: 16px;
+  }
+
+  /* Отключаем тяжелые трансформации для производительности */
+  .hero-img {
+    animation: none;
+    transform: none !important;
+  }
+
+  /* Горизонтальный режим на телефонах */
+  @media (orientation: landscape) {
+    .hero {
+      padding-block: 40px;
+      min-height: auto;
+    }
   }
 }
 
-/* 89. Анимация Появления (Keyframes) */
-@keyframes fadeSlideUp {
-  from {
+/* --- 9.5. Кинематографичные Анимации (Blur Reveal) --- */
+
+/* Эффект: Проявка фото из тумана + мягкий подъем */
+@keyframes cinematicReveal {
+  0% {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(30px) scale(0.98);
+    filter: blur(10px);
   }
-  to {
+  100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 }
 
-/* 90. Класс Анимации (.animate-up) */
+/* Класс для JS-триггера (фоллбэк) */
 .animate-up {
-  animation-name: fadeSlideUp;
-  animation-duration: 0.8s;
-  animation-timing-function: ease-out;
-  /* Сохраняет конечное состояние анимации */
-  animation-fill-mode: both;
+  opacity: 0;
+  will-change: opacity, transform, filter;
+  animation: cinematicReveal 1s var(--ease-luxury) forwards;
 }
 
-/* 91. Классы Задержки */
+/* NEXT-GEN: Анимация по скроллу без JS (Chrome, Edge, Future Safari) */
+@supports (animation-timeline: view()) {
+  .animate-up {
+    opacity: 1; /* Сброс для timeline */
+    transform: none;
+    animation: cinematicReveal linear both;
+    animation-timeline: view();
+    /* Анимация проигрывается, пока элемент проходит от 5% до 35% экрана снизу */
+    animation-range: entry 5% cover 35%;
+  }
+}
+
+/* Каскадные задержки */
 .delay-100 {
   animation-delay: 0.1s;
 }
@@ -2444,14 +2568,41 @@ address {
   animation-delay: 0.5s;
 }
 
-/* Улучшение доступности: отключение анимаций, если пользователь предпочитает уменьшенное движение */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+/* --- 9.6. Стили для Печати и Доступность --- */
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
   .animate-up {
-    animation: none;
-    opacity: 1;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .header,
+  .footer,
+  .fixed-nav-mobile,
+  .video-wrapper,
+  .btn {
+    display: none !important;
+  }
+  h1,
+  h2,
+  h3,
+  p,
+  li {
+    color: #000 !important;
+    text-shadow: none;
   }
 }
