@@ -67,60 +67,22 @@
 
     <header class="header" id="header">
       <div class="container header__container">
-        <a href="/" class="logo" aria-label="Главная страница VelourStyle"
-          >VelourStyle</a
-        >
+        <a href="/" class="logo" aria-label="Главная страница VelourStyle">
+          Velour<span>Style</span>
+        </a>
 
-        <div class="header__nav-wrapper" id="navigation-wrapper">
-          <div
-            class="header__nav-overlay js-menu-toggle"
-            aria-hidden="true"
-          ></div>
-
-          <div class="header__nav-content">
-            <div class="header__nav-header">
-              <span class="logo">VelourStyle</span>
-              <button
-                class="header__nav-close-btn js-menu-toggle"
-                aria-label="Закрыть меню"
-                aria-controls="navigation-wrapper"
-              >
-                <svg class="icon" width="24" height="24" aria-hidden="true">
-                  <use xlink:href="#close" />
-                </svg>
-              </button>
-            </div>
-            <nav class="nav" aria-label="Основная навигация">
-              <ul class="nav__list">
-                <li class="nav__item">
-                  <a href="#details" class="nav__link js-menu-link">Качество</a>
-                </li>
-                <li class="nav__item">
-                  <a href="#styles" class="nav__link js-menu-link">Дизайн</a>
-                </li>
-                <li class="nav__item">
-                  <a href="#technology" class="nav__link js-menu-link"
-                    >Технологии</a
-                  >
-                </li>
-                <li class="nav__item">
-                  <a href="#gallery" class="nav__link js-menu-link">Галерея</a>
-                </li>
-                <li class="nav__item">
-                  <a href="#reviews" class="nav__link js-menu-link">Отзывы</a>
-                </li>
-                <li class="nav__item">
-                  <a href="#faq" class="nav__link js-menu-link">FAQ</a>
-                </li>
-              </ul>
-            </nav>
-            <div class="header__nav-footer">
-              <a href="#order" class="button button--primary js-menu-link"
-                >Заказать комплект</a
-              >
-            </div>
-          </div>
-        </div>
+        <nav class="nav-desktop" aria-label="Основная навигация">
+          <ul class="nav-desktop__list">
+            <li><a href="#details" class="nav-desktop__link">Качество</a></li>
+            <li><a href="#styles" class="nav-desktop__link">Дизайн</a></li>
+            <li>
+              <a href="#technology" class="nav-desktop__link">Технологии</a>
+            </li>
+            <li><a href="#gallery" class="nav-desktop__link">Галерея</a></li>
+            <li><a href="#reviews" class="nav-desktop__link">Отзывы</a></li>
+            <li><a href="#faq" class="nav-desktop__link">FAQ</a></li>
+          </ul>
+        </nav>
 
         <div class="header__actions">
           <a href="#order" class="button button--primary header__cta-btn"
@@ -132,17 +94,69 @@
           class="burger-btn js-menu-toggle"
           id="burgerBtn"
           aria-label="Открыть меню"
-          aria-controls="navigation-wrapper"
+          aria-controls="mobile-menu-portal"
           aria-expanded="false"
         >
-          <span class="burger-btn__icon" aria-hidden="true">
-            <span class="burger-btn__line"></span>
-            <span class="burger-btn__line"></span>
-            <span class="burger-btn__line"></span>
-          </span>
+          <span class="burger-btn__line"></span>
+          <span class="burger-btn__line"></span>
+          <span class="burger-btn__line"></span>
         </button>
       </div>
     </header>
+
+    <div class="mobile-menu" id="mobile-menu-portal" aria-hidden="true" inert>
+      <div class="mobile-menu__overlay js-menu-close"></div>
+
+      <aside class="mobile-menu__drawer">
+        <div class="mobile-menu__header">
+          <span class="logo">Velour<span>Style</span></span>
+          <button class="close-btn js-menu-close" aria-label="Закрыть меню">
+            <svg class="icon" width="24" height="24" aria-hidden="true">
+              <use xlink:href="#close" />
+            </svg>
+          </button>
+        </div>
+
+        <nav class="mobile-nav">
+          <ul class="mobile-nav__list">
+            <li>
+              <a href="#details" class="mobile-nav__link js-menu-link"
+                >Качество</a
+              >
+            </li>
+            <li>
+              <a href="#styles" class="mobile-nav__link js-menu-link">Дизайн</a>
+            </li>
+            <li>
+              <a href="#technology" class="mobile-nav__link js-menu-link"
+                >Технологии</a
+              >
+            </li>
+            <li>
+              <a href="#gallery" class="mobile-nav__link js-menu-link"
+                >Галерея</a
+              >
+            </li>
+            <li>
+              <a href="#reviews" class="mobile-nav__link js-menu-link"
+                >Отзывы</a
+              >
+            </li>
+            <li>
+              <a href="#faq" class="mobile-nav__link js-menu-link">FAQ</a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="mobile-menu__footer">
+          <a
+            href="#order"
+            class="button button--primary button--full js-menu-link"
+            >Оформить заказ</a
+          >
+        </div>
+      </aside>
+    </div>
 
     <main class="main">
       <section class="hero" id="hero">
