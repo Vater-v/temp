@@ -1925,3 +1925,52 @@ a {
   transform: scale(1.1) rotate(10deg);
   color: var(--red-600);
 }
+/* Навигация в лайтбоксе */
+.lightbox__nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 2020;
+}
+
+.lightbox__nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox__nav-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.lightbox__nav-btn--prev {
+  left: -60px; /* Выносим за пределы картинки */
+}
+
+.lightbox__nav-btn--next {
+  right: -60px;
+}
+
+/* Адаптив для мобильных: кнопки поверх картинки */
+@media (max-width: 768px) {
+  .lightbox__nav-btn {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5); /* Темный фон для контраста */
+  }
+  .lightbox__nav-btn--prev {
+    left: 10px;
+  }
+  .lightbox__nav-btn--next {
+    right: 10px;
+  }
+}

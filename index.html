@@ -351,7 +351,8 @@
             <article class="feature-card feature-card--reversed">
               <figure class="feature-card__media">
                 <video
-                  class="feature-card__video"
+                  class="feature-card__video js-zoomable"
+                  style="cursor: zoom-in"
                   autoplay
                   muted
                   loop
@@ -560,19 +561,20 @@
             <h3 class="kit__subtitle">Комплектация "Полный Салон":</h3>
             <ul class="kit__list">
               <li class="kit__item">
-                <span class="kit__item-count">2 шт.</span> Накидки на передние
+                <span class="kit__item-count">2 шт.</span> Накидки перед сидения
+              </li>
+              <li class="kit__item">
+                <span class="kit__item-count">2 шт.</span> Накидки задние
                 сиденья
               </li>
               <li class="kit__item">
-                <span class="kit__item-count">1 шт.</span> Накидка на задний
-                диван
+                <span class="kit__item-count">1 шт.</span> Диван покрытие
               </li>
               <li class="kit__item">
-                <span class="kit__item-count">4+ шт.</span> Накидки на
-                подголовники
+                <span class="kit__item-count">2 шт.</span> Наголовника перед
               </li>
               <li class="kit__item">
-                <span class="kit__item-count">Набор</span> Крепежи и фурнитура
+                <span class="kit__item-count">🎁</span> + Подарок
               </li>
             </ul>
             <p class="kit__note">
@@ -596,7 +598,8 @@
           <div class="gallery__carousel-wrapper">
             <div class="gallery__slide">
               <img
-                class="gallery__image"
+                class="gallery__image js-zoomable"
+                style="cursor: zoom-in"
                 src="media/RedStitch_Salon_Collage_v1.webp"
                 loading="lazy"
                 decoding="async"
@@ -607,7 +610,8 @@
             </div>
             <div class="gallery__slide">
               <img
-                class="gallery__image"
+                class="gallery__image js-zoomable"
+                style="cursor: zoom-in"
                 src="media/RedStitch_Front_Side.webp"
                 loading="lazy"
                 decoding="async"
@@ -618,7 +622,8 @@
             </div>
             <div class="gallery__slide">
               <img
-                class="gallery__image"
+                class="gallery__image js-zoomable"
+                style="cursor: zoom-in"
                 src="media/Black_Rear_View.webp"
                 loading="lazy"
                 decoding="async"
@@ -629,7 +634,8 @@
             </div>
             <div class="gallery__slide">
               <img
-                class="gallery__image"
+                class="gallery__image js-zoomable"
+                style="cursor: zoom-in"
                 src="media/Black_Front_Top_Angle.webp"
                 loading="lazy"
                 decoding="async"
@@ -640,7 +646,8 @@
             </div>
             <div class="gallery__slide">
               <img
-                class="gallery__image"
+                class="gallery__image js-zoomable"
+                style="cursor: zoom-in"
                 src="media/RedStitch_Rear_View.webp"
                 loading="lazy"
                 decoding="async"
@@ -651,7 +658,8 @@
             </div>
             <div class="gallery__slide">
               <img
-                class="gallery__image"
+                class="gallery__image js-zoomable"
+                style="cursor: zoom-in"
                 src="media/RedStitch_Detail_Headrest.webp"
                 loading="lazy"
                 decoding="async"
@@ -662,7 +670,8 @@
             </div>
             <div class="gallery__slide">
               <img
-                class="gallery__image"
+                class="gallery__image js-zoomable"
+                style="cursor: zoom-in"
                 src="media/Black_Salon_Collage.webp"
                 loading="lazy"
                 decoding="async"
@@ -673,7 +682,8 @@
             </div>
             <div class="gallery__slide">
               <img
-                class="gallery__image"
+                class="gallery__image js-zoomable"
+                style="cursor: zoom-in"
                 src="media/Black_Front_Pair_Best.webp"
                 loading="lazy"
                 decoding="async"
@@ -1358,6 +1368,29 @@
           </svg>
         </button>
         <img src="" alt="Просмотр" class="lightbox__image" id="lightbox-img" />
+        <video
+          class="lightbox__image"
+          id="lightbox-video"
+          controls
+          style="display: none"
+        ></video>
+
+        <button
+          class="lightbox__nav-btn lightbox__nav-btn--prev js-lightbox-prev"
+          aria-label="Предыдущее фото"
+        >
+          <svg class="icon" width="24" height="24">
+            <use xlink:href="#arrow-left" />
+          </svg>
+        </button>
+        <button
+          class="lightbox__nav-btn lightbox__nav-btn--next js-lightbox-next"
+          aria-label="Следующее фото"
+        >
+          <svg class="icon" width="24" height="24">
+            <use xlink:href="#arrow-right" />
+          </svg>
+        </button>
       </div>
     </div>
     <script src="main.js" defer></script>

@@ -485,20 +485,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 6. Lightbox (Просмотр фото)
+   * 6. Lightbox (Просмотр фото и видео)
    * =========================================================================
    */
   const initLightbox = () => {
     const lightbox = document.getElementById("lightbox");
     const lightboxImg = document.getElementById("lightbox-img");
+    const lightboxVideo = document.getElementById("lightbox-video");
+    const prevBtn = document.querySelector(".js-lightbox-prev");
+    const nextBtn = document.querySelector(".js-lightbox-next");
 
     if (!lightbox || !lightboxImg) return;
 
-    const triggers = document.querySelectorAll(".js-zoomable");
+    // Собираем все увеличиваемые элементы в массив
+    let items = [];
+    let currentIndex = 0;
 
-    const openLightbox = (src, alt) => {
-      lightboxImg.src = src;
-      lightboxImg.alt = alt || "Изображение";
+    const updateItemsList = () => {
+      items = Array.from(document.querySelectorAll(".js-zoomable"));
+    };
+
+    const showItem = (index) => {
+      // Зацикливание (если конец списка - идем в начало)
+      if (index < 0) index = items.length - 1;
+      if (index >= items.length) index = 0;
+
+      currentIndex = index;
+      const element = items[currentIndex];
+      const isVideo = element.tagName === "VIDEO";
+
+      // Сброс
+      lightboxImg.style.display = "none";
+      if (lightboxVideo) {
+        lightboxVideo.style.display = "none";
+        lightboxVideo.pause();
+      }
+
+      if (isVideo && lightboxVideo) {
+        const src =
+          element.currentSrc ||
+          element.querySelector("source")?.src ||
+          element.src;
+        lightboxVideo.src = src;
+        lightboxVideo.style.display = "block";
+        lightboxVideo.play();
+      } else {
+        lightboxImg.src = element.src;
+        lightboxImg.alt = element.alt || "Изображение";
+        lightboxImg.style.display = "block";
+      }
+    };
+
+    const openLightbox = (index) => {
+      updateItemsList(); // Обновляем список на случай изменений
+      showItem(index);
 
       lightbox.classList.add("is-visible");
       lightbox.removeAttribute("aria-hidden");
@@ -515,9 +555,12 @@ document.addEventListener("DOMContentLoaded", () => {
       lightbox.setAttribute("aria-hidden", "true");
       lightbox.setAttribute("inert", "");
 
+      if (lightboxVideo) lightboxVideo.pause();
+
       setTimeout(() => {
         if (!lightbox.classList.contains("is-visible")) {
           lightboxImg.src = "";
+          if (lightboxVideo) lightboxVideo.src = "";
         }
       }, 300);
 
@@ -530,21 +573,42 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    triggers.forEach((img) => {
-      img.addEventListener("click", (e) => {
+    // Слушатели кликов по картинкам
+    // Используем делегирование или навешиваем на существующие
+    document.querySelectorAll(".js-zoomable").forEach((el) => {
+      el.addEventListener("click", (e) => {
         e.preventDefault();
-        openLightbox(img.src, img.alt);
+        updateItemsList(); // Важно: обновить список перед поиском индекса
+        const index = items.indexOf(el);
+        if (index !== -1) openLightbox(index);
       });
     });
 
+    // Навигация
+    if (prevBtn)
+      prevBtn.addEventListener("click", (e) => {
+        e.stopPropagation(); // Чтобы не закрывался оверлей
+        showItem(currentIndex - 1);
+      });
+
+    if (nextBtn)
+      nextBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showItem(currentIndex + 1);
+      });
+
+    // Закрытие
     lightbox.querySelectorAll(".js-lightbox-close").forEach((el) => {
       el.addEventListener("click", closeLightbox);
     });
 
+    // Клавиатура
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && lightbox.classList.contains("is-visible")) {
-        closeLightbox();
-      }
+      if (!lightbox.classList.contains("is-visible")) return;
+
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") showItem(currentIndex - 1);
+      if (e.key === "ArrowRight") showItem(currentIndex + 1);
     });
   };
 
