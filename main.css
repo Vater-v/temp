@@ -1170,13 +1170,21 @@ a {
 }
 .accordion__icon {
   transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  color: var(--color-gray); /* Иконка серая по умолчанию */
+  color: var(--color-gray);
+
+  /* --- ИСПРАВЛЕНИЕ ВИДИМОСТИ --- */
+  fill: none; /* Убираем заливку */
+  stroke: currentColor; /* Красим линии */
+  stroke-width: 2; /* Толщина линий */
+  stroke-linecap: round; /* Скругляем концы */
+  stroke-linejoin: round; /* Скругляем углы */
+  /* ---------------------------- */
 }
 
-/* При открытии поворачиваем на 90 градусов (если стрелка вправо) */
+/* Оставляем поворот как был */
 .accordion__item.is-open .accordion__icon {
   transform: rotate(90deg);
-  color: var(--color-accent); /* Краснеет при открытии */
+  color: var(--color-accent);
 }
 .accordion__title {
   margin: 0;

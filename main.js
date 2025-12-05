@@ -302,16 +302,38 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // (Логика отправки формы должна быть здесь)
-
-      // Демонстрация работы модалки при отправке
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
 
-      // Имитация успешной отправки
-      console.log("Form submitted (simulation)", data);
-      openModal(data.name);
-      form.reset();
+      // Добавляем цену и товары из выбранных радио-кнопок (если нужно)
+      const activeKit = document.querySelector(
+        'input[name="configuration"]:checked'
+      );
+      if (activeKit) {
+        data.total_price = activeKit.dataset.price;
+      }
+
+      try {
+        // Отправляем реальный запрос на Python-сервер
+        const response = await fetch("/send-order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          // Если все ок — открываем модалку
+          openModal(data.name);
+          form.reset();
+        } else {
+          alert("Ошибка при отправке заказа. Попробуйте позже.");
+        }
+      } catch (error) {
+        console.error("Ошибка:", error);
+        alert("Не удалось соединиться с сервером.");
+      }
     });
   };
 
