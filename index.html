@@ -149,11 +149,33 @@
         </nav>
 
         <div class="mobile-menu__footer">
+          <div class="mobile-menu__contacts">
+            <a href="tel:+79991234567" class="mobile-phone"
+              >+7 (999) 123-45-67</a
+            >
+            <p class="mobile-hint">Задайте вопрос в мессенджере:</p>
+            <div class="mobile-socials">
+              <a
+                href="https://wa.me/79991234567"
+                target="_blank"
+                class="ms-btn ms-btn--wa"
+                >WhatsApp</a
+              >
+              <a
+                href="https://t.me/username"
+                target="_blank"
+                class="ms-btn ms-btn--tg"
+                >Telegram</a
+              >
+            </div>
+          </div>
+
           <a
             href="#order"
             class="button button--primary button--full js-menu-link"
-            >Оформить заказ</a
           >
+            Оформить заказ
+          </a>
         </div>
       </aside>
     </div>
@@ -1128,17 +1150,32 @@
               </p>
             </form>
 
-            <div class="order-form__footer">
-              <p class="order-form__guarantee">
-                ✓ <strong>Оплата при получении</strong>
-              </p>
-              <p class="order-form__guarantee">
-                ✓ <strong>Гарантия 3 месяца</strong>
-              </p>
-              <p class="order-form__guarantee">
-                ✓ <strong>Быстрая доставка</strong>
-              </p>
-            </div>
+            <ul class="order-form__footer">
+              <li class="trust-item">
+                <div class="trust-item__icon-box">
+                  <svg class="icon" width="16" height="16" aria-hidden="true">
+                    <use xlink:href="#check" />
+                  </svg>
+                </div>
+                <span class="trust-item__text">Оплата при получении</span>
+              </li>
+              <li class="trust-item">
+                <div class="trust-item__icon-box">
+                  <svg class="icon" width="16" height="16" aria-hidden="true">
+                    <use xlink:href="#check" />
+                  </svg>
+                </div>
+                <span class="trust-item__text">Гарантия 3 месяца</span>
+              </li>
+              <li class="trust-item">
+                <div class="trust-item__icon-box">
+                  <svg class="icon" width="16" height="16" aria-hidden="true">
+                    <use xlink:href="#check" />
+                  </svg>
+                </div>
+                <span class="trust-item__text">Быстрая доставка</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>

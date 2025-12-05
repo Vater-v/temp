@@ -1284,6 +1284,9 @@ a {
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: inset 0 0 0 2px #fff;
+
+  /* ДОБАВИТЬ ВОТ ЭТУ СТРОКУ: */
+  flex-shrink: 0;
 }
 .radio-group__swatch--red {
   background-color: var(--red-700);
@@ -1353,18 +1356,65 @@ a {
 }
 
 .order-form__footer {
-  margin-top: 20px;
-  padding-top: 16px;
+  margin-top: 24px;
+  padding-top: 20px;
   border-top: 1px solid var(--color-border);
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: var(--color-heading);
+
+  /* Используем Grid для адаптивности */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 колонки */
+  gap: 12px;
+
+  list-style: none; /* Убираем стандартные маркеры списка */
+  padding-left: 0;
 }
 .order-form__guarantee strong {
   color: var(--green-500);
 }
 
+/* Элемент списка */
+.trust-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+/* Кружок под иконку */
+.trust-item__icon-box {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: rgba(40, 167, 69, 0.1); /* Полупрозрачный зеленый */
+  color: var(--green-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Текст */
+.trust-item__text {
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  line-height: 1.3;
+  color: var(--color-heading);
+}
+
+/* --- Адаптив для маленьких экранов (если текст не влезает) --- */
+@media (max-width: 380px) {
+  .order-form__footer {
+    grid-template-columns: 1fr; /* В одну колонку */
+    justify-items: start;
+    gap: 16px;
+  }
+
+  .trust-item {
+    flex-direction: row; /* Иконка слева, текст справа */
+    text-align: left;
+  }
+}
 @media (min-width: 1024px) {
   .order__container {
     grid-template-columns: 1fr 420px;
@@ -1638,4 +1688,58 @@ a {
 .modal__close-btn:hover {
   background-color: var(--gray-100);
   color: var(--red-500);
+}
+/* --- Контакты в мобильном меню --- */
+
+.mobile-menu__contacts {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05); /* Легкий разделитель перед кнопкой заказа */
+}
+
+.mobile-phone {
+  display: block;
+  font-size: 20px;
+  font-weight: var(--fw-bold);
+  color: var(--color-heading);
+  margin-bottom: 8px;
+  text-decoration: none;
+}
+
+.mobile-hint {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+
+.mobile-socials {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Две колонки поровну */
+  gap: 12px;
+}
+
+.ms-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  font-weight: var(--fw-medium);
+  font-size: 14px;
+  color: #fff;
+  transition: opacity 0.2s;
+}
+
+.ms-btn:active {
+  opacity: 0.8;
+}
+
+/* Фирменные цвета мессенджеров */
+.ms-btn--wa {
+  background-color: #25d366; /* WhatsApp Green */
+}
+
+.ms-btn--tg {
+  background-color: #0088cc; /* Telegram Blue */
 }
