@@ -1108,7 +1108,14 @@ a {
   margin-bottom: 25px;
   font-style: italic;
 }
-
+/* Заставляем заголовок занимать обе колонки на ПК */
+@media (min-width: 768px) {
+  .kit__title {
+    grid-column: 1 / -1; /* Растянуть от первой до последней линии */
+    text-align: center; /* Убедиться, что текст по центру */
+    margin-bottom: 40px; /* Отступ до контента */
+  }
+}
 @media (min-width: 768px) {
   .kit__layout {
     grid-template-columns: 1fr 1fr;
@@ -1463,6 +1470,10 @@ a {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xl); /* Глубокая тень */
   border: 1px solid var(--gray-200);
+  /* Улучшение: */
+  max-width: 500px; /* Оптимальная ширина для восприятия */
+  margin-inline: auto; /* Центрирование по горизонтали */
+  width: 100%;
 }
 
 .order-form__header {
@@ -1628,8 +1639,9 @@ a {
   .order__container {
     grid-template-columns: 1fr 420px;
     align-items: start;
-    gap: 80px;
+    gap: clamp(40px, 5vw, 80px); 
   }
+
   .order-form {
     position: sticky; /* Форма залипает при скролле */
     top: calc(var(--header-height) + 20px);
