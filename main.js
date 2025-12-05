@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 5. Логика формы заказа
+   * 5. Логика формы заказа (ОБНОВЛЕНО)
    * =========================================================================
    */
   const initOrderForm = () => {
@@ -438,11 +438,21 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", closeModal);
     });
 
+    // -------------------------------------------------------------
+    // ИСПРАВЛЕННАЯ ЛОГИКА ОТПРАВКИ ФОРМЫ (FETCH)
+    // -------------------------------------------------------------
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Отправка...";
+
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
 
+      // Добавляем актуальную цену
       const activeKit = document.querySelector(
         'input[name="configuration"]:checked'
       );
@@ -450,13 +460,29 @@ document.addEventListener("DOMContentLoaded", () => {
         data.total_price = activeKit.dataset.price;
       }
 
-      // Здесь можно добавить реальную отправку, если есть бэкенд
-      // Пока просто имитируем успешную заявку
-      setTimeout(() => {
-        openModal(data.name);
-        form.reset();
-        updateProductState();
-      }, 500);
+      try {
+        const response = await fetch("/send-order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          openModal(data.name);
+          form.reset();
+          updateProductState(); // Сброс UI в исходное состояние
+        } else {
+          alert("Произошла ошибка при отправке заявки. Попробуйте еще раз.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Ошибка соединения. Проверьте интернет или попробуйте позже.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
     });
   };
 
