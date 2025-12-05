@@ -457,6 +457,81 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   };
+  /**
+   * =========================================================================
+   * 7. Lightbox (Просмотр фото)
+   * =========================================================================
+   */
+  const initLightbox = () => {
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+
+    // Если элементов нет, выходим, чтобы не было ошибок
+    if (!lightbox || !lightboxImg) return;
+
+    // Находим все картинки, которым мы дали класс js-zoomable
+    // Можно добавить этот класс любым картинкам, которые хотим увеличивать
+    const triggers = document.querySelectorAll(".js-zoomable");
+
+    const openLightbox = (src, alt) => {
+      lightboxImg.src = src;
+      lightboxImg.alt = alt || "Изображение";
+
+      lightbox.classList.add("is-visible");
+      lightbox.removeAttribute("aria-hidden");
+      lightbox.removeAttribute("inert"); // Включаем интерактивность для скринридеров
+
+      // Блокируем скролл страницы (используем ту же логику, что в меню)
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      document.body.classList.add("no-scroll");
+    };
+
+    const closeLightbox = () => {
+      lightbox.classList.remove("is-visible");
+      lightbox.setAttribute("aria-hidden", "true");
+      lightbox.setAttribute("inert", ""); // Выключаем интерактивность
+
+      // Очищаем src после анимации закрытия (300мс), чтобы не мелькало старое фото при следующем открытии
+      setTimeout(() => {
+        if (!lightbox.classList.contains("is-visible")) {
+          lightboxImg.src = "";
+        }
+      }, 300);
+
+      // Разблокируем скролл (если не открыто другое меню)
+      if (
+        !document.querySelector(".mobile-menu.is-active") &&
+        !document.querySelector(".modal.is-visible")
+      ) {
+        document.body.style.paddingRight = "";
+        document.body.classList.remove("no-scroll");
+      }
+    };
+
+    // Навешиваем клик на картинки
+    triggers.forEach((img) => {
+      img.addEventListener("click", (e) => {
+        e.preventDefault(); // На всякий случай
+        // Берем src прямо из картинки.
+        // Если у вас есть более качественная версия, можно использовать data-full-src атрибут
+        openLightbox(img.src, img.alt);
+      });
+    });
+
+    // Закрытие по клику на крестик или фон
+    lightbox.querySelectorAll(".js-lightbox-close").forEach((el) => {
+      el.addEventListener("click", closeLightbox);
+    });
+
+    // Закрытие по Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && lightbox.classList.contains("is-visible")) {
+        closeLightbox();
+      }
+    });
+  };
 
   // --- Инициализация ---
   initScrollSpy();
@@ -465,4 +540,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initGallerySlider();
   initOrderForm();
   initReviewsSlider();
+  initLightbox();
 });

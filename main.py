@@ -46,6 +46,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             f"📍 <b>Город:</b> {data.get('city')}\n"
             f"🎨 <b>Цвет:</b> {data.get('color')}\n"
             f"🚘 <b>Комплект:</b> {data.get('configuration')}\n"
+            f"🎁 <b>Бонус:</b> {data.get('gift', 'Нет')}\n"  # <-- ДОБАВЛЕНО ЭТО
             f"💰 <b>Сумма:</b> {data.get('total_price')} ₽"
         )
         

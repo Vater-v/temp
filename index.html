@@ -302,7 +302,8 @@
 
           <div class="hero__image-wrapper">
             <img
-              class="hero__image"
+              class="hero__image js-zoomable"
+              style="cursor: zoom-in"
               src="media/RedStitch_Front_Straight.webp"
               alt="Переднее кресло автомобиля с установленной черной велюровой накидкой и красной ромбовидной строчкой."
               width="960"
@@ -324,7 +325,8 @@
             <article class="feature-card">
               <figure class="feature-card__media">
                 <img
-                  class="feature-card__image"
+                  class="feature-card__image js-zoomable"
+                  style="cursor: zoom-in"
                   src="media/RedStitch_Texture_Macro.webp"
                   alt="Макро-съемка фактуры: черный велюровый материал с ромбовидной прострочкой красной нитью."
                   loading="lazy"
@@ -388,7 +390,8 @@
             <article class="style-card" data-theme="red">
               <figure class="style-card__media">
                 <img
-                  class="style-card__image"
+                  class="style-card__image js-zoomable"
+                  style="cursor: zoom-in"
                   src="media/RedStitch_Front_Side.webp"
                   alt="Переднее кресло: вид сбоку, красная нить."
                   loading="lazy"
@@ -415,7 +418,8 @@
             <article class="style-card" data-theme="black">
               <figure class="style-card__media">
                 <img
-                  class="style-card__image"
+                  class="style-card__image js-zoomable"
+                  style="cursor: zoom-in"
                   src="media/Black_Front_Pair_Best.webp"
                   alt="Передний ряд: черные накидки."
                   loading="lazy"
@@ -449,7 +453,8 @@
             <article class="tech-card">
               <figure class="tech-card__media">
                 <img
-                  class="tech-card__image"
+                  class="tech-card__image js-zoomable"
+                  style="cursor: zoom-in"
                   src="media/Tech_Lining_Comparison.webp"
                   alt="Сравнение подкладки"
                   loading="lazy"
@@ -468,7 +473,8 @@
             <article class="tech-card">
               <figure class="tech-card__media">
                 <img
-                  class="tech-card__image"
+                  class="tech-card__image js-zoomable"
+                  style="cursor: zoom-in"
                   src="media/Tech_Hooks_Straps.webp"
                   alt="Крепеж"
                   loading="lazy"
@@ -487,7 +493,8 @@
             <article class="tech-card">
               <figure class="tech-card__media">
                 <img
-                  class="tech-card__image"
+                  class="tech-card__image js-zoomable"
+                  style="cursor: zoom-in"
                   src="media/Tech_Fixing_Washers.webp"
                   alt="Фурнитура"
                   loading="lazy"
@@ -539,7 +546,8 @@
           </h2>
           <figure class="kit__media">
             <img
-              class="kit__image"
+              class="kit__image js-zoomable"
+              style="cursor: zoom-in"
               src="media/Black_Kit_Flatlay.webp"
               alt="Полный комплект накидок flatlay"
               loading="lazy"
@@ -1152,7 +1160,37 @@
                   />
                 </div>
               </fieldset>
-
+              <div class="gift-block">
+                <div class="gift-block__icon-box">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                    <rect x="2" y="7" width="20" height="5"></rect>
+                    <line x1="12" y1="22" x2="12" y2="7"></line>
+                    <path
+                      d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"
+                    ></path>
+                    <path
+                      d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"
+                    ></path>
+                  </svg>
+                </div>
+                <div class="gift-block__content">
+                  <p class="gift-block__title">Подарок при заказе сегодня!</p>
+                  <p class="gift-block__text">
+                    Премиум микрофибра для ухода за салоном.
+                  </p>
+                </div>
+                <input type="hidden" name="gift" value="Микрофибра в подарок" />
+              </div>
               <button
                 class="button button--primary button--large form__submit"
                 type="submit"
@@ -1308,6 +1346,20 @@
       </div>
     </div>
 
+    <div class="lightbox" id="lightbox" aria-hidden="true" inert>
+      <div class="lightbox__overlay js-lightbox-close"></div>
+      <div class="lightbox__content">
+        <button
+          class="lightbox__close-btn js-lightbox-close"
+          aria-label="Закрыть"
+        >
+          <svg class="icon" width="32" height="32" viewBox="0 0 24 24">
+            <use xlink:href="#close" />
+          </svg>
+        </button>
+        <img src="" alt="Просмотр" class="lightbox__image" id="lightbox-img" />
+      </div>
+    </div>
     <script src="main.js" defer></script>
   </body>
 </html>

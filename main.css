@@ -1743,3 +1743,142 @@ a {
 .ms-btn--tg {
   background-color: #0088cc;
 }
+/* ==========================================================================
+   11. Lightbox (Просмотр изображений)
+   ========================================================================== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000; /* Выше всего остального */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
+}
+
+.lightbox.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85); /* Темный фон */
+  backdrop-filter: blur(5px); /* Размытие заднего плана - выглядит дорого */
+  cursor: pointer;
+}
+
+.lightbox__content {
+  position: relative;
+  max-width: 95vw;
+  max-height: 95vh;
+  z-index: 2010;
+  transform: scale(0.95);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Эффект пружинки */
+}
+
+.lightbox.is-visible .lightbox__content {
+  transform: scale(1);
+}
+
+.lightbox__image {
+  display: block;
+  max-width: 100%;
+  max-height: 90vh; /* Оставляем место для интерфейса */
+  border-radius: 4px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  object-fit: contain;
+  user-select: none;
+}
+
+.lightbox__close-btn {
+  position: absolute;
+  top: -40px;
+  right: -10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff; /* Белый крестик */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.lightbox__close-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Адаптив для мобильных */
+@media (max-width: 768px) {
+  .lightbox__close-btn {
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+  }
+}
+/* --- Gift Block --- */
+.gift-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: rgba(
+    229,
+    57,
+    53,
+    0.08
+  ); /* Легкий красный фон (ваш accent) */
+  border: 1px dashed var(--red-500); /* Пунктирная обводка привлекает внимание */
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.gift-block__icon-box {
+  color: var(--red-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  animation: pulse-gift 2s infinite;
+}
+
+.gift-block__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.gift-block__title {
+  font-weight: var(--fw-bold);
+  font-size: 14px;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.gift-block__text {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* Анимация пульсации иконки для привлечения внимания */
+@keyframes pulse-gift {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
