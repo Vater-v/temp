@@ -1146,32 +1146,69 @@
 
     <footer class="footer" id="footer">
       <div class="container footer__container">
-        <div class="footer__contacts">
-          <a href="/" class="logo">Velour<span>Style</span></a>
+        <div class="footer__col footer__brand-col">
+          <a href="/" class="logo footer__logo">Velour<span>Style</span></a>
+          <p class="footer__desc">
+            Премиальные накидки из алькантары для вашего комфорта. Идеальная
+            посадка и защита салона.
+          </p>
+        </div>
+
+        <div class="footer__col footer__nav-col">
+          <h3 class="footer__title">Меню</h3>
+          <ul class="footer__nav-list">
+            <li><a href="#details" class="footer__nav-link">Качество</a></li>
+            <li><a href="#styles" class="footer__nav-link">Дизайн</a></li>
+            <li><a href="#gallery" class="footer__nav-link">Галерея</a></li>
+            <li><a href="#reviews" class="footer__nav-link">Отзывы</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col footer__contacts-col">
+          <h3 class="footer__title">Контакты</h3>
           <address class="footer__address">
-            <a class="footer__link" href="tel:+79991234567"
-              >+7 (999) 123-45-67</a
+            <a
+              class="footer__contact-link footer__contact-link--phone"
+              href="tel:+79991234567"
             >
-            <a class="footer__link" href="mailto:info@velour-style.ru"
-              >info@velour-style.ru</a
-            >
+              +7 (999) 123-45-67
+            </a>
+            <a class="footer__contact-link" href="mailto:info@velour-style.ru">
+              info@velour-style.ru
+            </a>
+            <p class="footer__work-time">Ежедневно с 09:00 до 21:00</p>
           </address>
+
           <div class="footer__socials">
-            <a class="footer__social-link" href="#" aria-label="WhatsApp"
+            <a
+              class="footer__social-btn"
+              href="#"
+              aria-label="WhatsApp"
+              target="_blank"
               >WhatsApp</a
             >
-            <a class="footer__social-link" href="#" aria-label="Telegram"
+            <a
+              class="footer__social-btn"
+              href="#"
+              aria-label="Telegram"
+              target="_blank"
               >Telegram</a
             >
           </div>
         </div>
-        <div class="footer__legal">
+      </div>
+
+      <div class="footer__bottom">
+        <div class="container footer__bottom-container">
           <p class="footer__copyright">
             © 2025 VelourStyle. Все права защищены.
           </p>
-          <a class="footer__link" href="/privacy-policy"
-            >Политика конфиденциальности</a
-          >
+          <div class="footer__legal-links">
+            <a href="/privacy-policy" class="footer__legal-link"
+              >Политика конфиденциальности</a
+            >
+            <a href="/offer" class="footer__legal-link">Публичная оферта</a>
+          </div>
         </div>
       </div>
     </footer>

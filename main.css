@@ -1378,139 +1378,166 @@ a {
 }
 
 /* ==========================================================================
-   9. Footer & Modal
+   9. Footer (Redesign)
    ========================================================================== */
 
-/* --- FOOTER --- */
 .footer {
-  background-color: var(--gray-100);
-  padding: 40px 0;
-  border-top: 1px solid var(--color-border);
+  background-color: var(--gray-900); /* Темный фон для премиальности */
+  color: var(--gray-200); /* Светло-серый текст для чтения */
+  padding-top: 60px;
+  font-size: 15px;
 }
+
+/* --- Сетка (Grid) --- */
 .footer__container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  padding-bottom: 60px;
+}
+
+/* На десктопе разбиваем на 3 колонки: 
+   1. Широкая для бренда 
+   2. Узкая для меню 
+   3. Средняя для контактов 
+*/
+@media (min-width: 768px) {
+  .footer__container {
+    grid-template-columns: 1.5fr 1fr 1.2fr;
+    gap: 60px;
+    align-items: start;
+  }
+}
+
+/* --- Колонка 1: Бренд --- */
+.footer__logo {
+  color: var(--white);
+  margin-bottom: 16px;
+  display: inline-block;
+}
+.footer__desc {
+  color: var(--gray-500);
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+/* --- Заголовки колонок --- */
+.footer__title {
+  color: var(--white);
+  font-size: 16px;
+  font-weight: var(--fw-bold);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* --- Колонка 2: Навигация --- */
+.footer__nav-list {
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  text-align: center;
+  gap: 12px;
 }
+
+.footer__nav-link {
+  color: var(--gray-200);
+  transition: color 0.2s, transform 0.2s;
+  display: inline-block;
+}
+
+.footer__nav-link:hover {
+  color: var(--color-accent);
+  transform: translateX(4px); /* Легкий сдвиг при наведении */
+}
+
+/* --- Колонка 3: Контакты --- */
 .footer__address {
+  font-style: normal;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  font-style: normal;
+  gap: 12px;
+  margin-bottom: 24px;
 }
-.footer__link {
-  color: var(--color-text-main);
+
+.footer__contact-link {
+  color: var(--gray-200);
   transition: color 0.2s;
 }
-.footer__link:hover {
-  color: var(--color-accent);
+.footer__contact-link:hover {
+  color: var(--white);
 }
+
+.footer__contact-link--phone {
+  font-size: 18px;
+  font-weight: var(--fw-bold);
+  color: var(--white);
+}
+
+.footer__work-time {
+  font-size: 13px;
+  color: var(--gray-500);
+}
+
+/* Соцсети в виде кнопок */
 .footer__socials {
   display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer__social-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--gray-800);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: var(--fw-medium);
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s;
+}
+
+.footer__social-btn:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--white);
+}
+
+/* --- Нижняя панель (Bottom Bar) --- */
+.footer__bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 24px 0;
+  background-color: #111; /* Чуть темнее основного фона */
+}
+
+.footer__bottom-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--gray-500);
+}
+
+.footer__legal-links {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
-  margin-top: 10px;
 }
-.footer__social-link {
-  font-weight: var(--fw-bold);
-  color: var(--color-heading);
+
+.footer__legal-link {
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.2);
+  transition: color 0.2s;
 }
-.footer__copyright {
-  font-size: 13px;
-  color: var(--color-text-muted);
+.footer__legal-link:hover {
+  color: var(--gray-200);
+  text-decoration-color: var(--gray-200);
 }
 
 @media (min-width: 768px) {
-  .footer__container {
+  .footer__bottom-container {
     flex-direction: row;
     justify-content: space-between;
-    align-items: flex-start;
     text-align: left;
   }
-  .footer__address {
-    align-items: flex-start;
-  }
-}
-
-/* --- MODAL --- */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100dvh;
-  z-index: var(--z-modal); /* 1000 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-.modal.is-visible {
-  opacity: 1;
-  visibility: visible;
-}
-.modal__overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
-}
-.modal__content {
-  position: relative;
-  background-color: var(--white);
-  padding: 40px 30px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
-  transform: scale(0.9) translateY(20px);
-  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-}
-.modal.is-visible .modal__content {
-  transform: scale(1) translateY(0);
-}
-.modal__close-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-muted);
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-.modal__close-btn:hover {
-  background-color: var(--gray-100);
-  color: var(--color-heading);
-}
-.modal__icon-wrapper {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-}
-.modal__icon-wrapper .icon {
-  width: 48px;
-  height: 48px;
-  color: var(--green-500);
-}
-.modal__title {
-  font-size: 22px;
-  font-weight: var(--fw-bold);
-  margin-bottom: 10px;
-  color: var(--color-heading);
-}
-.modal__text {
-  color: var(--color-text-muted);
-  margin-bottom: 24px;
 }
