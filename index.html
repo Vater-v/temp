@@ -924,6 +924,7 @@
             </p>
             <img
               class="order__image"
+              id="order-image"
               src="media/RedStitch_Salon_Collage_v2.webp"
               alt="Коллаж накидок"
               loading="lazy"
@@ -963,12 +964,12 @@
                       id="color-red"
                       name="color"
                       value="Красная строчка"
+                      data-selection-color="red"
                       checked
                     />
                     <label class="radio-group__label" for="color-red">
                       <span
                         class="radio-group__swatch radio-group__swatch--red"
-                        aria-hidden="true"
                       ></span>
                       <span class="radio-group__text">Красная строчка</span>
                     </label>
@@ -981,11 +982,11 @@
                       id="color-black"
                       name="color"
                       value="Классика Black"
+                      data-selection-color="black"
                     />
                     <label class="radio-group__label" for="color-black">
                       <span
                         class="radio-group__swatch radio-group__swatch--black"
-                        aria-hidden="true"
                       ></span>
                       <span class="radio-group__text">Классика Black</span>
                     </label>
@@ -1003,6 +1004,7 @@
                       id="kit-full"
                       name="configuration"
                       value="Полный салон"
+                      data-selection-kit="full"
                       data-price="3990"
                       data-old-price="5990"
                       checked
@@ -1025,6 +1027,7 @@
                       id="kit-front"
                       name="configuration"
                       value="Только передние"
+                      data-selection-kit="front"
                       data-price="2490"
                       data-old-price="3690"
                     />

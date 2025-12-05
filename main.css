@@ -1597,7 +1597,15 @@ a {
     padding-bottom: 60px;
   }
 }
+.order__image {
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+}
 
+.order__image.is-loading {
+  opacity: 0.5; /* Или 0, если хотите полное исчезновение */
+  filter: blur(2px); /* Опционально: легкий блюр при смене */
+}
 /* --- Hover Effects Global (Desktop with Mouse) --- */
 @media (hover: hover) {
   .style-card:hover {

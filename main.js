@@ -1,15 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
+
   /**
    * =========================================================================
-   * 0. Активная навигация (ScrollSpy) - High Performance
+   * 0. Активная навигация (ScrollSpy)
    * =========================================================================
    */
   const initScrollSpy = () => {
-    const sections = document.querySelectorAll("section[id]"); // Все секции с ID
+    const sections = document.querySelectorAll("section[id]");
     const navLinks = document.querySelectorAll(".nav__link");
 
-    // Опции: срабатываем, когда 40% секции видно на экране
     const observerOptions = {
       root: null,
       rootMargin: "0px",
@@ -19,14 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          // Удаляем активный класс у всех ссылок
           navLinks.forEach((link) => link.classList.remove("is-current"));
-
-          // Находим ссылку, ведущую на эту секцию
           const activeLink = document.querySelector(
             `.nav__link[href="#${entry.target.id}"]`
           );
-
           if (activeLink) {
             activeLink.classList.add("is-current");
           }
@@ -39,13 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  // Не забудьте вызвать функцию:
   initScrollSpy();
+
   /**
    * =========================================================================
    * 1. Мобильное меню (Off-canvas Navigation)
    * =========================================================================
-   * (Логика меню оставлена как в оригинале, но добавлена проверка на открытую модалку при снятии no-scroll)
    */
   const initMobileMenu = () => {
     const menuToggles = document.querySelectorAll(".js-menu-toggle");
@@ -67,7 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         navWrapper.classList.remove("is-active");
         burgerBtn.setAttribute("aria-expanded", "false");
-        // Снимаем блокировку скролла, только если модалка тоже закрыта
         if (!document.querySelector(".modal.is-visible")) {
           body.classList.remove("no-scroll");
         }
@@ -99,10 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 2. FAQ Аккордеон (FIXED)
+   * 2. FAQ Аккордеон
    * =========================================================================
-   * Исправлено: Теперь JS добавляет класс .is-open родительскому элементу
-   * .accordion__item, так как CSS не может дотянуться до контента изнутри H3.
    */
   const initAccordion = () => {
     const accordion = document.getElementById("faq-accordion");
@@ -118,7 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const isExpanded = button.getAttribute("aria-expanded") === "true";
       const shouldOpen = !isExpanded;
 
-      // 1. Сначала закрываем все открытые пункты (кроме текущего, если мы по нему кликнули)
       if (shouldOpen) {
         const openItems = accordion.querySelectorAll(
           ".accordion__item.is-open"
@@ -132,7 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      // 2. Переключаем состояние текущего
       button.setAttribute("aria-expanded", shouldOpen);
       if (shouldOpen) {
         item.classList.add("is-open");
@@ -144,9 +134,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 3. Галерея (Горизонтальный скролл) (REFACTORED)
+   * 3. Галерея (Слайдер)
    * =========================================================================
-   * Оптимизировано для работы с новым CSS Grid скроллом и существующим HTML.
    */
   const initGallerySlider = () => {
     const sliderWrapper = document.querySelector(".gallery__carousel-wrapper");
@@ -156,16 +145,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!sliderWrapper) return;
 
-    // --- 1. Логика кнопок (существующая) ---
     const scrollSlider = (direction) => {
-      const style = window.getComputedStyle(sliderWrapper);
-      // Если на ПК (grid) скролл не нужен, выходим (опционально)
-      // if (style.overflowX !== "auto") return;
-
       const slide = sliderWrapper.querySelector(".gallery__slide");
       if (!slide) return;
-
       const slideWidth = slide.offsetWidth;
+      const style = window.getComputedStyle(sliderWrapper);
       const gap = parseInt(style.columnGap || style.gap || 0);
       const scrollAmount = slideWidth + gap;
 
@@ -180,35 +164,25 @@ document.addEventListener("DOMContentLoaded", () => {
       prevBtn.addEventListener("click", () => scrollSlider("prev"));
     }
 
-    // --- 2. Логика точек (новая) ---
     const slides = sliderWrapper.querySelectorAll(".gallery__slide");
-
     if (dotsContainer && slides.length > 0) {
-      // Очищаем контейнер перед генерацией
       dotsContainer.innerHTML = "";
-
-      // Генерируем точки
       slides.forEach((_, index) => {
         const dot = document.createElement("div");
         dot.classList.add("gallery__dot");
-        // Первая точка активна сразу
         if (index === 0) dot.classList.add("is-active");
         dotsContainer.appendChild(dot);
       });
 
-      // Слушаем скролл для переключения активной точки
       sliderWrapper.addEventListener(
         "scroll",
         () => {
           const scrollLeft = sliderWrapper.scrollLeft;
-          const slideWidth = slides[0].offsetWidth; // Ширина слайда
-          // Вычисляем индекс центрального слайда
-          // Добавляем половину ширины слайда к scrollLeft для точности
+          const slideWidth = slides[0].offsetWidth;
           const centerIndex = Math.round(scrollLeft / slideWidth);
 
           const dots = document.querySelectorAll(".gallery__dot");
           dots.forEach((dot, index) => {
-            // Защита от выхода за пределы массива
             if (index === centerIndex) {
               dot.classList.add("is-active");
             } else {
@@ -217,23 +191,23 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         },
         { passive: true }
-      ); // passive для производительности скролла
+      );
     }
   };
 
   /**
    * =========================================================================
-   * 4. Sticky Bar Observer
+   * 4. Sticky Bar Observer (Placeholder)
    * =========================================================================
    */
   const initStickyBarObserver = () => {
-    // (Логика оставлена как в оригинале, так как она рабочая)
-    // ... (код из оригинала) ...
+    // Здесь может быть логика появления кнопки "Купить" при скролле,
+    // если она была в вашем оригинальном проекте.
   };
 
   /**
    * =========================================================================
-   * 5. Логика формы заказа и Модальное окно (REFACTORED)
+   * 5. Логика формы заказа, Калькулятор и Модальное окно (ОБНОВЛЕНО)
    * =========================================================================
    */
   const initOrderForm = () => {
@@ -241,28 +215,116 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("modal-success");
     const successNameEl = document.getElementById("success-name");
 
-    // (Логика калькулятора и выбора цвета опущена, так как она рабочая)
+    // Элементы для смены картинки и цены
+    const orderImage = document.getElementById("order-image");
+    const priceNewEl = document.querySelector(".js-price-new");
+    const priceOldEl = document.querySelector(".js-price-old");
+    const allSelectors = document.querySelectorAll(
+      'input[name="color"], input[name="configuration"]'
+    );
 
     if (!form || !modal) return;
 
-    // --- 5.3. Модальное окно (Улучшено для A11y) ---
+    // --- 5.1. База данных изображений (Матрица 2x2) ---
+    // - используем доступные файлы
+    const imageMap = {
+      red: {
+        full: "media/RedStitch_Salon_Collage_v2.webp", // Красный + Полный
+        front: "media/RedStitch_Front_Straight.webp", // Красный + Перед
+      },
+      black: {
+        full: "media/Black_Salon_Collage.webp", // Черный + Полный
+        front: "media/Black_Front_Pair_Best.webp", // Черный + Перед
+      },
+    };
+
+    // --- 5.2. Функция обновления Картинки и Цены ---
+    const updateProductState = () => {
+      // 1. Получаем текущий выбор
+      const selectedColorInput = document.querySelector(
+        'input[name="color"]:checked'
+      );
+      const selectedKitInput = document.querySelector(
+        'input[name="configuration"]:checked'
+      );
+
+      if (!selectedColorInput || !selectedKitInput) return;
+
+      const colorKey = selectedColorInput.dataset.selectionColor; // 'red' или 'black'
+      const kitKey = selectedKitInput.dataset.selectionKit; // 'full' или 'front'
+
+      // 2. Обновляем картинку
+      if (orderImage && imageMap[colorKey] && imageMap[colorKey][kitKey]) {
+        const newSrc = imageMap[colorKey][kitKey];
+
+        // Меняем только если путь отличается
+        if (!orderImage.getAttribute("src").includes(newSrc)) {
+          orderImage.classList.add("is-loading");
+
+          setTimeout(() => {
+            orderImage.src = newSrc;
+            orderImage.onload = () => orderImage.classList.remove("is-loading");
+            setTimeout(() => orderImage.classList.remove("is-loading"), 50); // Fallback
+          }, 300);
+        }
+      }
+
+      // 3. Обновляем цену
+      if (priceNewEl && priceOldEl) {
+        const newPrice = selectedKitInput.dataset.price;
+        const oldPrice = selectedKitInput.dataset.oldPrice;
+
+        // Простая анимация текста цены
+        if (priceNewEl.textContent !== `${newPrice} руб.`) {
+          priceNewEl.style.opacity = 0;
+          setTimeout(() => {
+            priceNewEl.textContent = `${newPrice} руб.`;
+            priceOldEl.textContent = `${oldPrice} руб.`;
+            priceNewEl.style.opacity = 1;
+          }, 200);
+        }
+      }
+    };
+
+    // Слушаем изменения на всех радиокнопках
+    allSelectors.forEach((input) => {
+      input.addEventListener("change", updateProductState);
+    });
+
+    // --- 5.3. Кнопки "Выбрать этот стиль" (скролл + выбор) ---
+    const styleButtons = document.querySelectorAll(".js-select-color");
+    styleButtons.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const colorKey = btn.dataset.color; // 'red' или 'black'
+        const targetInput = document.getElementById(`color-${colorKey}`);
+
+        if (targetInput) {
+          targetInput.checked = true;
+          // Принудительно запускаем обновление
+          targetInput.dispatchEvent(new Event("change"));
+
+          // Плавный скролл к форме
+          const orderSection = document.getElementById("order");
+          if (orderSection) {
+            orderSection.scrollIntoView({ behavior: "smooth" });
+          }
+        }
+      });
+    });
+
+    // --- 5.4. Модальное окно ---
     let previousActiveElement = null;
 
     const openModal = (name) => {
-      // Сохраняем активный элемент перед открытием (для возврата фокуса)
       previousActiveElement = document.activeElement;
-
       successNameEl.textContent = name || "Клиент";
       modal.classList.add("is-visible");
       modal.setAttribute("aria-hidden", "false");
       body.classList.add("no-scroll");
 
-      // Перемещаем фокус внутрь модалки (на первую кнопку)
-      const firstFocusableElement = modal.querySelector("button");
-      if (firstFocusableElement) {
-        firstFocusableElement.focus();
-      }
-
+      const firstBtn = modal.querySelector("button");
+      if (firstBtn) firstBtn.focus();
       document.addEventListener("keydown", handleModalKeyboard);
     };
 
@@ -270,42 +332,31 @@ document.addEventListener("DOMContentLoaded", () => {
       modal.classList.remove("is-visible");
       modal.setAttribute("aria-hidden", "true");
 
-      // Снимаем блокировку скролла, если мобильное меню также закрыто
       const isMenuOpen = document
         .getElementById("navigation-wrapper")
         ?.classList.contains("is-active");
       if (!isMenuOpen) {
         body.classList.remove("no-scroll");
       }
-
-      // Возвращаем фокус на элемент, который был активен до открытия
-      if (previousActiveElement) {
-        previousActiveElement.focus();
-      }
-
+      if (previousActiveElement) previousActiveElement.focus();
       document.removeEventListener("keydown", handleModalKeyboard);
     };
 
     const handleModalKeyboard = (e) => {
-      // Закрытие по Escape
-      if (e.key === "Escape") {
-        closeModal();
-      }
+      if (e.key === "Escape") closeModal();
     };
 
-    // Назначаем обработчики на все элементы закрытия (кнопки, оверлей)
     modal.querySelectorAll(".js-modal-close").forEach((btn) => {
       btn.addEventListener("click", closeModal);
     });
 
-    // --- 5.4. Отправка формы (Симуляция) ---
+    // --- 5.5. Отправка формы ---
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
 
-      // Добавляем цену и товары из выбранных радио-кнопок (если нужно)
+      // Добавляем актуальную цену в данные
       const activeKit = document.querySelector(
         'input[name="configuration"]:checked'
       );
@@ -314,19 +365,17 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        // Отправляем реальный запрос на Python-сервер
         const response = await fetch("/send-order", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
 
         if (response.ok) {
-          // Если все ок — открываем модалку
           openModal(data.name);
           form.reset();
+          // Сброс состояния к дефолтному после отправки (опционально)
+          updateProductState();
         } else {
           alert("Ошибка при отправке заказа. Попробуйте позже.");
         }
@@ -339,7 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 6. Слайдер Отзывов (NEW: Dots + Logic)
+   * 6. Слайдер Отзывов
    * =========================================================================
    */
   const initReviewsSlider = () => {
@@ -351,16 +400,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const cards = sliderWrapper.querySelectorAll(".review-card");
     if (cards.length === 0) return;
 
-    // 1. Генерируем точки
     dotsContainer.innerHTML = "";
     cards.forEach((_, index) => {
       const dot = document.createElement("div");
-      dot.classList.add("reviews__dot"); // Используем отдельный класс или общий с галереей
+      dot.classList.add("reviews__dot");
       if (index === 0) dot.classList.add("is-active");
       dotsContainer.appendChild(dot);
     });
 
-    // 2. Слушаем скролл
     sliderWrapper.addEventListener(
       "scroll",
       () => {
@@ -368,8 +415,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const cardWidth = cards[0].offsetWidth;
         const style = window.getComputedStyle(sliderWrapper);
         const gap = parseInt(style.columnGap || style.gap || 0);
-
-        // Учитываем gap при расчете центра
         const centerIndex = Math.round(scrollLeft / (cardWidth + gap));
 
         const dots = document.querySelectorAll(".reviews__dot");
@@ -385,11 +430,11 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   };
 
-  // --- Инициализация всех модулей ---
+  // --- Инициализация ---
   initMobileMenu();
   initAccordion();
   initGallerySlider();
   initStickyBarObserver();
   initOrderForm();
-  initReviewsSlider(); // <--- Не забудьте добавить этот вызов!
+  initReviewsSlider();
 });
