@@ -169,7 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!slide) return;
 
       const slideWidth = slide.offsetWidth;
-      // Хардкод отступа для скорости, либо вычисляем один раз
       const gap = 24;
       const scrollAmount = slideWidth + gap;
 
@@ -184,7 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
       prevBtn.addEventListener("click", () => scrollSlider("prev"));
     }
 
-    // Инициализация точек и Наблюдатель
     const slides = sliderWrapper.querySelectorAll(".gallery__slide");
     if (dotsContainer && slides.length > 0) {
       dotsContainer.innerHTML = "";
@@ -195,7 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
         dot.classList.add("gallery__dot");
         if (index === 0) dot.classList.add("is-active");
 
-        // Клик по точке
         dot.addEventListener("click", () => {
           slide.scrollIntoView({
             behavior: "smooth",
@@ -208,15 +205,11 @@ document.addEventListener("DOMContentLoaded", () => {
         dots.push(dot);
       });
 
-      // Observer вместо scroll event
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              // Находим индекс слайда в коллекции
               const index = Array.from(slides).indexOf(entry.target);
-
-              // Обновляем активный класс
               dots.forEach((d) => d.classList.remove("is-active"));
               if (dots[index]) dots[index].classList.add("is-active");
             }
@@ -224,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
           root: sliderWrapper,
-          threshold: 0.5, // Считать активным, если виден на 50%
+          threshold: 0.5,
         }
       );
 
@@ -234,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 6. Слайдер Отзывов — ОПТИМИЗИРОВАНО (IntersectionObserver)
+   * 4. Слайдер Отзывов
    * =========================================================================
    */
   const initReviewsSlider = () => {
@@ -251,11 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cards.forEach((card, index) => {
       const dot = document.createElement("div");
-      dot.classList.add("reviews__dot"); // Убедитесь, что стили для .reviews__dot есть в CSS (обычно общие с gallery__dot)
-      // Если стилей нет, можно добавить класс gallery__dot
-      if (!dot.classList.contains("reviews__dot"))
-        dot.classList.add("gallery__dot");
-
+      dot.classList.add("gallery__dot"); // Используем общий класс точек
       if (index === 0) dot.classList.add("is-active");
 
       dot.addEventListener("click", () => {
@@ -291,7 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 5. Логика формы заказа
+   * 5. Логика формы заказа (ОБНОВЛЕНО: Preload + Mask + No delays)
    * =========================================================================
    */
   const initOrderForm = () => {
@@ -304,9 +293,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const allSelectors = document.querySelectorAll(
       'input[name="color"], input[name="configuration"]'
     );
+    const phoneInput = document.getElementById("phone");
 
     if (!form || !modal) return;
 
+    // Карта изображений
     const imageMap = {
       red: {
         full: "media/RedStitch_Salon_Collage_v2.webp",
@@ -318,6 +309,19 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     };
 
+    // --- ПРЕДЗАГРУЗКА ИЗОБРАЖЕНИЙ (Performance) ---
+    const preloadImages = () => {
+      Object.values(imageMap).forEach((group) => {
+        Object.values(group).forEach((src) => {
+          const img = new Image();
+          img.src = src;
+        });
+      });
+    };
+    // Запускаем предзагрузку сразу
+    preloadImages();
+
+    // --- ОБНОВЛЕНИЕ СОСТОЯНИЯ (Без искусственных задержек) ---
     const updateProductState = () => {
       const selectedColorInput = document.querySelector(
         'input[name="color"]:checked'
@@ -331,29 +335,28 @@ document.addEventListener("DOMContentLoaded", () => {
       const colorKey = selectedColorInput.dataset.selectionColor;
       const kitKey = selectedKitInput.dataset.selectionKit;
 
+      // Мгновенное обновление картинки (берется из кэша)
       if (orderImage && imageMap[colorKey] && imageMap[colorKey][kitKey]) {
         const newSrc = imageMap[colorKey][kitKey];
-        if (!orderImage.getAttribute("src").includes(newSrc)) {
-          orderImage.classList.add("is-loading");
-          setTimeout(() => {
-            orderImage.src = newSrc;
-            orderImage.onload = () => orderImage.classList.remove("is-loading");
-            setTimeout(() => orderImage.classList.remove("is-loading"), 50);
-          }, 300);
+        // Проверка src, чтобы лишний раз не дергать DOM
+        if (!orderImage.src.includes(newSrc)) {
+          orderImage.src = newSrc;
         }
       }
 
+      // Обновление цены
       if (priceNewEl && priceOldEl) {
         const newPrice = selectedKitInput.dataset.price;
         const oldPrice = selectedKitInput.dataset.oldPrice;
 
+        // Легкая анимация текста цены
         if (priceNewEl.textContent !== `${newPrice} руб.`) {
           priceNewEl.style.opacity = 0;
           setTimeout(() => {
             priceNewEl.textContent = `${newPrice} руб.`;
             priceOldEl.textContent = `${oldPrice} руб.`;
             priceNewEl.style.opacity = 1;
-          }, 200);
+          }, 150);
         }
       }
     };
@@ -362,6 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
       input.addEventListener("change", updateProductState);
     });
 
+    // Кнопки "Выбрать этот стиль" из секции Дизайн
     const styleButtons = document.querySelectorAll(".js-select-color");
     styleButtons.forEach((btn) => {
       btn.addEventListener("click", (e) => {
@@ -370,6 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const targetInput = document.getElementById(`color-${colorKey}`);
         if (targetInput) {
           targetInput.checked = true;
+          // Триггерим событие change вручную для обновления фото
           targetInput.dispatchEvent(new Event("change"));
           const orderSection = document.getElementById("order");
           if (orderSection) {
@@ -379,6 +384,24 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
+    // --- МАСКА ДЛЯ ТЕЛЕФОНА ---
+    if (phoneInput) {
+      phoneInput.addEventListener("input", (e) => {
+        let x = e.target.value
+          .replace(/\D/g, "")
+          .match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+        if (!x[2]) {
+          e.target.value = x[1] ? "+7" : "";
+          return;
+        }
+        e.target.value =
+          (!x[3] ? `+7 (${x[2]}` : `+7 (${x[2]}) ${x[3]}`) +
+          (x[4] ? `-${x[4]}` : "") +
+          (x[5] ? `-${x[5]}` : "");
+      });
+    }
+
+    // --- МОДАЛЬНОЕ ОКНО ---
     let previousActiveElement = null;
 
     const openModal = (name) => {
@@ -425,6 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", closeModal);
     });
 
+    // Отправка формы
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
@@ -447,6 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
           openModal(data.name);
           form.reset();
+          // Сброс состояния к дефолтному
           updateProductState();
         } else {
           alert("Ошибка при отправке заказа. Попробуйте позже.");
@@ -457,20 +482,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   };
+
   /**
    * =========================================================================
-   * 7. Lightbox (Просмотр фото)
+   * 6. Lightbox (Просмотр фото)
    * =========================================================================
    */
   const initLightbox = () => {
     const lightbox = document.getElementById("lightbox");
     const lightboxImg = document.getElementById("lightbox-img");
 
-    // Если элементов нет, выходим, чтобы не было ошибок
     if (!lightbox || !lightboxImg) return;
 
-    // Находим все картинки, которым мы дали класс js-zoomable
-    // Можно добавить этот класс любым картинкам, которые хотим увеличивать
     const triggers = document.querySelectorAll(".js-zoomable");
 
     const openLightbox = (src, alt) => {
@@ -479,9 +502,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       lightbox.classList.add("is-visible");
       lightbox.removeAttribute("aria-hidden");
-      lightbox.removeAttribute("inert"); // Включаем интерактивность для скринридеров
+      lightbox.removeAttribute("inert");
 
-      // Блокируем скролл страницы (используем ту же логику, что в меню)
       const scrollbarWidth =
         window.innerWidth - document.documentElement.clientWidth;
       document.body.style.paddingRight = `${scrollbarWidth}px`;
@@ -491,16 +513,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeLightbox = () => {
       lightbox.classList.remove("is-visible");
       lightbox.setAttribute("aria-hidden", "true");
-      lightbox.setAttribute("inert", ""); // Выключаем интерактивность
+      lightbox.setAttribute("inert", "");
 
-      // Очищаем src после анимации закрытия (300мс), чтобы не мелькало старое фото при следующем открытии
       setTimeout(() => {
         if (!lightbox.classList.contains("is-visible")) {
           lightboxImg.src = "";
         }
       }, 300);
 
-      // Разблокируем скролл (если не открыто другое меню)
       if (
         !document.querySelector(".mobile-menu.is-active") &&
         !document.querySelector(".modal.is-visible")
@@ -510,22 +530,17 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    // Навешиваем клик на картинки
     triggers.forEach((img) => {
       img.addEventListener("click", (e) => {
-        e.preventDefault(); // На всякий случай
-        // Берем src прямо из картинки.
-        // Если у вас есть более качественная версия, можно использовать data-full-src атрибут
+        e.preventDefault();
         openLightbox(img.src, img.alt);
       });
     });
 
-    // Закрытие по клику на крестик или фон
     lightbox.querySelectorAll(".js-lightbox-close").forEach((el) => {
       el.addEventListener("click", closeLightbox);
     });
 
-    // Закрытие по Escape
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && lightbox.classList.contains("is-visible")) {
         closeLightbox();
@@ -538,7 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initMobileMenu();
   initAccordion();
   initGallerySlider();
-  initOrderForm();
   initReviewsSlider();
+  initOrderForm();
   initLightbox();
 });

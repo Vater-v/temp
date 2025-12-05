@@ -1882,3 +1882,46 @@ a {
     transform: scale(1);
   }
 }
+/* Оптимизация для мобильных */
+@media (max-width: 1023px) {
+  /* Меняем порядок: Сначала заголовок, потом форма, потом картинка (или скрываем её) */
+  .order__container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .order__content {
+    display: contents; /* Убираем контейнер из потока, чтобы управлять порядком детей */
+  }
+
+  .order__title,
+  .order__subtitle {
+    order: 1; /* Сначала текст */
+    text-align: center;
+  }
+
+  .order-form {
+    order: 2; /* Потом форма - самое важное! */
+    margin-top: 20px;
+  }
+
+  .order__image {
+    order: 3; /* Картинка в конце или вообще скрыта */
+    margin-top: 30px;
+    max-height: 200px; /* Делаем её компактной полоской */
+    object-fit: cover;
+    /* display: none; — если хотите агрессивный минимализм */
+  }
+}
+/* Изменить анимацию на более спокойную */
+.gift-block__icon-box {
+  /* Убираем бесконечную пульсацию */
+  animation: none;
+  /* Добавляем эффект при наведении на весь блок */
+  transition: transform 0.3s ease;
+}
+
+.gift-block:hover .gift-block__icon-box {
+  transform: scale(1.1) rotate(10deg);
+  color: var(--red-600);
+}
