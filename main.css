@@ -1541,3 +1541,101 @@ a {
     text-align: left;
   }
 }
+/* ==========================================================================
+   10. Модальное окно (Modal)
+   ========================================================================== */
+.modal {
+  position: fixed;
+  inset: 0; /* Растягиваем на весь экран: top, right, bottom, left = 0 */
+  z-index: var(--z-modal); /* Используем вашу переменную 1000 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  /* Скрываем по умолчанию */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Состояние видимости (добавляется через JS) */
+.modal.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Затемненный фон */
+.modal__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+/* Контент окна */
+.modal__content {
+  position: relative;
+  background-color: var(--white);
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  z-index: 1; /* Чтобы быть выше затемнения */
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+/* Анимация всплывания контента */
+.modal.is-visible .modal__content {
+  transform: translateY(0);
+}
+
+/* Иконка галочки */
+.modal__icon-wrapper {
+  width: 64px;
+  height: 64px;
+  background-color: rgba(40, 167, 69, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  color: var(--green-500);
+}
+
+.modal__title {
+  font-size: 24px;
+  font-weight: var(--fw-bold);
+  margin-bottom: 12px;
+  color: var(--color-heading);
+}
+
+.modal__text {
+  color: var(--color-text-muted);
+  margin-bottom: 32px;
+}
+
+/* Кнопка закрытия (крестик) */
+.modal__close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-500);
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.modal__close-btn:hover {
+  background-color: var(--gray-100);
+  color: var(--red-500);
+}
