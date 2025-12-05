@@ -731,17 +731,11 @@ a {
    5. Основные секции (Main Content)
    ========================================================================== */
 
-/* Общие стили секций */
 .section {
   padding: var(--space-3xl) 0;
-  /* Оптимизация рендеринга для длинных страниц */
-  content-visibility: auto;
-  contain-intrinsic-size: 500px;
-
-  /* Чтобы якорные ссылки (из меню) не перекрывались шапкой */
+  /* Убираем content-visibility и contain-intrinsic-size */
   scroll-margin-top: calc(var(--header-height) + 20px);
 }
-
 .section__title {
   text-align: center;
   /* Плавный размер шрифта: мин 28px, макс 40px */
@@ -1639,7 +1633,7 @@ a {
   .order__container {
     grid-template-columns: 1fr 420px;
     align-items: start;
-    gap: clamp(40px, 5vw, 80px); 
+    gap: clamp(40px, 5vw, 80px);
   }
 
   .order-form {
