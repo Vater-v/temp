@@ -8,21 +8,18 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   const initScrollSpy = () => {
     const sections = document.querySelectorAll("section[id]");
-    const navLinks = document.querySelectorAll(".nav-desktop__link"); // Обновил класс для десктопа
+    const navLinks = document.querySelectorAll(".nav-desktop__link");
 
     const observerOptions = {
       root: null,
-      rootMargin: "-20% 0px -60% 0px", // Активная зона ближе к верху
+      rootMargin: "-20% 0px -60% 0px",
       threshold: 0,
     };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          // Удаляем активный класс у всех ссылок
           navLinks.forEach((link) => link.classList.remove("is-current"));
-
-          // Ищем ссылку, ведущую на эту секцию
           const activeLink = document.querySelector(
             `.nav-desktop__link[href="#${entry.target.id}"]`
           );
@@ -40,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 1. Мобильное меню (Portal Pattern + Scroll Lock) — ОБНОВЛЕНО
+   * 1. Мобильное меню (Portal Pattern + Scroll Lock)
    * =========================================================================
    */
   const initMobileMenu = () => {
@@ -58,59 +55,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const triggers = document.querySelectorAll(selectors.trigger);
     const header = document.querySelector(selectors.header);
 
-    // --- Helper: Блокировка скролла без дерганья экрана ---
     const lockScroll = () => {
-      // 1. Вычисляем ширину скроллбара
       const scrollbarWidth =
         window.innerWidth - document.documentElement.clientWidth;
 
-      // 2. Компенсируем исчезновение скролла отступом
       body.style.paddingRight = `${scrollbarWidth}px`;
       if (header) header.style.paddingRight = `${scrollbarWidth}px`;
-
-      // 3. Блокируем
       body.classList.add("no-scroll");
     };
 
     const unlockScroll = () => {
-      // Разблокируем, только если нет открытых модалок (например, "Успех")
       if (document.querySelector(".modal.is-visible")) return;
 
       body.style.paddingRight = "";
       if (header) header.style.paddingRight = "";
-
       body.classList.remove("no-scroll");
     };
 
-    // --- Логика Открытия/Закрытия ---
     const openMenu = () => {
       menu.classList.add("is-active");
-
-      // A11y: Меню становится доступным
       menu.removeAttribute("inert");
       menu.setAttribute("aria-hidden", "false");
-
-      // Анимация иконки бургера
       triggers.forEach((btn) => btn.setAttribute("aria-expanded", "true"));
-
       lockScroll();
     };
 
     const closeMenu = () => {
       menu.classList.remove("is-active");
-
-      // A11y: Меню становится недоступным
       menu.setAttribute("inert", "");
       menu.setAttribute("aria-hidden", "true");
-
       triggers.forEach((btn) => btn.setAttribute("aria-expanded", "false"));
-
       unlockScroll();
     };
 
-    // --- Слушатели событий ---
-
-    // 1. Клик по бургеру
     triggers.forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -118,17 +95,14 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // 2. Кнопки закрытия (крестик + оверлей)
     menu.querySelectorAll(selectors.close).forEach((btn) => {
       btn.addEventListener("click", closeMenu);
     });
 
-    // 3. Навигация по ссылкам внутри меню
     menu.querySelectorAll(selectors.link).forEach((link) => {
       link.addEventListener("click", closeMenu);
     });
 
-    // 4. Закрытие по Escape
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && menu.classList.contains("is-active")) {
         closeMenu();
@@ -155,7 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const isExpanded = button.getAttribute("aria-expanded") === "true";
       const shouldOpen = !isExpanded;
 
-      // Закрываем другие (аккордеон)
       if (shouldOpen) {
         const openItems = accordion.querySelectorAll(
           ".accordion__item.is-open"
@@ -180,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 3. Галерея (Слайдер)
+   * 3. Галерея (Слайдер) — ОПТИМИЗИРОВАНО (IntersectionObserver)
    * =========================================================================
    */
   const initGallerySlider = () => {
@@ -196,8 +169,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!slide) return;
 
       const slideWidth = slide.offsetWidth;
-      const style = window.getComputedStyle(sliderWrapper);
-      const gap = parseInt(style.columnGap || style.gap || 0);
+      // Хардкод отступа для скорости, либо вычисляем один раз
+      const gap = 24;
       const scrollAmount = slideWidth + gap;
 
       sliderWrapper.scrollBy({
@@ -211,60 +184,120 @@ document.addEventListener("DOMContentLoaded", () => {
       prevBtn.addEventListener("click", () => scrollSlider("prev"));
     }
 
-    // Инициализация точек (dots)
+    // Инициализация точек и Наблюдатель
     const slides = sliderWrapper.querySelectorAll(".gallery__slide");
     if (dotsContainer && slides.length > 0) {
       dotsContainer.innerHTML = "";
-      slides.forEach((_, index) => {
+      const dots = [];
+
+      slides.forEach((slide, index) => {
         const dot = document.createElement("div");
         dot.classList.add("gallery__dot");
         if (index === 0) dot.classList.add("is-active");
+
+        // Клик по точке
+        dot.addEventListener("click", () => {
+          slide.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center",
+          });
+        });
+
         dotsContainer.appendChild(dot);
+        dots.push(dot);
       });
 
-      // Синхронизация точек при скролле
-      sliderWrapper.addEventListener(
-        "scroll",
-        () => {
-          const scrollLeft = sliderWrapper.scrollLeft;
-          const slideWidth = slides[0].offsetWidth;
-          // Добавляем половину ширины для более точного определения центра
-          const centerIndex = Math.round(scrollLeft / slideWidth);
+      // Observer вместо scroll event
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              // Находим индекс слайда в коллекции
+              const index = Array.from(slides).indexOf(entry.target);
 
-          const dots = document.querySelectorAll(".gallery__dot");
-          dots.forEach((dot, index) => {
-            if (index === centerIndex) {
-              dot.classList.add("is-active");
-            } else {
-              dot.classList.remove("is-active");
+              // Обновляем активный класс
+              dots.forEach((d) => d.classList.remove("is-active"));
+              if (dots[index]) dots[index].classList.add("is-active");
             }
           });
         },
-        { passive: true }
+        {
+          root: sliderWrapper,
+          threshold: 0.5, // Считать активным, если виден на 50%
+        }
       );
+
+      slides.forEach((slide) => observer.observe(slide));
     }
   };
 
   /**
    * =========================================================================
-   * 4. Sticky Bar Observer (Placeholder)
+   * 6. Слайдер Отзывов — ОПТИМИЗИРОВАНО (IntersectionObserver)
    * =========================================================================
    */
-  const initStickyBarObserver = () => {
-    // Место для логики плавающей кнопки "Купить" (если потребуется)
+  const initReviewsSlider = () => {
+    const sliderWrapper = document.getElementById("reviews-list");
+    const dotsContainer = document.querySelector(".js-reviews-dots");
+
+    if (!sliderWrapper || !dotsContainer) return;
+
+    const cards = sliderWrapper.querySelectorAll(".review-card");
+    if (cards.length === 0) return;
+
+    dotsContainer.innerHTML = "";
+    const dots = [];
+
+    cards.forEach((card, index) => {
+      const dot = document.createElement("div");
+      dot.classList.add("reviews__dot"); // Убедитесь, что стили для .reviews__dot есть в CSS (обычно общие с gallery__dot)
+      // Если стилей нет, можно добавить класс gallery__dot
+      if (!dot.classList.contains("reviews__dot"))
+        dot.classList.add("gallery__dot");
+
+      if (index === 0) dot.classList.add("is-active");
+
+      dot.addEventListener("click", () => {
+        card.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      });
+
+      dotsContainer.appendChild(dot);
+      dots.push(dot);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Array.from(cards).indexOf(entry.target);
+            dots.forEach((d) => d.classList.remove("is-active"));
+            if (dots[index]) dots[index].classList.add("is-active");
+          }
+        });
+      },
+      {
+        root: sliderWrapper,
+        threshold: 0.5,
+      }
+    );
+
+    cards.forEach((card) => observer.observe(card));
   };
 
   /**
    * =========================================================================
-   * 5. Логика формы заказа, Калькулятор и Модальное окно
+   * 5. Логика формы заказа
    * =========================================================================
    */
   const initOrderForm = () => {
     const form = document.getElementById("main-order-form");
     const modal = document.getElementById("modal-success");
     const successNameEl = document.getElementById("success-name");
-
-    // Элементы для смены картинки и цены
     const orderImage = document.getElementById("order-image");
     const priceNewEl = document.querySelector(".js-price-new");
     const priceOldEl = document.querySelector(".js-price-old");
@@ -274,7 +307,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!form || !modal) return;
 
-    // --- 5.1. База данных изображений ---
     const imageMap = {
       red: {
         full: "media/RedStitch_Salon_Collage_v2.webp",
@@ -286,7 +318,6 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     };
 
-    // --- 5.2. Функция обновления Картинки и Цены ---
     const updateProductState = () => {
       const selectedColorInput = document.querySelector(
         'input[name="color"]:checked'
@@ -300,7 +331,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const colorKey = selectedColorInput.dataset.selectionColor;
       const kitKey = selectedKitInput.dataset.selectionKit;
 
-      // Смена картинки
       if (orderImage && imageMap[colorKey] && imageMap[colorKey][kitKey]) {
         const newSrc = imageMap[colorKey][kitKey];
         if (!orderImage.getAttribute("src").includes(newSrc)) {
@@ -313,7 +343,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Смена цены
       if (priceNewEl && priceOldEl) {
         const newPrice = selectedKitInput.dataset.price;
         const oldPrice = selectedKitInput.dataset.oldPrice;
@@ -329,23 +358,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    // Слушаем изменения
     allSelectors.forEach((input) => {
       input.addEventListener("change", updateProductState);
     });
 
-    // --- 5.3. Кнопки "Выбрать этот стиль" ---
     const styleButtons = document.querySelectorAll(".js-select-color");
     styleButtons.forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
         const colorKey = btn.dataset.color;
         const targetInput = document.getElementById(`color-${colorKey}`);
-
         if (targetInput) {
           targetInput.checked = true;
-          targetInput.dispatchEvent(new Event("change")); // Триггер обновления
-
+          targetInput.dispatchEvent(new Event("change"));
           const orderSection = document.getElementById("order");
           if (orderSection) {
             orderSection.scrollIntoView({ behavior: "smooth" });
@@ -354,7 +379,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // --- 5.4. Модальное окно (Success) ---
     let previousActiveElement = null;
 
     const openModal = (name) => {
@@ -363,8 +387,6 @@ document.addEventListener("DOMContentLoaded", () => {
       modal.classList.add("is-visible");
       modal.setAttribute("aria-hidden", "false");
 
-      // Блокируем скролл, используя ту же логику отступов, что и в меню
-      // (Можно было бы вынести lockScroll в общую утилиту, но дублируем для надежности здесь)
       const scrollbarWidth =
         window.innerWidth - document.documentElement.clientWidth;
       body.style.paddingRight = `${scrollbarWidth}px`;
@@ -372,7 +394,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (header) header.style.paddingRight = `${scrollbarWidth}px`;
       body.classList.add("no-scroll");
 
-      // Фокус на кнопке внутри модалки
       const firstBtn = modal.querySelector("button");
       if (firstBtn) firstBtn.focus();
       document.addEventListener("keydown", handleModalKeyboard);
@@ -382,12 +403,9 @@ document.addEventListener("DOMContentLoaded", () => {
       modal.classList.remove("is-visible");
       modal.setAttribute("aria-hidden", "true");
 
-      // Проверяем, открыто ли мобильное меню (ID ОБНОВЛЕН)
       const isMenuOpen = document
         .getElementById("mobile-menu-portal")
         ?.classList.contains("is-active");
-
-      // Если меню не открыто, снимаем блокировку скролла
       if (!isMenuOpen) {
         body.style.paddingRight = "";
         const header = document.querySelector(".header");
@@ -407,13 +425,11 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", closeModal);
     });
 
-    // --- 5.5. Отправка формы ---
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
 
-      // Добавляем цену
       const activeKit = document.querySelector(
         'input[name="configuration"]:checked'
       );
@@ -431,7 +447,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
           openModal(data.name);
           form.reset();
-          updateProductState(); // Сброс к дефолту
+          updateProductState();
         } else {
           alert("Ошибка при отправке заказа. Попробуйте позже.");
         }
@@ -442,57 +458,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  /**
-   * =========================================================================
-   * 6. Слайдер Отзывов
-   * =========================================================================
-   */
-  const initReviewsSlider = () => {
-    const sliderWrapper = document.getElementById("reviews-list");
-    const dotsContainer = document.querySelector(".js-reviews-dots");
-
-    if (!sliderWrapper || !dotsContainer) return;
-
-    const cards = sliderWrapper.querySelectorAll(".review-card");
-    if (cards.length === 0) return;
-
-    dotsContainer.innerHTML = "";
-    cards.forEach((_, index) => {
-      const dot = document.createElement("div");
-      dot.classList.add("reviews__dot");
-      if (index === 0) dot.classList.add("is-active");
-      dotsContainer.appendChild(dot);
-    });
-
-    sliderWrapper.addEventListener(
-      "scroll",
-      () => {
-        const scrollLeft = sliderWrapper.scrollLeft;
-        const cardWidth = cards[0].offsetWidth;
-        const style = window.getComputedStyle(sliderWrapper);
-        const gap = parseInt(style.columnGap || style.gap || 0);
-        // Добавляем смещение для точности
-        const centerIndex = Math.round(scrollLeft / (cardWidth + gap));
-
-        const dots = document.querySelectorAll(".reviews__dot");
-        dots.forEach((dot, index) => {
-          if (index === centerIndex) {
-            dot.classList.add("is-active");
-          } else {
-            dot.classList.remove("is-active");
-          }
-        });
-      },
-      { passive: true }
-    );
-  };
-
   // --- Инициализация ---
   initScrollSpy();
   initMobileMenu();
   initAccordion();
   initGallerySlider();
-  initStickyBarObserver();
   initOrderForm();
   initReviewsSlider();
 });
