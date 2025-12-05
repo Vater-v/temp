@@ -227,55 +227,105 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 4. Слайдер Отзывов
+   * 4. Слайдер Отзывов (UI & UX Improved)
    * =========================================================================
    */
   const initReviewsSlider = () => {
     const sliderWrapper = document.getElementById("reviews-list");
     const dotsContainer = document.querySelector(".js-reviews-dots");
 
-    if (!sliderWrapper || !dotsContainer) return;
+    if (!sliderWrapper) return;
 
     const cards = sliderWrapper.querySelectorAll(".review-card");
     if (cards.length === 0) return;
 
-    dotsContainer.innerHTML = "";
-    const dots = [];
+    // --- 1. Логика точек (Dots) ---
+    if (dotsContainer) {
+      dotsContainer.innerHTML = "";
+      const dots = [];
 
-    cards.forEach((card, index) => {
-      const dot = document.createElement("div");
-      dot.classList.add("gallery__dot");
-      if (index === 0) dot.classList.add("is-active");
+      cards.forEach((card, index) => {
+        const dot = document.createElement("button"); // Используем button для доступности
+        dot.classList.add("reviews__dot");
+        dot.setAttribute("aria-label", `Отзыв ${index + 1}`);
+        if (index === 0) dot.classList.add("is-active");
 
-      dot.addEventListener("click", () => {
-        card.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "center",
+        dot.addEventListener("click", () => {
+          // Для мобилок используем scrollIntoView
+          card.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center", // Важно для центрирования
+          });
         });
+
+        dotsContainer.appendChild(dot);
+        dots.push(dot);
       });
 
-      dotsContainer.appendChild(dot);
-      dots.push(dot);
+      // Observer для переключения активной точки при скролле
+      const observer = new IntersectionObserver(
+        (entries) => {
+          // Находим элемент с наибольшим пересечением
+          let maxRatio = 0;
+          let activeIndex = -1;
+
+          entries.forEach((entry) => {
+            if (entry.intersectionRatio > maxRatio) {
+              maxRatio = entry.intersectionRatio;
+              activeIndex = Array.from(cards).indexOf(entry.target);
+            }
+          });
+
+          // Если нашли явного лидера по видимости
+          if (activeIndex !== -1 && maxRatio > 0.49) {
+            dots.forEach((d) => d.classList.remove("is-active"));
+            if (dots[activeIndex]) dots[activeIndex].classList.add("is-active");
+          }
+        },
+        {
+          root: sliderWrapper,
+          threshold: [0.1, 0.5, 0.9], // Несколько порогов для точности
+        }
+      );
+
+      cards.forEach((card) => observer.observe(card));
+    }
+
+    // --- 2. Логика Drag-to-Scroll (для мыши на ПК без тачпада) ---
+    // Это критично, так как скроллбар скрыт
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    sliderWrapper.addEventListener("mousedown", (e) => {
+      // Отключаем на десктопе, если там сетка (проверка по computed style или ширине)
+      if (window.getComputedStyle(sliderWrapper).gridAutoFlow === "row") return;
+
+      isDown = true;
+      sliderWrapper.classList.add("active"); // Можно добавить стиль cursor: grabbing
+      startX = e.pageX - sliderWrapper.offsetLeft;
+      scrollLeft = sliderWrapper.scrollLeft;
+
+      // Отменяем выделение текста и картинок
+      e.preventDefault();
     });
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = Array.from(cards).indexOf(entry.target);
-            dots.forEach((d) => d.classList.remove("is-active"));
-            if (dots[index]) dots[index].classList.add("is-active");
-          }
-        });
-      },
-      {
-        root: sliderWrapper,
-        threshold: 0.5,
-      }
-    );
+    sliderWrapper.addEventListener("mouseleave", () => {
+      isDown = false;
+    });
 
-    cards.forEach((card) => observer.observe(card));
+    sliderWrapper.addEventListener("mouseup", () => {
+      isDown = false;
+    });
+
+    sliderWrapper.addEventListener("mousemove", (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - sliderWrapper.offsetLeft;
+      const walk = (x - startX) * 2; // Скорость прокрутки
+      sliderWrapper.scrollLeft = scrollLeft - walk;
+    });
   };
 
   /**
