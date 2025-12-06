@@ -1458,6 +1458,12 @@ body.no-scroll {
   grid-template-columns: 1fr 1fr;
 }
 
+/* 1. Заставляем обертку растягивать содержимое на всю высоту */
+.radio-group__item {
+  display: flex;
+  flex-direction: column;
+}
+
 .radio-group__label {
   position: relative;
   display: flex;
@@ -1465,6 +1471,9 @@ body.no-scroll {
   justify-content: center;
   gap: 12px;
   padding: 14px;
+  width: 100%;
+  flex-grow: 1; /* Растягивает кнопку на всю высоту ячейки */
+  height: 100%; /* Гарантия высоты */
   background-color: var(--white);
   border: 2px solid var(--gray-200);
   border-radius: var(--radius-sm);
