@@ -2005,17 +2005,17 @@ body.no-scroll {
 }
 
 /* ==========================================================================
-   7. FAQ (Modern Grid Animation & A11y Refactoring)
+   7. FAQ
    ========================================================================== */
 .faq {
   background-color: var(--color-bg-subtle);
-  /* Оптимизация отрисовки для секции */
+  /* Изоляция стилей для оптимизации рендеринга всей секции */
   contain: content;
 }
 
 .accordion {
-  max-width: 800px; /* Оптимальная ширина для чтения */
-  margin-inline: auto; /* Логическое свойство вместо margin: 0 auto */
+  width: min(100%, 800px); /* Responsive width: 100% но не шире 800px */
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
@@ -2025,17 +2025,19 @@ body.no-scroll {
   background-color: var(--white);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  /* Резервируем место под границу, чтобы избежать скачков лейаута */
+  /* Прозрачная рамка предотвращает субпиксельные сдвиги при фокусе/ховере */
   border: 1px solid transparent;
   overflow: hidden;
+
+  /* Плавный переход для теней и рамок */
   transition: box-shadow var(--transition-base),
     border-color var(--transition-base);
 
-  /* Изоляция перерисовки внутри элемента при анимации высоты */
+  /* Изоляция Layout Thrashing внутри карточки при анимации высоты */
   contain: layout paint;
 }
 
-/* Состояние "Открыто" */
+/* State: Open (Card Style) */
 .accordion__item.is-open {
   border-color: var(--color-border);
   box-shadow: var(--shadow-md);
@@ -2045,7 +2047,7 @@ body.no-scroll {
   margin: 0;
 }
 
-/* Кнопка-триггер */
+/* --- Trigger Button --- */
 .accordion__button {
   width: 100%;
   display: flex;
@@ -2053,12 +2055,14 @@ body.no-scroll {
   justify-content: space-between;
   gap: var(--space-md);
 
-  /* Отступы: Mobile first (20px -> space-lg примерно) */
+  /* Touch Target: Большие отступы для удобства пальца */
   padding: 20px var(--space-lg);
+  min-height: 4rem; /* ~64px гарантия высоты */
 
   background: none;
   border: none;
   cursor: pointer;
+  user-select: none; /* Запрет выделения текста при кликах */
 
   text-align: left;
   color: var(--color-heading);
@@ -2069,45 +2073,46 @@ body.no-scroll {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Hover-эффект (только для устройств с мышью) */
+/* Hover (Mouse only) */
 @media (hover: hover) {
   .accordion__button:hover {
     color: var(--color-accent);
-    /* Используем токен вместо хардкода #fafafa */
     background-color: var(--color-bg-hover);
   }
 }
 
-/* Фокус для клавиатуры (A11y) */
+/* Focus Visible (A11y) */
 .accordion__button:focus-visible {
   outline: none;
   background-color: var(--gray-050);
-  /* Акцентная рамка внутри, не ломающая скругления */
-  box-shadow: inset 0 0 0 2px var(--color-accent);
   color: var(--color-accent);
+  /* Акцентный инсет-бордер, не ломающий скругления */
+  box-shadow: inset 0 0 0 2px var(--color-accent);
 }
 
-/* Иконка-стрелка */
+/* Icon Animation */
 .accordion__icon {
   flex-shrink: 0;
   width: 24px;
   height: 24px;
   color: var(--color-accent);
-  /* Пружинистая анимация для "живого" эффекта */
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Вынос в композитный слой для плавной анимации */
   will-change: transform;
+  transition: transform 0.4s var(--ease-out-expo);
 }
 
 .accordion__item.is-open .accordion__icon {
   transform: rotate(90deg);
 }
 
-/* --- GRID ANIMATION (0fr -> 1fr) --- */
+/* --- Grid Animation Core --- */
 .accordion__content {
   display: grid;
   grid-template-rows: 0fr;
-  /* Используем глобальную плавную кривую */
+  /* Анимация "раскрытия" шторки */
   transition: grid-template-rows 0.4s var(--ease-out-expo);
+  /* Подсказка браузеру о грядущем изменении лейаута */
   will-change: grid-template-rows;
 }
 
@@ -2115,39 +2120,59 @@ body.no-scroll {
   grid-template-rows: 1fr;
 }
 
-/* Внутренняя обертка для контента */
+/* --- Inner Content Animation (Staggered) --- */
 .accordion__content-inner {
   overflow: hidden;
-  /* Каскадная анимация появления текста */
+
+  /* Начальное состояние: невидимо, чуть сдвинуто вверх */
   opacity: 0;
-  transform: translateY(-8px);
-  transition: opacity 0.3s 0.1s, transform 0.3s 0.1s;
+  transform: translateY(-10px);
+  visibility: hidden;
+
+  /* Логика закрытия: Сначала исчезает (fast), потом скрывается visibility */
+  transition: visibility 0s linear 0.3s, opacity 0.2s ease-in,
+    transform 0.2s ease-in;
 }
 
 .accordion__item.is-open .accordion__content-inner {
+  /* Конечное состояние */
   opacity: 1;
   transform: translateY(0);
-  /* Отступы снизу и по бокам такие же, как у кнопки */
+  visibility: visible;
   padding: 0 var(--space-lg) var(--space-lg);
+
+  /* Логика открытия: Ждем пока шторка чуть поедет, потом плавно показываем текст */
+  transition: visibility 0s linear 0s, opacity 0.35s 0.1s ease-out,
+    transform 0.35s 0.1s var(--ease-out-expo);
 }
 
-/* Типографика внутри аккордеона */
+/* Typography inside content */
 .accordion__content-inner p {
   margin: 0;
   color: var(--color-text-muted);
   line-height: 1.6;
-  font-size: 15px; /* Чуть меньше основного текста для контраста */
+  font-size: 15px;
 }
 
-/* Desktop Adaptation */
+/* --- Desktop Adaptation --- */
 @media (min-width: 768px) {
   .accordion__button {
-    font-size: var(--text-lg); /* 18px */
-    padding: var(--space-lg) var(--space-xl); /* 24px 32px */
+    font-size: var(--text-lg);
+    padding: var(--space-lg) var(--space-xl);
   }
 
   .accordion__item.is-open .accordion__content-inner {
     padding: 0 var(--space-xl) var(--space-xl);
+  }
+}
+
+/* --- Accessibility: Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .accordion__icon,
+  .accordion__content,
+  .accordion__content-inner {
+    transition: none !important;
+    animation: none !important;
   }
 }
 /* ==========================================================================
