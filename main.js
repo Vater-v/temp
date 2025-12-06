@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 3. Галерея (Слайдер)
+   * 3. Галерея (Слайдер с Snap Logic)
    * =========================================================================
    */
   const initGallerySlider = () => {
@@ -164,13 +164,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!sliderWrapper) return;
 
+    // Скролл по кнопкам
     const scrollSlider = (direction) => {
+      // Ищем первый слайд, чтобы узнать его ширину
       const slide = sliderWrapper.querySelector(".gallery__slide");
       if (!slide) return;
 
-      const slideWidth = slide.offsetWidth;
-      const gap = 24;
-      const scrollAmount = slideWidth + gap;
+      const gap = 16; // Отступ из CSS
+      const scrollAmount = slide.offsetWidth + gap;
 
       sliderWrapper.scrollBy({
         left: direction === "next" ? scrollAmount : -scrollAmount,
@@ -183,21 +184,23 @@ document.addEventListener("DOMContentLoaded", () => {
       prevBtn.addEventListener("click", () => scrollSlider("prev"));
     }
 
+    // Инициализация точек (IntersectionObserver - самый легкий способ)
     const slides = sliderWrapper.querySelectorAll(".gallery__slide");
     if (dotsContainer && slides.length > 0) {
       dotsContainer.innerHTML = "";
       const dots = [];
 
       slides.forEach((slide, index) => {
-        const dot = document.createElement("div");
+        const dot = document.createElement("button");
         dot.classList.add("gallery__dot");
+        dot.setAttribute("aria-label", `Фото ${index + 1}`);
         if (index === 0) dot.classList.add("is-active");
 
         dot.addEventListener("click", () => {
           slide.scrollIntoView({
             behavior: "smooth",
             block: "nearest",
-            inline: "center",
+            inline: "center", // Важно: центрируем слайд
           });
         });
 
@@ -205,6 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dots.push(dot);
       });
 
+      // Observer следит, какой слайд сейчас по центру
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -215,10 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           });
         },
-        {
-          root: sliderWrapper,
-          threshold: 0.5,
-        }
+        { root: sliderWrapper, threshold: 0.6 }
       );
 
       slides.forEach((slide) => observer.observe(slide));
@@ -227,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 4. Слайдер Отзывов (UI & UX Improved)
+   * 4. Слайдер Отзывов (Drag Fix + Snap)
    * =========================================================================
    */
   const initReviewsSlider = () => {
@@ -239,91 +240,75 @@ document.addEventListener("DOMContentLoaded", () => {
     const cards = sliderWrapper.querySelectorAll(".review-card");
     if (cards.length === 0) return;
 
-    // --- 1. Логика точек (Dots) ---
+    // 1. Точки (Dots Logic)
     if (dotsContainer) {
       dotsContainer.innerHTML = "";
       const dots = [];
 
       cards.forEach((card, index) => {
-        const dot = document.createElement("button"); // Используем button для доступности
+        const dot = document.createElement("button");
         dot.classList.add("reviews__dot");
         dot.setAttribute("aria-label", `Отзыв ${index + 1}`);
         if (index === 0) dot.classList.add("is-active");
 
         dot.addEventListener("click", () => {
-          // Для мобилок используем scrollIntoView
           card.scrollIntoView({
             behavior: "smooth",
             block: "nearest",
-            inline: "center", // Важно для центрирования
+            inline: "center",
           });
         });
-
         dotsContainer.appendChild(dot);
         dots.push(dot);
       });
 
-      // Observer для переключения активной точки при скролле
       const observer = new IntersectionObserver(
         (entries) => {
-          // Находим элемент с наибольшим пересечением
-          let maxRatio = 0;
-          let activeIndex = -1;
-
           entries.forEach((entry) => {
-            if (entry.intersectionRatio > maxRatio) {
-              maxRatio = entry.intersectionRatio;
-              activeIndex = Array.from(cards).indexOf(entry.target);
+            if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+              const index = Array.from(cards).indexOf(entry.target);
+              dots.forEach((d) => d.classList.remove("is-active"));
+              if (dots[index]) dots[index].classList.add("is-active");
             }
           });
-
-          // Если нашли явного лидера по видимости
-          if (activeIndex !== -1 && maxRatio > 0.49) {
-            dots.forEach((d) => d.classList.remove("is-active"));
-            if (dots[activeIndex]) dots[activeIndex].classList.add("is-active");
-          }
         },
-        {
-          root: sliderWrapper,
-          threshold: [0.1, 0.5, 0.9], // Несколько порогов для точности
-        }
+        { root: sliderWrapper, threshold: [0.51] }
       );
-
       cards.forEach((card) => observer.observe(card));
     }
 
-    // --- 2. Логика Drag-to-Scroll (для мыши на ПК без тачпада) ---
-    // Это критично, так как скроллбар скрыт
+    // 2. Логика перетаскивания мышкой (Drag-to-Scroll)
     let isDown = false;
     let startX;
     let scrollLeft;
 
     sliderWrapper.addEventListener("mousedown", (e) => {
-      // Отключаем на десктопе, если там сетка (проверка по computed style или ширине)
-      if (window.getComputedStyle(sliderWrapper).gridAutoFlow === "row") return;
+      // Игнорируем на тач-устройствах (там нативный свайп)
+      if ("ontouchstart" in window) return;
 
       isDown = true;
-      sliderWrapper.classList.add("active"); // Можно добавить стиль cursor: grabbing
+      // Добавляем класс, который в CSS отключит Snap, чтобы не дергалось
+      sliderWrapper.classList.add("is-dragging");
+
       startX = e.pageX - sliderWrapper.offsetLeft;
       scrollLeft = sliderWrapper.scrollLeft;
-
-      // Отменяем выделение текста и картинок
       e.preventDefault();
     });
 
-    sliderWrapper.addEventListener("mouseleave", () => {
+    const stopDragging = () => {
+      if (!isDown) return;
       isDown = false;
-    });
+      sliderWrapper.classList.remove("is-dragging"); // Возвращаем Snap
+    };
 
-    sliderWrapper.addEventListener("mouseup", () => {
-      isDown = false;
-    });
+    sliderWrapper.addEventListener("mouseleave", stopDragging);
+    sliderWrapper.addEventListener("mouseup", stopDragging);
 
     sliderWrapper.addEventListener("mousemove", (e) => {
       if (!isDown) return;
       e.preventDefault();
       const x = e.pageX - sliderWrapper.offsetLeft;
-      const walk = (x - startX) * 2; // Скорость прокрутки
+      const walk = (x - startX) * 2; // Скорость скролла
       sliderWrapper.scrollLeft = scrollLeft - walk;
     });
   };
