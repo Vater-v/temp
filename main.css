@@ -1646,90 +1646,134 @@ body.no-scroll {
    6. Универсальные Слайдеры (Галерея и Отзывы)
    ========================================================================== */
 
-/* --- 1. Общая оболочка и Трек (Track) --- */
+/* --- 6.1. Обертка и Секции --- */
 .gallery,
 .reviews {
-  background-color: var(--white);
+  background-color: var(--color-bg-body);
+  /* Изоляция отрисовки (Performance) */
+  contain: content;
+  /* Отступ снизу для разделения секций */
+  padding-bottom: var(--space-3xl);
+}
+
+/* 
+   Общий класс обертки (из HTML).
+   Задает вертикальные отступы и скрывает выходящие тени/скроллбары за пределами блока.
+*/
+.slider_wrapper_unified {
+  position: relative;
+  width: 100%;
+  padding-block: var(--space-lg) var(--space-xl);
   overflow: hidden;
 }
 
-/* Обертка для корректных отступов теней и центрирования */
-.gallery__slider-wrapper,
-.reviews__slider-wrapper {
-  padding-block: 20px 40px;
-  /* Центрируем контент, позволяя выходить за края на больших экранах */
-  margin-left: max(0px, calc((100% - var(--container-width)) / 2));
-  margin-right: max(0px, calc((100% - var(--container-width)) / 2));
-}
-
-/* Лента слайдов (общие стили) */
+/* --- 6.2. Трек Слайдера (Список) --- */
+/* Группируем селекторы для чистоты кода (DRY) */
 .gallery__list,
 .reviews__list {
   display: flex;
-  gap: 24px;
+  /* Используем gap вместо margin для отступов между слайдами */
+  gap: var(--space-md);
+
+  /* 
+     Smart Alignment (Full Bleed):
+     Вычисляем отступ так, чтобы первый слайд визуально начинался по сетке контейнера (1240px),
+     но скролл уходил за пределы экрана.
+     Формула: (Ширина экрана - Ширина контейнера) / 2 + Gutter.
+  */
+  padding-inline: max(
+    var(--gutter),
+    calc((100% - var(--container-width)) / 2 + var(--gutter))
+  );
+  /* Добавляем внутренний отступ снизу для теней карточек */
+  padding-block-end: var(--space-md);
+
+  /* Настройки скролла */
   overflow-x: auto;
-
-  /* Магнитное прилипание (Snap) */
-  scroll-snap-type: x mandatory;
-  padding-inline: 20px;
-
-  /* Скрываем скроллбар */
-  scrollbar-width: none; /* Firefox */
-  -webkit-overflow-scrolling: touch;
-
-  cursor: grab;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory; /* Строгое прилипание */
   scroll-behavior: smooth;
+
+  /* UX */
+  cursor: grab;
+  /* Предотвращает рывки скролла всей страницы при скролле слайдера (Mobile) */
+  overscroll-behavior-x: contain;
+
+  /* Скрытие скроллбара (Firefox, IE/Edge) */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  /* Оптимизация */
+  -webkit-overflow-scrolling: touch;
+  will-change: scroll-position;
 }
 
+/* Скрытие скроллбара (Chrome, Safari, Webkit) */
 .gallery__list::-webkit-scrollbar,
 .reviews__list::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  display: none;
 }
 
-/* Состояние перетаскивания (активируется JS) */
+/* Увеличенные отступы для десктопов */
+@media (min-width: 1024px) {
+  .gallery__list,
+  .reviews__list {
+    gap: var(--space-lg);
+  }
+}
+
+/* Состояние активного перетаскивания (JS добавляет класс) */
 .gallery__list.is-dragging,
 .reviews__list.is-dragging {
   cursor: grabbing;
-  scroll-snap-type: none; /* Отключаем прилипание для плавности драга */
+  scroll-snap-type: none; /* Отключаем snap для плавности свободного драга */
   scroll-behavior: auto;
   user-select: none;
 }
 
-/* Адаптив отступов между слайдами */
-@media (max-width: 767px) {
-  .gallery__list,
-  .reviews__list {
-    gap: 16px;
-  }
-}
-
-/* --- 2. Карточки (Базовые анимации) --- */
+/* --- 6.3. Карточки: Общие стили --- */
 .gallery__card,
 .review-card {
-  scroll-snap-align: center;
-  margin: 0;
+  position: relative;
+  flex: 0 0 auto; /* Запрещаем сжатие карточек */
+  scroll-snap-align: center; /* Прилипание по центру экрана */
+
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
-  background-color: var(--gray-100); /* Дефолтный фон */
-  position: relative;
-  overflow: hidden;
+  background-color: var(--color-bg-surface);
+
+  /* Аппаратное ускорение и плавные переходы */
+  transform: translateZ(0);
+  transition: transform var(--transition-base),
+    box-shadow var(--transition-base), border-color var(--transition-base);
 }
 
-/* Единый эффект наведения */
+/* A11y: Явный фокус при навигации с клавиатуры */
+.gallery__card:focus-visible,
+.review-card:focus-visible {
+  outline: none;
+  /* Двойная тень для контраста на любом фоне */
+  box-shadow: 0 0 0 2px var(--color-bg-body), 0 0 0 5px var(--color-accent);
+}
+
+/* Hover-эффекты (только для устройств с мышью) */
 @media (hover: hover) {
   .gallery__card:hover,
   .review-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
+    z-index: var(--z-raised);
   }
 }
 
-/* --- 3. Специфика ГАЛЕРЕИ --- */
+/* --- 6.4. Специфика ГАЛЕРЕИ --- */
 .gallery__card {
-  /* Пропорции портретного фото */
+  /* Адаптивная ширина через clamp (мин 260px, макс 340px) */
+  width: clamp(260px, 70vw, 340px);
+  /* Сохраняем пропорции фото 3:4 */
   aspect-ratio: 3/4;
-  flex: 0 0 280px;
+  overflow: hidden;
+  background-color: var(--gray-100);
 }
 
 .gallery__image {
@@ -1738,112 +1782,97 @@ body.no-scroll {
   object-fit: cover;
   display: block;
   cursor: zoom-in;
+  transition: transform 0.5s var(--ease-out-expo);
+  /* Блокируем системный драг картинки, чтобы не мешать свайпу */
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
-@media (min-width: 768px) {
-  .gallery__card {
-    flex: 0 0 320px;
+@media (hover: hover) {
+  .gallery__card:hover .gallery__image {
+    transform: scale(1.05);
   }
 }
 
-/* --- 4. Специфика ОТЗЫВОВ --- */
+/* --- 6.5. Специфика ОТЗЫВОВ --- */
 .review-card {
-  /* Ширина чуть больше для текста */
-  flex: 0 0 280px;
+  /* Ширина чуть больше для удобства чтения текста */
+  width: clamp(280px, 80vw, 380px);
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-
-  background-color: var(--white);
-  border: 1px solid var(--gray-200);
-  padding: 24px;
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  height: auto; /* Карточки будут одинаковой высоты благодаря flex-контейнеру */
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .review-card {
-    flex: 0 0 340px;
+    padding: var(--space-xl);
   }
 }
 
-/* Ховер для отзывов дополнительно подсвечивает рамку */
 @media (hover: hover) {
   .review-card:hover {
-    border-color: var(--gray-300);
+    border-color: var(--color-border-hover);
   }
 }
 
-/* Внутренности отзыва */
+/* Внутренняя структура отзыва */
 .review-card__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-md);
 }
 
 .review-card__rating {
-  display: flex; /* Звезды берут цвет из глобального .stars */
-}
-
-/* Серая звезда (если оценка 4/5) */
-.star--muted {
-  color: #e5e7eb;
-}
-
-.verified-badge {
   display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #166534;
-  background-color: #dcfce7;
-  padding: 4px 8px;
-  border-radius: 6px;
+}
+
+.star--muted {
+  color: var(--gray-300);
 }
 
 .review-card__quote {
-  margin: 0 0 24px 0;
-  font-size: 15px;
+  flex-grow: 1; /* Прижимает футер с автором вниз */
+  margin: 0 0 var(--space-lg) 0;
+
+  font-size: var(--text-base);
   line-height: 1.6;
   color: var(--color-text-main);
-  flex-grow: 1;
+  /* Предотвращает висячие слова */
+  text-wrap: pretty;
 }
-.review-card__quote p {
-  margin: 0;
-}
-/* Уменьшаем шрифт на мобильных */
+
 @media (max-width: 767px) {
   .review-card__quote {
-    font-size: 14px;
-  }
-  .review-card {
-    padding: 20px;
+    font-size: 15px;
   }
 }
 
 .review-card__author {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding-top: 16px;
+  gap: var(--space-md);
+  padding-top: var(--space-md);
   border-top: 1px solid var(--gray-100);
 }
 
 .author-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: var(--fw-bold);
-  font-size: 16px;
   flex-shrink: 0;
-  background-color: var(--gray-200);
+
+  font-weight: var(--fw-bold);
+  font-size: var(--text-lg);
+  background-color: var(--gray-100);
   color: var(--gray-500);
+  text-transform: uppercase;
 }
 
 .author-info {
@@ -1851,130 +1880,128 @@ body.no-scroll {
   flex-direction: column;
   line-height: 1.3;
 }
+
 .author-name {
   font-weight: var(--fw-bold);
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--color-heading);
 }
+
 .author-desc {
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: var(--color-text-muted);
 }
 
-/* --- 5. Унифицированная Навигация (Точки) --- */
+/* --- 6.6. Навигация (Кнопки и Точки) --- */
 .gallery__controls,
 .reviews__controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px; /* Расстояние между стрелками и точками */
-  margin-top: 20px;
-  position: relative;
+  gap: var(--space-lg);
+  margin-top: var(--space-md);
+
+  /* Центрируем блок управления по ширине контейнера */
+  width: min(100%, var(--container-width));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
-.gallery__controls .slider-btn,
-.reviews__controls .slider-btn {
-  position: static;
-  transform: none;
-  margin: 0;
+
+/* Кнопки-стрелки */
+.slider-btn {
+  /* Оптимальный размер тач-таргета (48px) */
+  width: 3rem;
+  height: 3rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: var(--radius-full);
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-md);
+
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
 }
+
+.slider-btn .icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+@media (hover: hover) {
+  .slider-btn:hover {
+    background-color: var(--color-accent-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+  }
+}
+
+.slider-btn:active {
+  transform: scale(0.95);
+  box-shadow: var(--shadow-sm);
+}
+
+.slider-btn:focus-visible {
+  outline: 2px solid var(--color-heading);
+  outline-offset: 2px;
+}
+
+/* Скрываем кнопки на мобильных (свайп нативнее и удобнее) */
+@media (max-width: 767px) {
+  .slider-btn {
+    display: none;
+  }
+}
+
+/* Индикаторы (Точки) */
 .gallery__dots,
 .reviews__dots {
   display: flex;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
-/* Общий стиль точки */
 .gallery__dot,
 .reviews__dot {
   width: 10px;
   height: 10px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
   padding: 0;
-}
+  border-radius: var(--radius-full);
+  border: none;
+  background-color: var(--gray-300);
+  cursor: pointer;
+  transition: all 0.3s;
 
-/* Галерея: точки серые, активная - красная */
-.gallery__dot {
-  background-color: var(--gray-200);
-}
-.gallery__dot:hover {
-  background-color: var(--gray-400);
-}
-.gallery__dot.is-active {
-  background-color: var(--color-accent);
-  transform: scale(1.2);
-}
-
-/* Отзывы: точки серые, активная - черная (строже) */
-.reviews__dot {
-  background-color: var(--gray-200);
-}
-.reviews__dot:hover {
-  background-color: var(--gray-400);
-}
-.reviews__dot.is-active {
-  background-color: var(--color-accent);
-  transform: scale(1.2);
-}
-/* 1. Делаем обертку "точкой отсчета" */
-.slider_wrapper_unified {
+  /* Увеличение зоны клика (UX pattern) */
   position: relative;
 }
 
-/* 2. Общие стили для кнопок-стрелок с НОВЫМИ ЦВЕТАМИ */
-.slider-btn {
+.gallery__dot::after,
+.reviews__dot::after {
+  content: "";
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-
-  background-color: #e2363c; /* Ваш красный фон */
-  color: #ffffff; /* Белый цвет. SVG-иконка "подхватит" его */
-
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень чуть темнее для контраста */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s, background-color 0.2s;
+  inset: -8px;
 }
 
-/* Важно: заставляем SVG использовать цвет текста родителя */
-.slider-btn .icon {
-  fill: currentColor;
+.gallery__dot:hover,
+.reviews__dot:hover {
+  background-color: var(--gray-400);
 }
 
-/* Ховер-эффект (при наведении) */
-.slider-btn:hover {
-  /* Делаем красный чуть темнее при наведении для обратной связи */
-  background-color: #c42b30;
-  transform: translateY(-5%) scale(1.1);
+.gallery__dot.is-active,
+.reviews__dot.is-active {
+  background-color: var(--color-accent);
+  transform: scale(1.3);
 }
 
-/* 3. Разносим по сторонам (без изменений) */
-.slider-btn--prev {
-  left: 10px;
-}
-
-.slider-btn--next {
-  right: 10px;
-}
-
-/* 4. Адаптив для мобильных */
-@media (max-width: 768px) {
-  .slider-btn {
-    width: 36px; /* Чуть меньше на мобилках */
-    height: 36px;
-    /* Можно сделать полупрозрачным, если слишком ярко перекрывает фото */
-    /* background-color: rgba(226, 54, 60, 0.9); */
-  }
+.gallery__dot:focus-visible,
+.reviews__dot:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 /* ==========================================================================
