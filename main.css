@@ -178,30 +178,132 @@
 /* ==========================================================================
    2. Базовый сброс и Настройки
    ========================================================================== */
+
+/* 1. Global Reset & Box Sizing (Modern Approach)
+   Сбрасываем отступы у всех элементов глобально для полного контроля.
+   Подход Josh Comeau / Andy Bell. */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
+/* 2. HTML Document Settings */
 html {
-  scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--header-height) + 20px);
   -webkit-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Учет фиксированной шапки при скролле к якорям (Header + воздух) */
+  scroll-padding-top: calc(var(--header-height) + 20px);
+
+  /* Modern Scrollbar (Firefox + Standards)
+     Используем переменные темы для консистентности. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-300) transparent;
 }
 
+/* A11y: Плавный скролл только если пользователь не отключил анимации в системе.
+   Критично для пользователей с вестибулярными расстройствами. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* 3. Body Defaults */
 body {
-  margin: 0;
-  min-height: 100dvh;
+  min-height: 100dvh; /* dvh корректно обрабатывает мобильные панели браузеров */
   font-family: var(--font-main);
   font-size: 16px;
   line-height: 1.6;
   color: var(--color-text-main);
   background-color: var(--color-bg-body);
   -webkit-tap-highlight-color: transparent;
+  /* Предотвращение случайного горизонтального скролла */
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* 4. Media Elements (Images, Video, SVG) */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Сохраняем пропорции и заполнение для растра и видео */
+img,
+video {
+  height: auto;
+  object-fit: cover;
+}
+
+/* SVG-иконки должны наследовать цвет текста */
+svg {
+  fill: currentColor;
+}
+
+/* 5. Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--fw-bold);
+  color: var(--color-heading);
+  /* Балансировка строк для заголовков (улучшает читаемость) */
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+p {
+  /* Предотвращает висячие слова в конце строк (поддержка Chrome 117+) */
+  text-wrap: pretty;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--transition-base);
+}
+
+/* 6. Forms Inheritance (Critical Fix)
+   Элементы форм теперь наследуют шрифт Montserrat, а не системный Arial. */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  text-align: left;
+}
+
+/* 7. Focus Management (A11y) */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px; /* Улучшенная видимость фокуса */
+  border-radius: 4px;
+  /* Гарантирует, что элемент не спрячется под Sticky-хедером при табе */
+  scroll-margin-block: 20vh;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 ::selection {
@@ -214,15 +316,18 @@ body {
   color: inherit;
 }
 
+/* 8. Custom Scrollbars (Webkit / Chrome / Safari) */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px; /* Для горизонтального скролла */
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
+  background-color: var(--gray-300);
   border-radius: 20px;
+  /* Трюк: прозрачная рамка создает отступ внутри скроллбара */
   border: 2px solid transparent;
   background-clip: content-box;
 }
@@ -230,51 +335,11 @@ body {
   background-color: var(--gray-500);
 }
 
-img,
-picture,
-video,
-svg {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  object-fit: cover;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  text-wrap: balance;
-  margin: 0;
-  font-weight: var(--fw-bold);
-  color: var(--color-heading);
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-  transition: color var(--transition-base);
-}
-button {
-  cursor: pointer;
-  border: none;
-  background: none;
-  padding: 0;
-  font: inherit;
-}
-
-:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-:focus:not(:focus-visible) {
-  outline: none;
-}
-
+/* 9. Utilities */
 body.no-scroll {
   overflow: hidden;
-  padding-right: 8px;
+  /* Padding-right для компенсации скролла добавляется через JS (main.js),
+     поэтому здесь жесткое значение не нужно, чтобы избежать двойных отступов. */
 }
 
 /* ==========================================================================
