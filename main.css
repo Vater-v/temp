@@ -1,83 +1,103 @@
-/* ==========================================================================
-   1. Глобальные переменные (Design Tokens)
-   ========================================================================== */
 :root {
-  /* -----------------------------------------------------------------------
-     1. ПАЛИТРА (Primitives)
-     Используем HSL для акцента, чтобы управлять прозрачностью через alpha-канал
-     ----------------------------------------------------------------------- */
+  /* ========================================================================
+     1. COLOR PRIMITIVES (Палитра)
+     Базовые значения. Не используйте их напрямую в компонентах,
+     используйте Семантический слой (раздел 2).
+     ======================================================================== */
+
+  /* Brand Accents (HSL for alpha control) */
   --hue-accent: 358;
   --sat-accent: 75%;
   --lig-accent: 55%;
 
-  /* Brand & Base Colors */
-  --color-accent: hsl(
+  /* Brand Red (Primary) */
+  --red-500: hsl(
     var(--hue-accent),
     var(--sat-accent),
     var(--lig-accent)
   ); /* #e53935 */
-  --color-accent-hover: hsl(
+  --red-600: hsl(
     var(--hue-accent),
     var(--sat-accent),
     45%
-  ); /* Темнее при ховере */
+  ); /* Darker for hover */
+  --red-700: #c42b30; /* Deep Red (Slider buttons hover) */
+  --red-bright: #e2363c; /* Bright Red (Slider buttons) */
+  --red-100: #fff1f0; /* Backgrounds */
 
+  /* Neutrals */
   --white: #ffffff;
   --black: #000000;
 
-  /* Grayscale (Neutral) */
-  --gray-900: #1a1a1a; /* Основной текст / Заголовки */
+  --gray-900: #1a1a1a; /* Main Text / Headings */
   --gray-800: #2d2d2d;
   --gray-700: #4b5563;
-  --gray-500: #767676; /* Второстепенный текст */
+  --gray-500: #767676; /* Muted Text */
   --gray-400: #9ca3af;
   --gray-300: #d1d5db;
-  --gray-200: #e5e7eb; /* Границы */
-  --gray-100: #f3f4f6; /* Фоны секций */
-  --gray-050: #f9fafb;
+  --gray-200: #e5e7eb; /* Borders */
+  --gray-100: #f3f4f6; /* Section Bgs */
+  --gray-050: #f9fafb; /* Subtle Bgs / Hovers */
 
-  /* Footer Specific (Dark Theme) */
-  --footer-bg: #111111;
-  --footer-bg-sub: #0a0a0a;
-  --footer-text: #a3a3a3;
-  --footer-text-dim: #737373;
-  --footer-border: rgba(255, 255, 255, 0.1);
+  /* Footer Specific (Dark Theme Primitives) */
+  --dark-bg-main: #111111;
+  --dark-bg-sub: #0a0a0a;
+  --dark-text-main: #a3a3a3;
+  --dark-text-dim: #737373;
+  --dark-border: rgba(255, 255, 255, 0.1);
 
   /* Functional Colors */
-  --green-100: #dcfce7; /* Success background */
-  --green-500: #28a745; /* Success icon (legacy) */
-  --green-700: #166534; /* Success text */
-  --gold-500: #fbbf24; /* Stars */
-  --red-100: #fff1f0; /* Error/Sale background */
-  --blue-tg: #24a1de; /* Telegram */
+  --color-success-bg: #dcfce7;
+  --color-success-text: #166534;
+  --color-gold: #fbbf24; /* Stars */
+  --color-tg-blue: #24a1de; /* Telegram */
 
-  /* Product Swatches (Hardcoded in logic, reflected here for CSS usage) */
-  --swatch-red: #d32f2f;
-  --swatch-black: #1a1a1a;
+  /* ========================================================================
+     2. SEMANTIC TOKENS (Семантика)
+     Используйте эти переменные в верстке.
+     ======================================================================== */
 
-  /* -----------------------------------------------------------------------
-     2. СЕМАНТИКА (Semantic Layer)
-     Привязываем примитивы к контексту использования
-     ----------------------------------------------------------------------- */
-  /* Text */
+  /* Text Colors */
   --color-text-main: var(--gray-900);
   --color-text-muted: var(--gray-500);
   --color-heading: var(--gray-900);
   --color-text-inverse: var(--white);
+  --color-text-success: var(--color-success-text);
 
   /* Backgrounds */
   --color-bg-body: var(--white);
   --color-bg-subtle: var(--gray-100);
   --color-bg-surface: var(--white);
-  --color-glass: rgba(255, 255, 255, 0.85);
-  --glass-blur: 12px;
+  --color-bg-surface-hover: var(--gray-050); /* Accordion hover, inputs */
+  --color-bg-accent-light: var(--red-100);
 
-  /* Borders */
+  /* Glassmorphism */
+  --color-bg-glass: rgba(255, 255, 255, 0.85);
+
+  /* Interactive Elements (Buttons, Links) */
+  --color-accent: var(--red-500);
+  --color-accent-hover: var(--red-600);
+
+  --color-control-bg: var(--red-bright); /* Slider arrows */
+  --color-control-bg-hover: var(--red-700);
+
+  /* Borders & Separators */
   --color-border: var(--gray-200);
+  --color-border-dark: var(--dark-border);
 
-  /* -----------------------------------------------------------------------
-     3. ТИПОГРАФИКА
-     ----------------------------------------------------------------------- */
+  /* Footer Mapping */
+  --footer-bg: var(--dark-bg-main);
+  --footer-bg-sub: var(--dark-bg-sub);
+  --footer-text: var(--dark-text-main);
+  --footer-text-dim: var(--dark-text-dim);
+
+  /* Overlays */
+  --overlay-modal: rgba(0, 0, 0, 0.6);
+  --overlay-lightbox: rgba(0, 0, 0, 0.92);
+
+  /* ========================================================================
+     3. TYPOGRAPHY
+     ======================================================================== */
   --font-main: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, sans-serif;
 
@@ -88,11 +108,16 @@
   --fw-bold: 700;
   --fw-black: 800;
 
-  /* -----------------------------------------------------------------------
-     4. РАЗМЕРЫ И ОТСТУПЫ (Spacing & Layout)
-     Base unit: 1rem = 16px
-     ----------------------------------------------------------------------- */
+  /* Line Heights */
+  --lh-tight: 1.1; /* Headings */
+  --lh-base: 1.2; /* Buttons, Short text */
+  --lh-body: 1.6; /* Paragraphs */
+
+  /* ========================================================================
+     4. SPACING & LAYOUT
+     ======================================================================== */
   --container-width: 77.5rem; /* 1240px */
+  --container-padding: max(20px, env(safe-area-inset-left));
   --header-height: 4.5rem; /* 72px */
 
   /* Spacing Scale */
@@ -104,17 +129,18 @@
   --space-2xl: 3rem; /* 48px */
   --space-3xl: 5rem; /* 80px */
 
-  /* Safe Areas (with rem fallbacks) */
+  /* Safe Areas */
   --safe-top: env(safe-area-inset-top, 1.25rem);
   --safe-bottom: env(safe-area-inset-bottom, 1.25rem);
 
-  /* -----------------------------------------------------------------------
-     5. UI КОМПОНЕНТЫ (Effects & Radius)
-     ----------------------------------------------------------------------- */
-  /* Radius */
+  /* ========================================================================
+     5. UI EFFECTS (Radius, Shadows, Animation)
+     ======================================================================== */
+  /* Border Radius */
   --radius-sm: 0.5rem; /* 8px */
   --radius-md: 1rem; /* 16px */
   --radius-lg: 1.5rem; /* 24px */
+  --radius-xl: 1.75rem; /* 28px (Modal) */
   --radius-full: 9999px;
 
   /* Shadows */
@@ -126,34 +152,39 @@
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
-  /* Glow Effect using HSL Accent */
+  /* Specific Glows */
   --shadow-glow: 0 0 0.9375rem
     hsla(var(--hue-accent), var(--sat-accent), var(--lig-accent), 0.35);
 
-  /* Animations */
+  /* Blurs */
+  --backdrop-blur: 8px;
+  --backdrop-blur-lg: 10px;
+
+  /* Transitions */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: 0.2s ease;
   --transition-base: 0.25s var(--ease-out-expo);
   --transition-smooth: 0.4s var(--ease-out-expo);
+  --transition-bounce: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  /* -----------------------------------------------------------------------
-     6. Z-INDEX LAYERS (Z-Elevator)
-     Единый источник правды для наслоений
-     ----------------------------------------------------------------------- */
+  /* ========================================================================
+     6. Z-INDEX LAYERS (The Elevator)
+     ======================================================================== */
   --z-negative: -1;
   --z-base: 1;
+  --z-raised: 2; /* Logos, Hover states */
   --z-decorative: 10;
 
-  --z-sticky: 50; /* Sticky elements (Form, etc) */
+  --z-sticky: 50; /* Form, TOC */
   --z-header: 100; /* Fixed Header */
-  --z-burger: 101; /* Burger button sits above header */
+  --z-burger: 101; /* Controls above header */
 
   --z-mobile-overlay: 200;
   --z-mobile-drawer: 210;
 
-  --z-modal: 1000; /* Popups */
-  --z-lightbox: 2000; /* Fullscreen media */
-  --z-lightbox-ui: 2020; /* Lightbox controls */
+  --z-modal: 1000;
+  --z-lightbox: 2000;
+  --z-lightbox-ui: 2020;
 }
 
 /* ==========================================================================
