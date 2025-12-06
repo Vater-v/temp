@@ -343,28 +343,45 @@ body.no-scroll {
 }
 
 /* ==========================================================================
-   3. Утилиты и Компоненты
+   3. УТИЛИТЫ И КОМПОНЕНТЫ
+   Системные примитивы, сетка и базовые UI-элементы.
    ========================================================================== */
+
+/* --- 3.1 Layout Utilities --- */
+
 .container {
-  width: 100%;
-  max-width: var(--container-width);
+  /* Используем min() для надежности: 100% ширины, но не больше заданного максимума */
+  width: min(100%, var(--container-width));
+
+  /* Логические отступы: центрирование по горизонтали */
   margin-inline: auto;
-  padding-inline: max(20px, env(safe-area-inset-left));
+
+  /* Безопасные поля по бокам, учитывающие вырезы экранов (iPhone Notch) */
+  padding-inline: var(--gutter);
 }
 
+/* 
+   Паттерн для скрытия контента визуально, но сохранения доступа для скринридеров.
+   Modern "Robust" версия (inclusive hiding).
+*/
 .visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
-  margin: -1px;
-  border: 0;
   padding: 0;
-  white-space: nowrap;
-  clip-path: inset(100%);
-  clip: rect(0 0 0 0);
+  margin: -1px;
   overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
+/* --- 3.2 Graphic Primitives --- */
+
+/* 
+   Базовая иконка. 
+   em-размеры позволяют иконке масштабироваться вместе с текстом родителя.
+*/
 .icon {
   display: inline-block;
   width: 1em;
@@ -374,103 +391,241 @@ body.no-scroll {
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Иконка не сплющивается во flex-контейнере */
+  vertical-align: middle;
 }
 
+/* Компонент рейтинга */
 .stars {
   display: inline-flex;
-  gap: 2px;
-  color: var(--gold-500);
+  align-items: center;
+  /* Вычисляем отступ на основе сетки, избегая магических чисел (4px / 2 = 2px) */
+  gap: calc(var(--space-xs) * 0.5);
+  color: var(--color-star);
+  line-height: 1;
 }
 
-/* --- Кнопки --- */
-.button {
+.star--muted {
+  color: var(--gray-300);
+}
+
+/* Бейджи (используются в отзывах и формах) */
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background-color: var(--green-100);
+  color: var(--green-500);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+/* --- 3.3 Buttons (Core Component) --- */
+
+/* 
+   Используем :where() для нулевой специфичности базового класса.
+   Это позволяет легко переопределять стили модификаторами без !important.
+*/
+:where(.button) {
+  /* Layout */
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 14px 28px;
-  font-weight: var(--fw-bold);
-  font-size: 16px;
-  line-height: 1.2;
+  gap: var(--space-sm);
+
+  /* Box Model: используем токены MD (16px) и XL (32px) для "дорогого" воздуха */
+  padding-block: var(--space-md);
+  padding-inline: var(--space-xl);
+
+  /* Appearance */
+  border: 2px solid transparent; /* Резерв места под рамку */
   border-radius: var(--radius-sm);
-  transition: all var(--transition-base);
-  overflow: hidden;
-  user-select: none;
+  cursor: pointer;
+  overflow: hidden; /* Обрезает эффект блика */
+  user-select: none; /* Текст не выделяется при клике */
+  -webkit-tap-highlight-color: transparent;
+
+  /* Typography */
+  font-family: var(--font-main);
+  font-weight: var(--fw-bold);
+  font-size: var(--text-base);
+  line-height: 1.25;
+  text-decoration: none;
+  white-space: nowrap;
+
+  /* Performance & Transitions */
+  transform: translateZ(0); /* Fix для Safari border-radius clipping */
+  transition: color var(--transition-base),
+    background-color var(--transition-base), border-color var(--transition-base),
+    box-shadow var(--transition-base), transform 0.1s ease-out;
 }
 
-.button:active:not(:disabled) {
+/* State: Focus Visible (A11y) */
+:where(.button):focus-visible {
+  outline: none;
+  /* Двойная тень: отступ от фона + акцентный контур. Видно везде. */
+  box-shadow: 0 0 0 2px var(--color-bg-body), 0 0 0 5px var(--color-accent);
+  z-index: var(--z-raised);
+}
+
+/* State: Active (Tactile Feedback) */
+:where(.button):active:not(:disabled) {
   transform: scale(0.97);
 }
 
-.button--primary {
-  background-color: var(--color-accent);
-  color: var(--white);
-  box-shadow: var(--shadow-md);
+/* State: Disabled */
+:where(.button):disabled,
+:where(.button).is-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(1);
+  pointer-events: none;
 }
 
+/* --- Button Variants --- */
+
+/* 1. Primary: Brand Solid + Sheen Effect */
+.button--primary {
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-accent);
+}
+
+/* GPU-Optimized Shine Effect */
 .button--primary::after {
   content: "";
   position: absolute;
   top: 0;
-  left: -100%;
+  left: 0;
   width: 50%;
   height: 100%;
+
   background: linear-gradient(
     90deg,
-    transparent,
-    rgba(255, 255, 255, 0.25),
-    transparent
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 100%
   );
-  transform: skewX(-20deg);
-  transition: 0.5s;
+
+  /* Используем translate3d для переноса анимации на композитный слой */
+  transform: skewX(-20deg) translate3d(-250%, 0, 0);
+  pointer-events: none;
+  will-change: transform;
 }
 
 @media (hover: hover) {
   .button--primary:hover {
     background-color: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+    /* Комбинация подъема и "свечения" бренда */
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg), var(--shadow-glow);
   }
+
+  /* Запуск анимации блика */
   .button--primary:hover::after {
-    left: 150%;
-    transition: 0.7s ease-in-out;
+    transition: transform 0.6s ease-in-out;
+    transform: skewX(-20deg) translate3d(350%, 0, 0);
   }
 }
 
+/* 2. Secondary: Outline */
 .button--secondary {
-  border: 2px solid var(--color-heading);
+  background-color: transparent;
+  border-color: var(--color-heading);
   color: var(--color-heading);
 }
 
 @media (hover: hover) {
   .button--secondary:hover {
     background-color: var(--color-heading);
-    color: var(--white);
+    color: var(--color-text-inverse);
+    /* Тень добавляет объем при наведении */
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
   }
 }
 
+/* --- Button Sizes & Modifiers --- */
+
 .button--large {
-  width: 100%;
-  padding: 18px 32px;
-  font-size: 18px;
+  font-size: var(--text-lg);
+  /* Чуть больше вертикального воздуха для CTA */
+  padding-block: calc(var(--space-md) + 2px);
+  padding-inline: var(--space-2xl);
+  width: 100%; /* Mobile First: кнопка на всю ширину */
 }
+
 .button--full {
   width: 100%;
+  display: flex;
 }
 
 @media (min-width: 768px) {
   .button--large {
-    width: auto;
+    width: auto; /* На десктопе возвращаем естественную ширину */
   }
+}
+
+/* --- Button Icon Animation --- */
+.btn-arrow {
+  transition: transform var(--transition-base);
+  margin-inline-start: 4px; /* Логический отступ */
 }
 
 .button:hover .btn-arrow {
   transform: translateX(4px);
 }
-.btn-arrow {
-  transition: transform var(--transition-base);
+
+/* --- 3.4 Form Elements (Inputs) --- */
+/* Добавлено для полноты UI-кита, так как классы используются в форме заказа */
+
+.form__input {
+  width: 100%;
+  padding: 14px var(--space-md);
+  font-family: var(--font-main);
+  font-size: var(--text-base); /* 16px предотвращает авто-зум на iOS */
+  color: var(--color-heading);
+  background-color: var(--gray-100);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  appearance: none;
+  transition: background-color var(--transition-base),
+    border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.form__input::placeholder {
+  color: var(--gray-400);
+}
+
+@media (hover: hover) {
+  .form__input:hover:not(:disabled) {
+    background-color: var(--gray-200);
+  }
+}
+
+.form__input:focus {
+  outline: none;
+  background-color: var(--white);
+  border-color: var(--color-heading);
+  /* Деликатное кольцо фокуса */
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Кастомная стрелка для Select */
+.form__input--select {
+  cursor: pointer;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
 }
 
 /* ==========================================================================
