@@ -3014,155 +3014,272 @@ body.no-scroll {
 .lightbox {
   position: fixed;
   inset: 0;
-  z-index: 2000;
+  z-index: var(--z-lightbox);
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* State: Hidden (Default) */
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
-  /* Блокируем лишние жесты скролла страницы под лайтбоксом */
+
+  /* Performance: Smooth opacity, instant visibility on show / delayed on hide */
+  transition: opacity 0.3s var(--ease-out-expo), visibility 0s 0.3s;
+  will-change: opacity, visibility;
+
+  /* UX: Block scrolling gestures on touch devices */
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
+
+  /* Creates a new stacking context */
+  isolation: isolate;
 }
 
 .lightbox.is-visible {
   opacity: 1;
   visibility: visible;
+  transition-delay: 0s;
 }
 
+/* --- Overlay --- */
 .lightbox__overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.92); /* Глубокий черный фон */
+  background-color: var(--overlay-lightbox);
+
+  /* Modern Glass Effect */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+
+  /* Performance */
+  transform: translateZ(0);
   cursor: zoom-out;
 }
 
+/* --- Content Wrapper --- */
 .lightbox__content {
   position: relative;
+  z-index: 10;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2010;
-  /* Начальное состояние анимации */
-  transform: scale(0.95);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  pointer-events: none; /* Клики мимо контента уходят в оверлей */
-}
 
-.lightbox.is-visible .lightbox__content {
-  transform: scale(1);
-}
+  /* Safe Areas: Ensure content doesn't touch screen edges or notches */
+  padding: max(20px, env(safe-area-inset-top))
+    max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom))
+    max(20px, env(safe-area-inset-left));
 
-.lightbox__image {
-  pointer-events: auto;
-  display: block;
-  /* Ограничиваем размер, оставляя место для UI и безопасных зон */
-  max-width: 95vw;
-  max-height: 85vh; /* Место под header/footer телефона */
-  width: auto;
-  height: auto;
-  border-radius: 4px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  object-fit: contain;
-  user-select: none;
+  /* Interaction: Allow clicks to pass through empty space to overlay */
+  pointer-events: none;
+
+  /* Entry Animation */
+  transform: scale(0.96) translateZ(0);
+  transition: transform 0.4s var(--ease-out-expo);
   will-change: transform;
 }
 
-/* Кнопка закрытия (Safe Area aware) */
-.lightbox__close-btn {
-  pointer-events: auto;
-  position: absolute;
-  /* Учитываем челку и закругления экрана */
-  top: max(20px, env(safe-area-inset-top));
-  right: max(20px, env(safe-area-inset-right));
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(4px);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.2s;
-  z-index: 2020;
-}
-.lightbox__close-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: rotate(90deg);
+.lightbox.is-visible .lightbox__content {
+  transform: scale(1) translateZ(0);
 }
 
-/* Навигация */
+/* --- Media (Image & Video) --- */
+.lightbox__image {
+  pointer-events: auto; /* Re-enable clicks on content */
+  display: block;
+
+  /* Responsive Constraints */
+  max-width: 100%;
+  /* dvh handles mobile URL bars correctly, fallback to vh */
+  max-height: 85vh;
+  max-height: 85dvh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+
+  border-radius: var(--radius-sm);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+
+  /* UX */
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Video Specifics */
+video.lightbox__image {
+  background-color: #000; /* Prevent white flashes */
+  min-width: 300px;
+}
+
+/* --- Controls: Common Styles --- */
+.lightbox__close-btn,
 .lightbox__nav-btn {
   pointer-events: auto;
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 64px;
-  height: 64px;
-  background-color: rgba(255, 255, 255, 0.08);
-  border-radius: 50%;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  z-index: 2020;
-  border: none;
+
+  /* Glassmorphism Button */
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--white);
+  border-radius: 50%;
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s, border-color 0.2s;
+
+  /* Prevent tap delay */
+  touch-action: manipulation;
 }
-.lightbox__nav-btn:hover {
+
+/* A11y: Focus Visible */
+.lightbox__close-btn:focus-visible,
+.lightbox__nav-btn:focus-visible {
+  outline: none;
   background-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 0 0 2px var(--color-accent), 0 0 0 4px rgba(0, 0, 0, 0.5);
 }
+
+/* State: Hover (Desktop only) */
+@media (hover: hover) {
+  .lightbox__close-btn:hover,
+  .lightbox__nav-btn:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+
+  .lightbox__close-btn:hover {
+    transform: rotate(90deg);
+  }
+
+  /* Specific navigation hover transform needs to account for centering */
+  .lightbox__nav-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+  }
+}
+
+/* State: Active */
+.lightbox__close-btn:active,
 .lightbox__nav-btn:active {
-  transform: translateY(-50%) scale(0.9);
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(0.95);
+}
+
+.lightbox__nav-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+/* --- Close Button Positioning --- */
+.lightbox__close-btn {
+  /* Safe Area Aware Positioning */
+  top: max(20px, env(safe-area-inset-top));
+  right: max(20px, env(safe-area-inset-right));
+  width: 3rem; /* 48px */
+  height: 3rem;
+}
+
+/* --- Navigation Buttons Positioning --- */
+.lightbox__nav-btn {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4rem; /* 64px */
+  height: 4rem;
 }
 
 .lightbox__nav-btn--prev {
-  left: 40px;
-}
-.lightbox__nav-btn--next {
-  right: 40px;
+  left: max(20px, env(safe-area-inset-left));
 }
 
-/* Адаптация Lightbox под мобильные */
+.lightbox__nav-btn--next {
+  right: max(20px, env(safe-area-inset-right));
+}
+
+/* --- Mobile Adaptation (< 1024px) --- */
 @media (max-width: 1023px) {
   .lightbox__image {
-    max-height: 80vh;
-    border-radius: 0;
     max-width: 100vw;
+    max-height: 80dvh;
+    border-radius: 0;
+    box-shadow: none;
   }
 
-  /* Сдвигаем кнопки ближе к краю экрана */
+  /* Optimize Controls for Touch */
   .lightbox__nav-btn {
-    width: 48px;
-    height: 48px;
-    background: transparent; /* Убираем фон, чтобы не перекрывать фото */
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    width: 3rem; /* 48px */
+    height: 3rem;
+    background-color: transparent;
+    border-color: transparent;
+    backdrop-filter: none;
   }
+
+  /* Drop shadow ensures icon visibility on white images without background */
+  .lightbox__nav-btn svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+  }
+
   .lightbox__nav-btn--prev {
-    left: 10px;
+    left: max(8px, env(safe-area-inset-left));
   }
+
   .lightbox__nav-btn--next {
-    right: 10px;
+    right: max(8px, env(safe-area-inset-right));
   }
 
   .lightbox__close-btn {
     top: max(16px, env(safe-area-inset-top));
     right: max(16px, env(safe-area-inset-right));
-    background: rgba(0, 0, 0, 0.4); /* Темная подложка для контраста */
+    background-color: rgba(0, 0, 0, 0.5); /* High contrast background */
     border: none;
   }
 }
+
+/* --- Mobile Landscape (Height < 500px) --- */
+@media (max-height: 500px) and (orientation: landscape) {
+  .lightbox__image {
+    max-height: 94dvh; /* Maximize image area */
+  }
+
+  .lightbox__nav-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  /* Push controls to edges to avoid covering image */
+  .lightbox__nav-btn--prev {
+    left: max(10px, env(safe-area-inset-left));
+  }
+  .lightbox__nav-btn--next {
+    right: max(10px, env(safe-area-inset-right));
+  }
+
+  .lightbox__close-btn {
+    top: max(10px, env(safe-area-inset-top));
+    right: max(16px, env(safe-area-inset-right));
+    background-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+  }
+}
+
+/* --- Accessibility: Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .lightbox,
+  .lightbox__content,
+  .lightbox__close-btn,
+  .lightbox__nav-btn {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .lightbox.is-visible .lightbox__content {
+    transform: none;
+  }
+}
+
 /* ==========================================================================
    11. PRODUCTION UPGRADES (UX Fixes & Footer)
    ========================================================================== */
