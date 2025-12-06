@@ -3284,110 +3284,160 @@ video.lightbox__image {
    11. PRODUCTION UPGRADES
    ========================================================================== */
 
-/* --- 1. ЛЕЧИМ ФОРМУ ЗАКАЗА (UX) --- */
+/* --- 1. UX ФОРМЫ ЗАКАЗА (Sticky & Scroll Logic) --- */
+
 @media (min-width: 1024px) {
-  /* А. Делаем скроллбар ВИДИМЫМ. Теперь юзер точно поймет, что можно листать. */
+  /* 
+     А. Стилизация скроллбара
+     Делаем прокрутку заметной, но эстетичной.
+     Используем токены для цветов и радиусов.
+  */
   .order-form {
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: var(--gray-500) transparent;
-  }
-  .order-form::-webkit-scrollbar {
-    width: 6px; /* Ширина для Chrome/Safari */
-  }
-  .order-form::-webkit-scrollbar-track {
-    background: transparent;
-    margin-block: 20px; /* Отступы сверху/снизу */
-  }
-  .order-form::-webkit-scrollbar-thumb {
-    background-color: #cbd5e1; /* Цвет ползунка */
-    border-radius: 10px;
-  }
-  .order-form:hover::-webkit-scrollbar-thumb {
-    background-color: var(--gray-500); /* Темнеет при наведении */
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray-300) transparent;
   }
 
-  /* Б. БЕЗОПАСНЫЙ РЕЖИМ: Если экран ноутбука низкий (< 900px), 
-     мы ОТКЛЮЧАЕМ липкость. Форма просто скроллится вместе со страницей.
-     Так кнопка "Оформить" никогда не спрячется. */
+  /* Webkit (Chrome, Safari, Edge) */
+  .order-form::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .order-form::-webkit-scrollbar-track {
+    background: transparent;
+    /* Отступ трека сверху и снизу (визуальная легкость) */
+    margin-block: var(--space-sm);
+  }
+
+  .order-form::-webkit-scrollbar-thumb {
+    background-color: var(--gray-300);
+    border-radius: var(--radius-full);
+    /* Прозрачная рамка создает эффект "парящего" ползунка */
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background-color var(--transition-base);
+  }
+
+  /* Hover эффект для скроллбара */
+  .order-form:hover::-webkit-scrollbar-thumb {
+    background-color: var(--gray-400);
+  }
+
+  /* 
+     Б. БЕЗОПАСНЫЙ STICKY-РЕЖИМ (Safe Fallback)
+     На невысоких экранах (< 900px) sticky-форма может перекрыть
+     футер или стать недоступной. Отключаем липкость для безопасности.
+  */
   @media (max-height: 899px) {
     .order-form {
       position: static;
       max-height: none;
       overflow: visible;
+      /* Сброс трансформации для корректного рендеринга */
+      transform: none;
     }
+
     .order__container {
-      align-items: flex-start; /* Выравнивание по верху */
+      /* Возвращаем естественное выравнивание по верху */
+      align-items: flex-start;
     }
   }
 }
 
-/* --- 2. НОВЫЕ СТИЛИ ОТЗЫВОВ --- */
+/* --- 2. СТИЛИ ОТЗЫВОВ (Systematized) --- */
+
 .review-card__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-md);
 }
-/* Убираем отступ у звезд, так как теперь есть обертка header */
-.review-card__header .review-card__rating {
+
+/* Сбрасываем внешний отступ у компонента рейтинга внутри хедера */
+.review-card__header .stars {
   margin-bottom: 0;
 }
-/* Серая звезда для 4-звездочного отзыва */
+
+/* Неактивная звезда (используем системный серый токен) */
 .star--muted {
-  color: #e5e7eb;
+  color: var(--gray-200);
 }
-/* Бейджик "Купил" */
+
+/* Бейдж верификации "Купил(а)" */
 .verified-badge {
-  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  font-family: var(--font-main);
+  font-size: var(--text-xs); /* 12px для читаемости */
+  font-weight: var(--fw-black);
   text-transform: uppercase;
-  font-weight: 800;
   letter-spacing: 0.05em;
-  color: #166534;
-  background-color: #dcfce7;
-  padding: 4px 8px;
-  border-radius: 4px;
+  line-height: 1;
+
+  /* Использование семантических токенов успеха */
+  color: var(--color-text-success); /* --green-500 */
+  background-color: var(--color-bg-success); /* --green-100 */
+
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
 }
 
 /* --- 3. PREMIUM DARK FOOTER --- */
+
 .footer {
-  background-color: #111111; /* Глубокий черный */
-  color: #a3a3a3; /* Серый текст (читаемость) */
-  padding-top: 60px;
+  /* Локальные переменные для темной темы футера */
+  --color-heading: var(--white);
+  --color-text-main: var(--charcoal-txt);
+  --color-link-hover: var(--color-accent);
+  --border-dark: rgba(255, 255, 255, 0.1);
+
+  background-color: var(--color-bg-footer-main); /* --charcoal-900 */
+  color: var(--color-text-main);
+
+  /* Большой системный отступ сверху */
+  padding-top: var(--space-3xl);
   border-top: none;
-  font-size: 15px;
+  font-size: var(--text-sm); /* 14px */
 }
 
 .footer__container {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 40px;
-  padding-bottom: 50px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2xl);
+  padding-bottom: var(--space-3xl);
 }
 
-/* Бренд */
+/* Колонка 1: Бренд */
 .footer__logo {
-  color: #fff;
-  font-size: 24px;
-  margin-bottom: 16px;
+  color: var(--white);
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-md);
   display: inline-block;
 }
+
+.footer__logo span {
+  color: var(--color-accent);
+}
+
 .footer__desc {
   line-height: 1.6;
-  max-width: 300px;
-  margin-bottom: 24px;
+  max-width: 20rem;
+  margin-bottom: var(--space-lg);
+  color: var(--color-text-main);
 }
 
-/* Заголовки */
+/* Колонка 2: Навигация */
 .footer__title {
-  color: #fff;
-  font-size: 16px;
+  color: var(--color-heading);
+  font-size: var(--text-base);
+  font-weight: var(--fw-bold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 20px;
-  font-weight: 700;
+  margin-bottom: var(--space-lg);
 }
 
-/* Ссылки */
 .footer__nav-list {
   list-style: none;
   padding: 0;
@@ -3396,80 +3446,126 @@ video.lightbox__image {
   flex-direction: column;
   gap: 12px;
 }
+
 .footer__link {
   color: inherit;
-  transition: all 0.2s;
+  text-decoration: none;
+  transition: color var(--transition-base), transform var(--transition-base);
   display: inline-block;
 }
-.footer__link:hover {
-  color: #fff;
-  transform: translateX(4px);
+
+@media (hover: hover) {
+  .footer__link:hover {
+    color: var(--color-link-hover);
+    transform: translateX(4px); /* Микро-интеракция */
+  }
 }
 
-/* Контакты */
+.footer__link:focus-visible {
+  outline: none;
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+/* Колонка 3: Контакты */
 .footer__address {
   font-style: normal;
   display: flex;
   flex-direction: column;
 }
+
 .footer__phone {
-  color: #fff;
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 6px;
+  display: block;
+  color: var(--white);
+  font-size: var(--text-xl);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--space-xs);
+  text-decoration: none;
+  transition: color var(--transition-base);
 }
-.footer__info {
-  font-size: 13px;
-  color: #737373;
-  margin-bottom: 12px;
-}
-.footer__email {
-  color: #e5e5e5;
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.2);
-}
-.footer__email:hover {
+
+.footer__phone:hover {
   color: var(--color-accent);
 }
 
-/* Telegram Button */
+.footer__info {
+  font-size: var(--text-xs);
+  color: var(--gray-500);
+  margin-bottom: var(--space-sm);
+}
+
+.footer__email {
+  color: var(--gray-300);
+  text-decoration: underline;
+  text-decoration-color: var(--border-dark);
+  text-underline-offset: 4px;
+  transition: color var(--transition-base),
+    text-decoration-color var(--transition-base);
+}
+
+.footer__email:hover {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
+/* Соцсети (Glassmorphism Effect) */
+.footer__socials {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
 .footer__social-btn {
   display: inline-flex;
   align-items: center;
   padding: 10px 20px;
-  border-radius: 100px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s;
+
+  /* Эффект стекла на темном фоне */
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-full);
+
+  color: var(--white);
+  font-weight: var(--fw-medium);
+  font-size: var(--text-sm);
+  text-decoration: none;
+
+  transition: all var(--transition-base);
 }
-.footer__social-btn:hover {
-  background: #24a1de; /* Telegram Blue */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(36, 161, 222, 0.2);
+
+@media (hover: hover) {
+  .footer__social-btn:hover {
+    background-color: var(--color-telegram); /* Semantic: --blue-tg */
+    border-color: var(--color-telegram);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(36, 161, 222, 0.25);
+  }
 }
 
 /* Подвал (Legal) */
 .footer__bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: #0a0a0a;
-  padding: 24px 0;
+  background-color: var(--color-bg-footer-sub); /* --charcoal-800 */
+  border-top: 1px solid var(--border-dark);
+  padding-block: var(--space-lg);
 }
+
 .footer__bottom-inner {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-sm);
   text-align: center;
-  font-size: 12px;
-  color: #525252;
+  font-size: var(--text-xs);
+  color: var(--gray-500);
 }
 
+/* Адаптивная сетка футера (Desktop) */
 @media (min-width: 768px) {
   .footer__container {
+    /* Асимметричная сетка: Широкий бренд | Навигация | Контакты */
     grid-template-columns: 1.4fr 1fr 1.2fr;
-    gap: 60px;
+    gap: var(--space-3xl); /* 80px */
   }
+
   .footer__bottom-inner {
     flex-direction: row;
     justify-content: space-between;
