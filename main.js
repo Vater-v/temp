@@ -666,35 +666,42 @@ document.addEventListener("DOMContentLoaded", () => {
    * =========================================================================
    */
   const initSliderButtons = () => {
-    // Находим все унифицированные обертки
-    const wrappers = document.querySelectorAll(".slider_wrapper_unified");
+    // Вспомогательная функция для подключения внешних кнопок
+    const setupExternalButtons = (sectionId, listId, controlsClass) => {
+      const section = document.getElementById(sectionId);
+      if (!section) return;
 
-    wrappers.forEach((wrapper) => {
-      const prevBtn = wrapper.querySelector(".js-slider-prev");
-      const nextBtn = wrapper.querySelector(".js-slider-next");
-      // Ищем контейнер с прокруткой внутри (либо #gallery-list, либо #reviews-list)
-      // У обоих есть класс .js-drag-scroll, используем его
-      const list = wrapper.querySelector(".js-drag-scroll");
+      const prevBtn = section.querySelector(
+        `.${controlsClass} .js-slider-prev`
+      );
+      const nextBtn = section.querySelector(
+        `.${controlsClass} .js-slider-next`
+      );
+      const list = document.getElementById(listId);
 
-      if (!prevBtn || !nextBtn || !list) return;
+      if (prevBtn && nextBtn && list) {
+        const getScrollAmount = () => {
+          const card = list.firstElementChild;
+          if (!card) return 300;
+          // Ширина карточки + gap (обычно 24px)
+          return card.offsetWidth + 24;
+        };
 
-      // Вычисляем шаг прокрутки (ширина карточки + отступ)
-      const getScrollAmount = () => {
-        const card = list.firstElementChild;
-        if (!card) return 300; // запасное значение
-        // offsetWidth дает ширину с padding/border.
-        // Предполагаем gap: 24px (как в CSS), добавляем его к ширине карточки.
-        return card.offsetWidth + 24;
-      };
+        prevBtn.addEventListener("click", () => {
+          list.scrollBy({ left: -getScrollAmount(), behavior: "smooth" });
+        });
 
-      prevBtn.addEventListener("click", () => {
-        list.scrollBy({ left: -getScrollAmount(), behavior: "smooth" });
-      });
+        nextBtn.addEventListener("click", () => {
+          list.scrollBy({ left: getScrollAmount(), behavior: "smooth" });
+        });
+      }
+    };
 
-      nextBtn.addEventListener("click", () => {
-        list.scrollBy({ left: getScrollAmount(), behavior: "smooth" });
-      });
-    });
+    // Запускаем логику для Галереи
+    setupExternalButtons("gallery", "gallery-list", "gallery__controls");
+
+    // Запускаем логику для Отзывов
+    setupExternalButtons("reviews", "reviews-list", "reviews__controls");
   };
 
   // --- Инициализация ---

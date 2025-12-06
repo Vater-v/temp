@@ -1138,10 +1138,18 @@ body.no-scroll {
 .gallery__controls,
 .reviews__controls {
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-top: 10px;
+  gap: 20px; /* Расстояние между стрелками и точками */
+  margin-top: 20px;
+  position: relative;
 }
-
+.gallery__controls .slider-btn,
+.reviews__controls .slider-btn {
+  position: static;
+  transform: none;
+  margin: 0;
+}
 .gallery__dots,
 .reviews__dots {
   display: flex;
@@ -1195,14 +1203,12 @@ body.no-scroll {
   transform: translateY(-50%);
   z-index: 10;
 
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
 
-  /* --- ИЗМЕНЕНИЯ ЗДЕСЬ --- */
   background-color: #e2363c; /* Ваш красный фон */
   color: #ffffff; /* Белый цвет. SVG-иконка "подхватит" его */
-  /* ----------------------- */
 
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень чуть темнее для контраста */
   display: flex;
@@ -1222,7 +1228,7 @@ body.no-scroll {
 .slider-btn:hover {
   /* Делаем красный чуть темнее при наведении для обратной связи */
   background-color: #c42b30;
-  transform: translateY(-50%) scale(1.1);
+  transform: translateY(-5%) scale(1.1);
 }
 
 /* 3. Разносим по сторонам (без изменений) */
@@ -1237,8 +1243,8 @@ body.no-scroll {
 /* 4. Адаптив для мобильных */
 @media (max-width: 768px) {
   .slider-btn {
-    width: 40px; /* Чуть меньше на мобилках */
-    height: 40px;
+    width: 36px; /* Чуть меньше на мобилках */
+    height: 36px;
     /* Можно сделать полупрозрачным, если слишком ярко перекрывает фото */
     /* background-color: rgba(226, 54, 60, 0.9); */
   }
