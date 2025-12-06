@@ -2723,26 +2723,31 @@ body.no-scroll {
 /* ==========================================================================
    9. Модальное окно и Меню контакты
    ========================================================================== */
+
+/* --- 9.1. Modal Wrapper & Overlay --- */
 .modal {
   position: fixed;
-  inset: 0;
+  inset: 0; /* Логическая замена top/right/bottom/left */
   z-index: var(--z-modal);
 
-  /* Flex центрирование - самое надежное */
+  /* Layout: Flex для центрирования + поддержка скролла */
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 20px;
-  padding-top: max(20px, env(safe-area-inset-top));
-  padding-bottom: max(20px, env(safe-area-inset-bottom));
+  /* Safe Areas & Spacing: учитываем "челку" и минимальные отступы */
+  padding: var(--space-md);
+  padding-block-start: max(var(--space-md), env(safe-area-inset-top));
+  padding-block-end: max(var(--space-md), env(safe-area-inset-bottom));
 
+  /* State: Hidden */
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
+  transition: opacity 0.3s var(--ease-out-expo), visibility 0.3s;
 
-  /* Разрешаем скролл, если контент модалки выше экрана */
+  /* Scroll Handling: разрешаем скролл, если контент не влезает */
   overflow-y: auto;
+  overscroll-behavior-y: contain; /* Блокировка прокрутки страницы под модалкой */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -2754,29 +2759,43 @@ body.no-scroll {
 .modal__overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  /* Премиальный эффект размытия фона */
+  background-color: var(--overlay-modal);
+
+  /* Glassmorphism Effect */
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+
   cursor: pointer;
+  /* Аппаратное ускорение */
+  transform: translateZ(0);
 }
 
+/* --- 9.2. Modal Content Card --- */
 .modal__content {
   position: relative;
-  background-color: var(--white);
-  padding: 48px 40px;
-  border-radius: 24px; /* Более мягкие углы */
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  max-width: 440px;
-  width: 100%;
-  text-align: center;
-  z-index: 2;
+  z-index: var(--z-raised);
+
+  /* Адаптивная ширина: макс 440px (27.5rem), но не шире экрана */
+  width: min(100%, 27.5rem);
+
+  /* margin: auto важен для центрирования во flex-контейнере при overflow */
   margin: auto;
 
-  /* Animation Pop-in */
-  transform: scale(0.9) translateY(10px);
+  background-color: var(--color-bg-surface);
+  border-radius: var(--radius-lg); /* 24px */
+  box-shadow: var(--shadow-xl);
+
+  /* Используем токены: вертикаль 48px, горизонталь 32px (по макету) */
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-xl);
+
+  text-align: center;
+
+  /* Entry Animation (Pop-in) */
+  transform: scale(0.95) translateY(10px);
   opacity: 0;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+  transition: transform 0.4s var(--ease-out-expo), opacity 0.3s ease;
+  will-change: transform, opacity;
 }
 
 .modal.is-visible .modal__content {
@@ -2784,113 +2803,209 @@ body.no-scroll {
   opacity: 1;
 }
 
+/* --- 9.3. Modal Internal Elements --- */
 .modal__icon-wrapper {
-  width: 72px;
-  height: 72px;
-  background-color: #dcfce7;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 24px;
-  color: #166534;
+
+  /* Фиксированный размер 72px */
+  width: 4.5rem;
+  height: 4.5rem;
+  margin-inline: auto;
+  margin-block-end: var(--space-lg);
+
+  background-color: var(--green-100);
+  color: var(--green-500);
+  border-radius: var(--radius-full);
+
+  /* Подготовка к анимации */
+  transform: scale(0);
+}
+
+/* Анимация иконки (запускается только при открытии) */
+.modal.is-visible .modal__icon-wrapper {
   animation: pop-icon 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
-@keyframes pop-icon {
-  0% {
-    transform: scale(0);
+
+.modal__title {
+  font-size: var(--text-2xl);
+  font-weight: var(--fw-black);
+  color: var(--color-heading);
+  margin-block-end: var(--space-sm);
+  line-height: 1.2;
+}
+
+.modal__text {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-block-end: var(--space-xl);
+  /* Равномерное распределение текста */
+  text-wrap: balance;
+}
+
+.modal__text span {
+  font-weight: var(--fw-bold);
+  color: var(--color-heading);
+}
+
+/* --- 9.4. Close Button --- */
+.modal__close-btn {
+  position: absolute;
+  /* Логическое позиционирование */
+  inset-block-start: var(--space-md);
+  inset-inline-end: var(--space-md);
+
+  /* Увеличенная зона клика (40px) */
+  width: 2.5rem;
+  height: 2.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--gray-100);
+  color: var(--gray-500);
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s,
+    transform 0.3s var(--ease-out-expo);
+}
+
+@media (hover: hover) {
+  .modal__close-btn:hover {
+    background-color: var(--color-accent);
+    color: var(--color-text-inverse);
+    transform: rotate(90deg);
   }
-  100% {
+}
+
+/* A11y: Focus Visible */
+.modal__close-btn:focus-visible {
+  outline: none;
+  /* Двойная тень для контраста на любом фоне */
+  box-shadow: 0 0 0 2px var(--color-bg-surface), 0 0 0 4px var(--color-accent);
+}
+
+/* --- 9.5. Animations & A11y --- */
+@keyframes pop-icon {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Support for Prefers-Reduced-Motion */
+@media (prefers-reduced-motion: reduce) {
+  .modal,
+  .modal__content,
+  .modal__close-btn,
+  .modal__icon-wrapper {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Гарантируем видимость без анимации */
+  .modal.is-visible .modal__content {
+    opacity: 1;
+    transform: none;
+  }
+  .modal__icon-wrapper {
     transform: scale(1);
   }
 }
 
-.modal__title {
-  font-size: 24px;
-  font-weight: var(--fw-black);
-  margin-bottom: 12px;
-  color: var(--color-heading);
-}
-.modal__text {
-  color: var(--color-text-muted);
-  margin-bottom: 32px;
-  line-height: 1.6;
-}
-.modal__text span {
-  font-weight: 600;
-  color: var(--color-heading);
-}
+/* ==========================================================================
+   [Component] Mobile Menu Contacts
+   Логически отделенный блок, используемый внутри мобильного меню.
+   ========================================================================== */
 
-.modal__close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--gray-500);
-  background: var(--gray-100);
-  border-radius: 50%;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-.modal__close-btn:hover {
-  background-color: var(--color-accent);
-  color: white;
-  transform: rotate(90deg);
-}
-
-/* --- Mobile Menu Contacts Part --- */
 .mobile-menu__contacts {
   text-align: center;
-  margin-bottom: 24px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--color-border);
+  margin-block-end: var(--space-lg);
+  padding-block-end: var(--space-lg);
+  border-block-end: 1px solid var(--color-border);
 }
 
 .mobile-phone {
   display: block;
-  font-size: 22px;
+  /* Приводим к системному размеру 24px (было 22px) для консистентности */
+  font-size: var(--text-2xl);
   font-weight: var(--fw-bold);
   color: var(--color-heading);
-  margin-bottom: 8px;
   text-decoration: none;
-  padding: 10px 0;
+
+  padding-block: var(--space-sm);
+  margin-block-end: var(--space-xs);
+  transition: color 0.2s ease;
+}
+
+.mobile-phone:active {
+  color: var(--color-accent);
 }
 
 .mobile-hint {
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--color-text-muted);
-  margin-bottom: 16px;
+  margin-block-end: var(--space-md);
 }
 
 .mobile-socials {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: var(--space-sm);
 }
 
+/* Social Button (Telegram) */
 .ms-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 24px;
-  min-width: 140px;
-  border-radius: 100px;
+
+  min-width: 8.75rem; /* 140px */
+  padding: 10px var(--space-lg);
+
+  font-size: 15px; /* Оптическая подстройка */
   font-weight: var(--fw-medium);
-  font-size: 15px;
-  color: #fff;
-  transition: opacity 0.2s, transform 0.1s;
   text-decoration: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: var(--white);
+
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.1s ease, box-shadow 0.2s ease, opacity 0.2s;
 }
+
+.ms-btn--tg {
+  background-color: var(--color-telegram);
+}
+
 .ms-btn:active {
   transform: scale(0.96);
+  box-shadow: none;
 }
-.ms-btn--tg {
-  background-color: #24a1de;
+
+.ms-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(36, 161, 222, 0.4);
+}
+
+/* --- Mobile Landscape Fix --- */
+/* Если высота экрана мала (ландшафт на телефоне), разрешаем скролл с самого верха */
+@media (max-height: 500px) and (orientation: landscape) {
+  .modal {
+    align-items: flex-start;
+  }
+  .modal__content {
+    margin-block: auto;
+  }
 }
 
 /* ==========================================================================
