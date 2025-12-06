@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 3. Галерея (Обновлено: Drag + Snap, как в отзывах)
+   * 3. Галерея (Drag + Snap)
    * =========================================================================
    */
   const initGallerySlider = () => {
@@ -209,19 +209,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let isDown = false;
     let startX;
     let scrollLeft;
-
-    // Предотвращаем конфликт drag и клика для zoom
     let isDraggingFlag = false;
 
     sliderWrapper.addEventListener("mousedown", (e) => {
-      if ("ontouchstart" in window) return; // Игнорируем тач (там нативный свайп)
+      if ("ontouchstart" in window) return;
 
       isDown = true;
       isDraggingFlag = false;
       sliderWrapper.classList.add("is-dragging");
       startX = e.pageX - sliderWrapper.offsetLeft;
       scrollLeft = sliderWrapper.scrollLeft;
-      // Не делаем preventDefault здесь, чтобы работали клики, если драга не было
     });
 
     const stopDragging = () => {
@@ -238,15 +235,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const x = e.pageX - sliderWrapper.offsetLeft;
       const walk = x - startX;
 
-      // Если сдвинули больше чем на 5px, считаем это перетаскиванием
       if (Math.abs(walk) > 5) {
         isDraggingFlag = true;
-        e.preventDefault(); // Блокируем выделение и прочее только при реальном движении
-        sliderWrapper.scrollLeft = scrollLeft - walk * 2; // *2 для скорости
+        e.preventDefault();
+        sliderWrapper.scrollLeft = scrollLeft - walk * 2;
       }
     });
 
-    // Блокируем открытие Lightbox, если это было перетаскивание
     const links = sliderWrapper.querySelectorAll("img, a");
     links.forEach((link) => {
       link.addEventListener("click", (e) => {
@@ -260,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 4. Слайдер Отзывов (Drag Fix + Snap)
+   * 4. Слайдер Отзывов (Drag + Snap)
    * =========================================================================
    */
   const initReviewsSlider = () => {
@@ -272,7 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const cards = sliderWrapper.querySelectorAll(".review-card");
     if (cards.length === 0) return;
 
-    // 1. Точки (Dots Logic)
+    // 1. Точки
     if (dotsContainer) {
       dotsContainer.innerHTML = "";
       const dots = [];
@@ -309,19 +304,16 @@ document.addEventListener("DOMContentLoaded", () => {
       cards.forEach((card) => observer.observe(card));
     }
 
-    // 2. Логика перетаскивания мышкой (Drag-to-Scroll)
+    // 2. Drag Logic
     let isDown = false;
     let startX;
     let scrollLeft;
 
     sliderWrapper.addEventListener("mousedown", (e) => {
-      // Игнорируем на тач-устройствах (там нативный свайп)
       if ("ontouchstart" in window) return;
 
       isDown = true;
-      // Добавляем класс, который в CSS отключит Snap, чтобы не дергалось
       sliderWrapper.classList.add("is-dragging");
-
       startX = e.pageX - sliderWrapper.offsetLeft;
       scrollLeft = sliderWrapper.scrollLeft;
       e.preventDefault();
@@ -330,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const stopDragging = () => {
       if (!isDown) return;
       isDown = false;
-      sliderWrapper.classList.remove("is-dragging"); // Возвращаем Snap
+      sliderWrapper.classList.remove("is-dragging");
     };
 
     sliderWrapper.addEventListener("mouseleave", stopDragging);
@@ -340,14 +332,14 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!isDown) return;
       e.preventDefault();
       const x = e.pageX - sliderWrapper.offsetLeft;
-      const walk = (x - startX) * 2; // Скорость скролла
+      const walk = (x - startX) * 2;
       sliderWrapper.scrollLeft = scrollLeft - walk;
     });
   };
 
   /**
    * =========================================================================
-   * 5. Логика формы заказа (ОБНОВЛЕНО)
+   * 5. Логика формы заказа
    * =========================================================================
    */
   const initOrderForm = () => {
@@ -364,7 +356,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!form || !modal) return;
 
-    // Карта изображений
     const imageMap = {
       red: {
         full: "media/RedStitch_Salon_Collage_v2.webp",
@@ -442,7 +433,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // Маска телефона
     if (phoneInput) {
       phoneInput.addEventListener("input", (e) => {
         let x = e.target.value
@@ -505,9 +495,6 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", closeModal);
     });
 
-    // -------------------------------------------------------------
-    // ИСПРАВЛЕННАЯ ЛОГИКА ОТПРАВКИ ФОРМЫ (FETCH)
-    // -------------------------------------------------------------
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -519,7 +506,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
 
-      // Добавляем актуальную цену
       const activeKit = document.querySelector(
         'input[name="configuration"]:checked'
       );
@@ -539,7 +525,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
           openModal(data.name);
           form.reset();
-          updateProductState(); // Сброс UI в исходное состояние
+          updateProductState();
         } else {
           alert("Произошла ошибка при отправке заявки. Попробуйте еще раз.");
         }
@@ -674,6 +660,43 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  /**
+   * =========================================================================
+   * 7. Кнопки Слайдера (Влево / Вправо)
+   * =========================================================================
+   */
+  const initSliderButtons = () => {
+    // Находим все унифицированные обертки
+    const wrappers = document.querySelectorAll(".slider_wrapper_unified");
+
+    wrappers.forEach((wrapper) => {
+      const prevBtn = wrapper.querySelector(".js-slider-prev");
+      const nextBtn = wrapper.querySelector(".js-slider-next");
+      // Ищем контейнер с прокруткой внутри (либо #gallery-list, либо #reviews-list)
+      // У обоих есть класс .js-drag-scroll, используем его
+      const list = wrapper.querySelector(".js-drag-scroll");
+
+      if (!prevBtn || !nextBtn || !list) return;
+
+      // Вычисляем шаг прокрутки (ширина карточки + отступ)
+      const getScrollAmount = () => {
+        const card = list.firstElementChild;
+        if (!card) return 300; // запасное значение
+        // offsetWidth дает ширину с padding/border.
+        // Предполагаем gap: 24px (как в CSS), добавляем его к ширине карточки.
+        return card.offsetWidth + 24;
+      };
+
+      prevBtn.addEventListener("click", () => {
+        list.scrollBy({ left: -getScrollAmount(), behavior: "smooth" });
+      });
+
+      nextBtn.addEventListener("click", () => {
+        list.scrollBy({ left: getScrollAmount(), behavior: "smooth" });
+      });
+    });
+  };
+
   // --- Инициализация ---
   initScrollSpy();
   initMobileMenu();
@@ -682,4 +705,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initReviewsSlider();
   initOrderForm();
   initLightbox();
+  initSliderButtons();
 });
