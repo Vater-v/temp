@@ -18,92 +18,180 @@
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
 
     <style>
-      /* Layout Fix: Прижимаем футер к низу */
+      /* --- Локальные стили для Policy Page --- */
+
       body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-      .main {
-        flex: 1 0 auto; /* Растягиваем контент */
-      }
-      .footer {
-        flex-shrink: 0;
+        background-color: var(
+          --color-bg-subtle
+        ); /* Светло-серый фон как на главной */
+        /* Паттерн в точку для фона */
+        background-image: radial-gradient(var(--gray-300) 1px, transparent 1px);
+        background-size: 24px 24px;
       }
 
-      /* Типографика текстовой страницы */
-      .text-page {
+      .main {
         padding-top: 40px;
         padding-bottom: 80px;
       }
-      .text-container {
-        max-width: 800px;
+
+      /* Ограничитель ширины для документа */
+      .policy-wrapper {
+        max-width: 860px;
         margin: 0 auto;
+        padding-inline: var(--gutter);
       }
-      .text-content h1 {
-        font-size: clamp(28px, 4vw, 40px);
-        font-weight: 800;
-        margin-bottom: 40px;
-        color: var(--color-heading);
+
+      /* Карточка документа */
+      .doc-card {
+        background-color: var(--white);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-xl); /* Глубокая тень */
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Декоративная полоса сверху */
+      .doc-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: var(--color-accent); /* Красный бренд */
+      }
+
+      /* Заголовок страницы */
+      .doc-header {
         text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid var(--gray-200);
       }
-      .text-content h2 {
-        font-size: 22px;
+
+      .doc-icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        background-color: var(--gray-100);
+        color: var(--color-heading);
+        border-radius: 50%;
+        margin-bottom: 20px;
+      }
+
+      .doc-title {
+        font-size: clamp(24px, 4vw, 36px);
+        font-weight: 800;
+        color: var(--color-heading);
+        line-height: 1.2;
+      }
+
+      /* Контент */
+      .doc-content {
+        font-size: 16px;
+        line-height: 1.7;
+        color: var(--color-text-main);
+      }
+
+      .doc-content h2 {
+        font-size: 20px;
         font-weight: 700;
         color: var(--color-heading);
         margin-top: 40px;
         margin-bottom: 16px;
-        border-bottom: 2px solid var(--color-bg-subtle);
-        padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
       }
-      .text-content p {
+
+      /* Номера разделов */
+      .doc-content h2::before {
+        content: attr(data-num);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background-color: var(--color-accent);
+        color: white;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: 6px;
+        flex-shrink: 0;
+      }
+
+      .doc-content p {
         margin-bottom: 16px;
-        color: var(--color-text-main);
-        font-size: 16px;
-        line-height: 1.7;
       }
-      .text-content strong {
+
+      .doc-content strong {
         font-weight: 700;
         color: var(--color-heading);
       }
-      .text-content ul {
+
+      /* Списки */
+      .doc-list {
+        list-style: none;
+        padding: 0;
         margin-bottom: 24px;
-        padding-left: 20px;
-        list-style: none; /* Убираем стандартные точки */
-      }
-      .text-content li {
-        position: relative;
-        padding-left: 20px;
-        margin-bottom: 12px;
-        color: var(--color-text-main);
-        line-height: 1.6;
-      }
-      /* Кастомные маркеры списка */
-      .text-content li::before {
-        content: "•";
-        color: var(--color-accent); /* Красный цвет маркера */
-        font-weight: bold;
-        position: absolute;
-        left: 0;
-        top: 0;
+        background-color: var(--gray-050); /* Выделение блока списка */
+        border-radius: var(--radius-sm);
+        padding: 20px;
+        border: 1px solid var(--gray-200);
       }
 
-      /* Блок с датой и кнопкой */
-      .last-update {
-        margin-top: 60px;
+      .doc-list li {
+        position: relative;
+        padding-left: 28px;
+        margin-bottom: 10px;
+      }
+      .doc-list li:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Кастомные маркеры (Галочки) */
+      .doc-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 8px; /* Оптическая центровка */
+        width: 16px;
+        height: 16px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e53935' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      /* Футер документа */
+      .doc-footer {
+        margin-top: 50px;
         padding-top: 30px;
-        border-top: 1px solid var(--color-border);
-        color: var(--color-text-muted);
-        font-size: 14px;
+        border-top: 1px dashed var(--gray-300);
         display: flex;
         flex-direction: column;
-        align-items: center;
         gap: 20px;
+        align-items: center;
         text-align: center;
       }
 
+      .update-date {
+        font-size: 14px;
+        color: var(--color-text-muted);
+        background-color: var(--gray-100);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+      }
+
+      /* Адаптив */
       @media (min-width: 768px) {
-        .last-update {
+        .doc-card {
+          padding: 60px;
+        }
+        .doc-footer {
           flex-direction: row;
           justify-content: space-between;
           text-align: left;
@@ -117,14 +205,14 @@
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </symbol>
-      <symbol id="check" viewBox="0 0 24 24">
-        <polyline points="20 6 9 17 4 12"></polyline>
+      <symbol id="shield" viewBox="0 0 24 24">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </symbol>
     </svg>
 
     <header class="header" id="header">
       <div class="container header__container">
-        <a href="/" class="logo" aria-label="На главную">
+        <a href="/" class="logo" aria-label="StyleAvto - На главную">
           Style<span>Avto</span>
         </a>
 
@@ -138,9 +226,9 @@
         </nav>
 
         <div class="header__actions">
-          <a href="/#order" class="button button--primary header__cta-btn"
-            >К заказу</a
-          >
+          <a href="/#order" class="button button--primary header__cta-btn">
+            К заказу
+          </a>
         </div>
 
         <button
@@ -148,9 +236,9 @@
           aria-label="Открыть меню"
           aria-expanded="false"
         >
-          <span class="burger-btn__line"></span>
-          <span class="burger-btn__line"></span>
-          <span class="burger-btn__line"></span>
+          <span class="burger-btn__box">
+            <span class="burger-btn__inner"></span>
+          </span>
         </button>
       </div>
     </header>
@@ -160,7 +248,7 @@
       <aside class="mobile-menu__drawer">
         <div class="mobile-menu__header">
           <span class="logo">Style<span>Avto</span></span>
-          <button class="close-btn js-menu-close">
+          <button class="close-btn js-menu-close" aria-label="Закрыть">
             <svg class="icon" width="24" height="24">
               <use xlink:href="#close" />
             </svg>
@@ -179,9 +267,7 @@
               >
             </li>
             <li>
-              <a href="/#gallery" class="mobile-nav__link js-menu-link"
-                >Галерея</a
-              >
+              <a href="/#gallery" class="mobile-nav__link js-menu-link">Фото</a>
             </li>
             <li>
               <a href="/#reviews" class="mobile-nav__link js-menu-link"
@@ -197,132 +283,159 @@
           <a
             href="/#order"
             class="button button--primary button--full js-menu-link"
-            >Оформить заказ</a
           >
+            Оформить заказ
+          </a>
         </div>
       </aside>
     </div>
 
     <main class="main">
-      <section class="section text-page">
-        <div class="container text-container">
-          <div class="text-content">
-            <h1>Политика конфиденциальности</h1>
-
-            <p>
-              Администрация сайта <strong>StyleAvto</strong> (частное лицо)
-              уважает ваше право на конфиденциальность и обязуется защищать ваши
-              персональные данные. В этом документе описано, какую информацию мы
-              собираем и как её используем.
-            </p>
-
-            <h2>1. Какие данные мы собираем</h2>
-            <p>
-              Мы собираем только ту информацию, которую вы добровольно
-              предоставляете при заполнении формы заявки на сайте:
-            </p>
-            <ul>
-              <li><strong>Имя</strong> — для корректного обращения к вам;</li>
-              <li>
-                <strong>Номер телефона</strong> — для связи, уточнения деталей
-                заказа и подтверждения отправки;
-              </li>
-              <li>
-                <strong>Город</strong> — для расчета стоимости и сроков
-                доставки.
-              </li>
-            </ul>
-
-            <h2>2. Цели сбора данных</h2>
-            <p>
-              Ваши данные используются исключительно для выполнения обязательств
-              перед вами:
-            </p>
-            <ul>
-              <li>
-                Обратный звонок для консультации по товару (автомобильные
-                накидки);
-              </li>
-              <li>Согласование комплектации, цвета и итоговой стоимости;</li>
-              <li>
-                Оформление транспортной накладной (СДЭК, Почта России) для
-                доставки товара.
-              </li>
-            </ul>
-
-            <h2>3. Передача данных третьим лицам</h2>
-            <p>
-              Мы <strong>не передаем</strong> ваши контактные данные рекламным
-              сетям, спам-базам или иным третьим лицам.
-            </p>
-            <p>
-              Единственное исключение — транспортные компании (курьерские
-              службы), которым необходимы ваши ФИО и телефон непосредственно для
-              доставки вашего заказа.
-            </p>
-
-            <h2>4. Безопасность и хранение</h2>
-            <p>
-              Сайт использует защищенный протокол передачи данных (HTTPS). Мы
-              принимаем разумные меры для защиты информации от
-              несанкционированного доступа, изменения или удаления.
-            </p>
-
-            <h2>5. Ваши права</h2>
-            <p>
-              Вы можете в любой момент отказаться от покупки до её отправки.
-              Также вы имеете право запросить удаление ваших персональных данных
-              из нашей базы контактов. Для этого просто сообщите нам об этом по
-              телефону или в мессенджере.
-            </p>
-
-            <div class="last-update">
-              <span>Последнее обновление: 01.01.2025</span>
-              <a href="/" class="button button--secondary"
-                >Вернуться в магазин</a
-              >
+      <div class="policy-wrapper">
+        <article class="doc-card">
+          <header class="doc-header">
+            <div class="doc-icon-wrapper">
+              <svg class="icon" width="32" height="32" stroke-width="1.5">
+                <use xlink:href="#shield" />
+              </svg>
             </div>
+            <h1 class="doc-title">Политика<br />конфиденциальности</h1>
+          </header>
+
+          <div class="doc-content">
+            <p>
+              Администрация сайта <strong>StyleAvto</strong> (далее — Оператор)
+              уважает ваше право на конфиденциальность и обязуется защищать
+              персональные данные, которые вы нам доверяете. Этот документ
+              объясняет простым языком, какие данные мы собираем, зачем они нам
+              нужны и как мы их храним.
+            </p>
+
+            <h2 data-num="1">Какие данные мы собираем</h2>
+            <p>
+              Мы собираем минимально необходимый набор данных, требуемый
+              исключительно для обработки вашего заказа. При заполнении формы на
+              сайте вы указываете:
+            </p>
+            <ul class="doc-list">
+              <li>
+                <strong>Имя</strong> — чтобы менеджер мог корректно к вам
+                обратиться;
+              </li>
+              <li>
+                <strong>Номер телефона</strong> — для подтверждения заказа,
+                уточнения деталей и информирования о доставке;
+              </li>
+              <li>
+                <strong>Город</strong> — для расчета стоимости и сроков доставки
+                через транспортные компании.
+              </li>
+            </ul>
+
+            <h2 data-num="2">Для чего мы используем данные</h2>
+            <p>
+              Ваши данные используются исключительно для выполнения наших
+              обязательств перед вами как перед покупателем:
+            </p>
+            <ul class="doc-list">
+              <li>
+                Обратная связь для консультации по характеристикам накидок;
+              </li>
+              <li>
+                Согласование комплектации, цвета строчки и итоговой стоимости;
+              </li>
+              <li>
+                Оформление накладной в службе доставки (СДЭК, Почта России).
+              </li>
+            </ul>
+
+            <h2 data-num="3">Передача третьим лицам</h2>
+            <p>
+              Мы <strong>категорически не продаем</strong> и не передаем ваши
+              контактные данные рекламным сетям, спам-базам или иным лицам, не
+              имеющим отношения к вашему заказу.
+            </p>
+            <p>
+              Передача данных (ФИО и телефон) осуществляется только транспортной
+              компании (курьерской службе) непосредственно в момент отправки
+              груза, что необходимо для вручения вам посылки.
+            </p>
+
+            <h2 data-num="4">Безопасность</h2>
+            <p>
+              Наш сайт работает по защищенному протоколу <strong>HTTPS</strong>,
+              что гарантирует шифрование данных при их передаче от вашего
+              браузера к нашему серверу. Доступ к базе заказов имеют только
+              сотрудники, непосредственно занимающиеся сборкой и отправкой
+              товара.
+            </p>
+
+            <h2 data-num="5">Ваши права</h2>
+            <p>
+              Вы имеете право в любой момент запросить информацию о том, какие
+              ваши данные хранятся у нас, а также потребовать их полного
+              удаления из нашей базы после завершения сделки. Для этого
+              достаточно связаться с нами любым удобным способом.
+            </p>
           </div>
-        </div>
-      </section>
+
+          <footer class="doc-footer">
+            <span class="update-date">Обновлено: 01.01.2025</span>
+            <a href="/" class="button button--secondary">
+              <svg
+                class="icon"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                style="margin-right: 8px; transform: rotate(180deg)"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+              Вернуться в магазин
+            </a>
+          </footer>
+        </article>
+      </div>
     </main>
 
     <footer class="footer">
       <div class="container footer__container">
-        <div class="footer__col footer__brand-col">
+        <div class="footer__col">
           <a href="/" class="logo footer__logo">Style<span>Avto</span></a>
           <p class="footer__desc">
-            Премиальные накидки для вашего комфорта. Качество материалов,
-            идеальная посадка и защита салона.
+            Премиальные автонакидки из алькантары и велюра. Эстетика, защита и
+            комфорт в каждой поездке.
           </p>
         </div>
-        <div class="footer__col footer__contacts-col">
+
+        <nav class="footer__col">
+          <h3 class="footer__title">Навигация</h3>
+          <ul class="footer__nav-list">
+            <li><a href="/#details" class="footer__link">Преимущества</a></li>
+            <li><a href="/#gallery" class="footer__link">Фото в салоне</a></li>
+            <li><a href="/#reviews" class="footer__link">Честные отзывы</a></li>
+          </ul>
+        </nav>
+
+        <div class="footer__col">
           <h3 class="footer__title">Контакты</h3>
           <address class="footer__address">
-            <a
-              class="footer__contact-link footer__contact-link--phone"
-              href="tel:73833759285"
+            <a class="footer__phone" href="tel:+73833759285"
               >+7 (383) 375-92-85</a
             >
-            <a class="footer__contact-link" href="mailto:v333iv@gmail.com"
+            <p class="footer__info">г. Новосибирск, доставка по РФ</p>
+            <a class="footer__email" href="mailto:v333iv@gmail.com"
               >v333iv@gmail.com</a
             >
           </address>
         </div>
       </div>
       <div class="footer__bottom">
-        <div class="container footer__bottom-container">
+        <div class="container footer__bottom-inner">
           <p class="footer__copyright">© 2025 StyleAvto. Все права защищены.</p>
-          <p
-            style="
-              font-size: 11px;
-              color: #767676;
-              margin-top: 10px;
-              opacity: 0.6;
-            "
-          >
-            Информация на сайте не является публичной офертой (ст. 437 ГК РФ).
-          </p>
         </div>
       </div>
     </footer>
