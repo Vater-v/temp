@@ -2176,137 +2176,228 @@ body.no-scroll {
   }
 }
 /* ==========================================================================
-   8. Форма Заказа (UX & Sticky Fix)
+   8. Форма Заказа (Refactored & Polished)
    ========================================================================== */
+
+/* --- 8.1. Layout & Section --- */
 .order {
-  padding-bottom: 80px;
+  /* Создаем контекст наложения для корректной работы sticky внутри */
   position: relative;
-  z-index: 10;
+  z-index: var(--z-base);
+  /* Дополнительный отступ снизу для "воздуха" перед футером */
+  padding-bottom: var(--space-3xl);
 }
 
 .order__container {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-xl);
+  align-items: start;
 }
 
+/* --- 8.2. Content Side (Left on Desktop) --- */
 .order__content {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.order__title {
+  text-align: center;
+  margin-bottom: var(--space-sm);
+  /* Равномерное распределение слов в заголовке */
+  text-wrap: balance;
+}
+
+.order__subtitle {
+  text-align: center;
+  max-width: 32rem;
+  margin-inline: auto;
+  margin-bottom: var(--space-xl);
+  color: var(--color-text-muted);
+  /* Предотвращает висячие слова */
+  text-wrap: pretty;
 }
 
 .order__image {
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
   width: 100%;
-  transition: opacity 0.3s ease;
-  display: block;
-}
-
-.order-form {
-  background: var(--white);
-  padding: var(--space-lg);
+  height: auto;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  border: 1px solid var(--gray-200);
-  width: 100%;
-  /* Fix: Для сглаживания анимации при изменении контента */
+  box-shadow: var(--shadow-lg);
+  object-fit: cover;
+  background-color: var(--gray-100);
+  /* Плавный переход при смене изображения через JS */
+  transition: opacity 0.3s ease, transform 0.4s var(--ease-out-expo);
   will-change: transform;
 }
 
+/* --- 8.3. Form Card (Right on Desktop) --- */
+.order-form {
+  position: relative;
+  background-color: var(--white);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  /* Premium Shadow: Комбинация тонкой обводки и глубокой тени */
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03),
+    0 20px 40px -12px rgba(0, 0, 0, 0.12);
+  /* Оптимизация перерисовки */
+  will-change: transform;
+  transform: translateZ(0);
+  /* Стилизация скроллбара (для sticky режима) */
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-300) transparent;
+}
+
+/* Стилизация скроллбара для Webkit (Chrome/Safari) */
+.order-form::-webkit-scrollbar {
+  width: 6px;
+}
+
+.order-form::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: var(--space-sm);
+}
+
+.order-form::-webkit-scrollbar-thumb {
+  background-color: var(--gray-300);
+  border-radius: var(--radius-full);
+}
+
+.order-form::-webkit-scrollbar-thumb:hover {
+  background-color: var(--gray-400);
+}
+
+/* --- 8.4. Form Header --- */
 .order-form__header {
   text-align: center;
   margin-bottom: var(--space-lg);
   padding-bottom: var(--space-md);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--gray-100);
 }
 
 .order-form__badge {
-  display: inline-block;
-  background-color: #fff1f0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff1f2; /* Light Brand Tint */
   color: var(--color-accent);
+  font-size: var(--text-xs);
   font-weight: var(--fw-bold);
-  font-size: 12px;
   text-transform: uppercase;
-  padding: 6px 14px;
-  border-radius: 100px;
-  margin-bottom: 10px;
   letter-spacing: 0.05em;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-sm);
+}
+
+.order-form__price-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
 }
 
 .price-block {
   display: flex;
   align-items: baseline;
   justify-content: center;
-  gap: 12px;
+  gap: var(--space-sm);
   flex-wrap: wrap;
-}
-.price-block__old {
-  text-decoration: line-through;
-  color: var(--gray-500);
-  font-size: 16px;
-  font-weight: 500;
-}
-.price-block__new {
-  color: var(--gray-900);
-  font-size: 32px;
-  font-weight: var(--fw-black);
-  transition: opacity 0.2s;
+  line-height: 1;
 }
 
-/* Radio Logic */
+.price-block__old {
+  text-decoration: line-through;
+  /* Цвет зачеркивания - акцентный для привлечения внимания к выгоде */
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 1.5px;
+  color: var(--gray-400);
+  font-size: var(--text-base);
+  font-weight: var(--fw-medium);
+}
+
+.price-block__new {
+  color: var(--color-heading);
+  font-size: 2rem; /* 32px */
+  font-weight: var(--fw-black);
+  letter-spacing: -0.02em;
+  /* Анимация при смене цены */
+  transition: opacity 0.2s ease;
+}
+
+/* --- 8.5. Form Layout & Fieldsets --- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
 .form__fieldset {
   border: none;
   padding: 0;
-  margin: 0 0 24px 0;
+  margin: 0;
+  min-inline-size: min-content;
 }
+
 .form__legend {
-  font-weight: var(--fw-bold);
-  margin-bottom: 12px;
   display: block;
-  font-size: 15px;
+  width: 100%;
+  margin-bottom: var(--space-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-bold);
   color: var(--color-heading);
 }
 
+/* --- Radio Groups (Interactive Cards) --- */
 .radio-group {
   display: grid;
-  gap: 12px;
+  gap: var(--space-sm);
 }
+
 .radio-group--colors {
-  grid-template-columns: 1fr 1fr;
+  /* Сетка: 2 колонки для цветов */
+  grid-template-columns: repeat(2, 1fr);
 }
 
-/* 1. Заставляем обертку растягивать содержимое на всю высоту */
+.radio-group--options {
+  /* Сетка: 1 колонка для комплектаций */
+  grid-template-columns: 1fr;
+}
+
 .radio-group__item {
-  display: flex;
-  flex-direction: column;
+  position: relative;
 }
 
+/* Label Styling (Card Look) */
 .radio-group__label {
-  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 12px;
-  padding: 14px;
   width: 100%;
-  flex-grow: 1; /* Растягивает кнопку на всю высоту ячейки */
-  height: 100%; /* Гарантия высоты */
+  height: 100%;
+  padding: 12px 16px;
   background-color: var(--white);
-  border: 2px solid var(--gray-200);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.2s ease;
   user-select: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Flex layout tweaks for options */
+.radio-group__label--option {
+  justify-content: space-between;
+}
+
+/* Visual Elements */
 .radio-group__swatch {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: inset 0 0 0 2px #fff;
+  box-shadow: inset 0 0 0 2px var(--white);
   flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
+
 .radio-group__swatch--red {
   background-color: #d32f2f;
 }
@@ -2314,238 +2405,323 @@ body.no-scroll {
   background-color: #1a1a1a;
 }
 
+.radio-group__text {
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+  color: var(--gray-700);
+  line-height: 1.2;
+}
+
+.radio-group__price {
+  font-size: var(--text-xs);
+  font-weight: var(--fw-bold);
+  color: var(--gray-900);
+  background-color: var(--gray-100);
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* --- Radio Interaction States --- */
+
+/* Hover */
+@media (hover: hover) {
+  .radio-group__label:hover {
+    border-color: var(--gray-300);
+    background-color: var(--gray-050);
+  }
+}
+
 /* Checked State */
 .radio-group__input:checked + .radio-group__label {
   border-color: var(--color-accent);
-  background-color: rgba(229, 57, 53, 0.03);
-  box-shadow: 0 4px 12px rgba(229, 57, 53, 0.15);
-  color: var(--color-heading);
-  transform: translateY(-1px);
-}
-.radio-group__input:checked + .radio-group__label .radio-group__swatch {
-  transform: scale(1.1);
+  background-color: rgba(229, 57, 53, 0.04); /* Subtle Tint */
+  /* Двойная обводка через inset shadow */
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  z-index: 1;
 }
 
-/* Focus State */
+.radio-group__input:checked + .radio-group__label .radio-group__text {
+  color: var(--color-heading);
+  font-weight: var(--fw-bold);
+}
+
+.radio-group__input:checked + .radio-group__label .radio-group__swatch {
+  transform: scale(1.15);
+}
+
+.radio-group__input:checked + .radio-group__label .radio-group__price {
+  background-color: var(--color-accent);
+  color: var(--white);
+}
+
+/* Focus Visible (A11y) */
 .radio-group__input:focus-visible + .radio-group__label {
   outline: 2px solid var(--color-accent);
-  outline-offset: 4px;
+  outline-offset: 2px;
 }
 
-.radio-group__label--option {
-  justify-content: space-between;
-  width: 100%;
-}
-.radio-group__price {
-  font-weight: var(--fw-bold);
-  background: var(--gray-100);
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: background 0.2s, color 0.2s;
-}
-.radio-group__input:checked + .radio-group__label .radio-group__price {
-  background: var(--color-accent);
-  color: white;
-}
-
-/* Inputs UX */
+/* --- Inputs --- */
 .form__group {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
 }
+
 .form__label {
   display: block;
-  margin-bottom: 8px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: var(--fw-bold);
-  color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-.form__input {
-  width: 100%;
-  padding: 14px 16px;
-  background-color: var(--gray-100);
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  /* ВАЖНО: 16px шрифт предотвращает авто-зум на iPhone при фокусе */
-  font-size: 16px;
-  color: var(--color-heading);
-  transition: all 0.2s;
-  appearance: none;
-}
-.form__input::placeholder {
-  color: #a1a1aa;
+  letter-spacing: 0.03em;
+  color: var(--gray-500);
+  margin-bottom: 6px;
 }
 
-.form__input:hover {
-  background-color: #eeeeee;
+.form__input {
+  width: 100%;
+  height: 50px; /* Удобный тач-таргет */
+  padding-inline: 16px;
+  background-color: var(--gray-050);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  /* 16px предотвращает авто-зум на iPhone при фокусе */
+  font-size: 16px;
+  color: var(--color-heading);
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  appearance: none;
 }
+
+.form__input::placeholder {
+  color: var(--gray-400);
+}
+
+.form__input:hover:not(:disabled) {
+  background-color: var(--white);
+  border-color: var(--gray-300);
+}
+
 .form__input:focus {
+  outline: none;
   background-color: var(--white);
   border-color: var(--color-heading);
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
-  outline: none;
-}
-.form__input--select {
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 44px;
 }
 
-/* Gift Block */
+/* Select Wrapper (Arrow is handled via CSS or embedded SVG in base input) */
+.select-wrapper {
+  position: relative;
+}
+
+/* --- Gift Block (Coupon Style) --- */
 .gift-block {
   display: flex;
   align-items: center;
-  gap: 14px;
-  background: linear-gradient(
-    135deg,
-    rgba(229, 57, 53, 0.08) 0%,
-    rgba(229, 57, 53, 0.02) 100%
-  );
+  gap: var(--space-md);
+  padding: 16px;
+  /* Мягкий градиент и пунктирная рамка */
+  background: linear-gradient(135deg, var(--gray-050) 0%, #fff1f0 100%);
   border: 1px dashed var(--color-accent);
-  padding: 14px 18px;
   border-radius: var(--radius-sm);
-  margin: 24px 0;
+  margin-bottom: var(--space-lg);
 }
+
 .gift-block__icon-box {
   color: var(--color-accent);
-  filter: drop-shadow(0 2px 4px rgba(229, 57, 53, 0.2));
-  animation: pulse-gift 2s infinite;
+  flex-shrink: 0;
+  /* Ненавязчивая анимация внимания */
+  animation: gift-pulse 3s infinite ease-in-out;
 }
-@keyframes pulse-gift {
-  0% {
+
+@keyframes gift-pulse {
+  0%,
+  100% {
     transform: scale(1);
+    opacity: 1;
   }
   50% {
     transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
+    opacity: 0.8;
   }
 }
+
+.gift-block__content {
+  display: flex;
+  flex-direction: column;
+}
+
 .gift-block__title {
+  font-size: var(--text-sm);
   font-weight: var(--fw-bold);
-  font-size: 14px;
   color: var(--color-heading);
-  margin-bottom: 2px;
+  line-height: 1.2;
 }
+
 .gift-block__text {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--color-text-muted);
 }
 
+/* --- Submit & Footer --- */
 .form__submit {
   width: 100%;
-  box-shadow: 0 10px 20px -5px rgba(229, 57, 53, 0.4);
+  /* Активная тень кнопки призыва к действию */
+  box-shadow: 0 8px 20px -5px rgba(229, 57, 53, 0.4);
 }
+
+.form__submit:hover {
+  box-shadow: 0 12px 25px -5px rgba(229, 57, 53, 0.5), var(--shadow-glow);
+}
+
 .form__privacy {
   font-size: 11px;
   text-align: center;
-  color: var(--color-text-muted);
-  margin-top: 16px;
+  color: var(--gray-500);
   line-height: 1.4;
-}
-.form__privacy a {
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  margin-top: 12px;
 }
 
-/* Footer Icons */
+.form__privacy a {
+  color: var(--gray-700);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s;
+}
+
+.form__privacy a:hover {
+  color: var(--color-accent);
+}
+
+/* Trust Icons */
 .order-form__footer {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--gray-200);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--gray-100);
   display: flex;
   justify-content: space-between;
   list-style: none;
-  padding-left: 0;
 }
+
 .trust-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 8px;
-  width: 32%;
+  flex: 1;
 }
+
 .trust-item__icon-box {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
-  background-color: #dcfce7; /* Light green */
-  color: #166534;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--green-100);
+  color: var(--green-500);
 }
+
 .trust-item__text {
   font-size: 10px;
   font-weight: var(--fw-bold);
-  line-height: 1.2;
-  color: var(--gray-800);
   text-transform: uppercase;
+  color: var(--color-text-main);
+  line-height: 1.2;
 }
 
-/* --- Layout: Mobile & Desktop --- */
+/* ==========================================================================
+   8.8. Responsive Logic (Mobile First -> Desktop)
+   ========================================================================== */
+
+/* 1. Mobile & Tablet (< 1024px) */
 @media (max-width: 1023px) {
-  .order__container {
-    display: flex;
-    flex-direction: column;
-  }
+  /*
+  UX Optimization:
+  Используем display: contents на обертке контента, чтобы все элементы (Заголовок,
+  Форма, Картинка) стали прямыми детьми grid-контейнера.
+  Это позволяет переупорядочить их через CSS без изменения HTML.
+  */
   .order__content {
-    display: contents; /* Убираем обертку из потока */
+    display: contents;
   }
 
-  /* Порядок для мобилок: Заголовок -> Форма -> Картинка */
-  .order__title,
-  .order__subtitle {
+  /* Визуальный порядок: Заголовок -> Форма -> Картинка */
+  .order__title {
     order: 1;
-    text-align: center;
-    padding: 0 10px;
+    grid-column: 1 / -1;
+    padding-inline: var(--gutter);
   }
-  .order-form {
+
+  .order__subtitle {
     order: 2;
-    margin-top: 10px;
+    grid-column: 1 / -1;
+    padding-inline: var(--gutter);
+    margin-bottom: var(--space-md);
+  }
+
+  .order-form {
+    order: 3;
+    /* На мобильных форма не должна "липнуть" */
+    position: static;
+    max-height: none;
+    overflow: visible;
+    /* Ограничиваем ширину на планшетах для эстетики */
     max-width: 500px;
+    width: 100%;
     margin-inline: auto;
   }
+
   .order__image {
-    order: 3;
-    margin-top: 30px;
-    max-height: 300px;
-    object-fit: cover;
+    order: 4;
+    margin-top: var(--space-lg);
   }
 }
 
+/* 2. Desktop (>= 1024px) */
 @media (min-width: 1024px) {
   .order__container {
+    /* Левая колонка - резина, правая - фиксирована 440px */
     grid-template-columns: 1fr 440px;
+    /* Важно для работы sticky */
     align-items: start;
-    gap: 80px;
+    gap: var(--space-3xl);
   }
 
-  /* STICKY FIX: Умное прилипание */
+  .order__title,
+  .order__subtitle {
+    text-align: left;
+    margin-inline: 0;
+  }
+
+  /* STICKY BEHAVIOR */
   .order-form {
     position: sticky;
-    top: calc(var(--header-height) + 20px);
-    z-index: 50;
-
-    /* Если форма выше, чем экран ноутбука -> разрешаем скролл ВНУТРИ формы */
-    max-height: calc(100vh - var(--header-height) - 40px);
+    /* Учитываем высоту хедера (72px) + отступ (24px) */
+    top: calc(var(--header-height) + 24px);
+    z-index: var(--z-sticky);
+    /* Smart Scroll:
+      Если высота формы больше доступной высоты экрана,
+      разрешаем внутренний скролл, чтобы кнопка "Оформить" не обрезалась.
+    */
+    max-height: calc(100vh - var(--header-height) - 48px);
     overflow-y: auto;
+  }
 
-    /* Стилизация внутреннего скролла */
-    scrollbar-width: thin;
-    scrollbar-color: var(--gray-200) transparent;
+  /*
+    Safety Fallback:
+    Если экран ноутбука очень низкий (< 850px), sticky может мешать.
+    В таком случае отключаем его для безопасности UX.
+  */
+  @media (max-height: 850px) {
+    .order-form {
+      position: static;
+      max-height: none;
+      overflow: visible;
+    }
   }
 }
 
 /* ==========================================================================
-   10. Модальное окно и Меню контакты (Backdrop Blur & Pop-in)
+   9. Модальное окно и Меню контакты
    ========================================================================== */
 .modal {
   position: fixed;
@@ -2718,7 +2894,7 @@ body.no-scroll {
 }
 
 /* ==========================================================================
-   11. Lightbox (Optimized for Mobile & Safe Areas)
+   10. Lightbox
    ========================================================================== */
 .lightbox {
   position: fixed;
@@ -2873,7 +3049,7 @@ body.no-scroll {
   }
 }
 /* ==========================================================================
-   PRODUCTION UPGRADES (UX Fixes & Footer)
+   11. PRODUCTION UPGRADES (UX Fixes & Footer)
    ========================================================================== */
 
 /* --- 1. ЛЕЧИМ ФОРМУ ЗАКАЗА (UX) --- */
