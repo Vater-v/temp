@@ -266,119 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 4. Слайдер Отзывов (Drag + Snap + Protection)
-   * =========================================================================
-   */
-  const initReviewsSlider = () => {
-    const sliderWrapper = document.getElementById("reviews-list");
-    const dotsContainer = document.querySelector(".js-reviews-dots");
-
-    if (!sliderWrapper) return;
-
-    const cards = sliderWrapper.querySelectorAll(".review-card");
-    if (cards.length === 0) return;
-
-    // 1. Точки
-    if (dotsContainer) {
-      dotsContainer.innerHTML = "";
-      const dots = [];
-
-      cards.forEach((card, index) => {
-        const dot = document.createElement("button");
-        dot.classList.add("reviews__dot");
-        dot.setAttribute("aria-label", `Отзыв ${index + 1}`);
-        if (index === 0) dot.classList.add("is-active");
-
-        dot.addEventListener("click", () => {
-          card.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center",
-          });
-        });
-        dotsContainer.appendChild(dot);
-        dots.push(dot);
-      });
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-              const index = Array.from(cards).indexOf(entry.target);
-              dots.forEach((d) => d.classList.remove("is-active"));
-              if (dots[index]) dots[index].classList.add("is-active");
-            }
-          });
-        },
-        { root: sliderWrapper, threshold: [0.51] }
-      );
-      cards.forEach((card) => observer.observe(card));
-    }
-
-    // 2. Drag Logic
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-    // Добавили флаг, чтобы не блокировать клики по кнопкам "Читать далее" если нет драга
-    let isDraggingFlag = false;
-
-    sliderWrapper.addEventListener("mousedown", (e) => {
-      if ("ontouchstart" in window) return;
-
-      isDown = true;
-      isDraggingFlag = false;
-      startX = e.pageX - sliderWrapper.offsetLeft;
-      scrollLeft = sliderWrapper.scrollLeft;
-      // Не делаем e.preventDefault() сразу, чтобы мог пройти клик
-    });
-
-    const stopDragging = () => {
-      if (!isDown) return;
-      isDown = false;
-
-      // Задержка удаления класса, чтобы предотвратить ложные срабатывания
-      setTimeout(() => {
-        sliderWrapper.classList.remove("is-dragging");
-      }, 0);
-    };
-
-    sliderWrapper.addEventListener("mouseleave", stopDragging);
-    sliderWrapper.addEventListener("mouseup", stopDragging);
-
-    sliderWrapper.addEventListener("mousemove", (e) => {
-      if (!isDown) return;
-
-      const x = e.pageX - sliderWrapper.offsetLeft;
-      const walk = x - startX; // Walk amount
-
-      // Порог в 5px для начала драга
-      if (Math.abs(walk) > 5) {
-        isDraggingFlag = true;
-        sliderWrapper.classList.add("is-dragging");
-        e.preventDefault();
-        sliderWrapper.scrollLeft = scrollLeft - walk * 2;
-      }
-    });
-
-    // Блокируем клики на кнопках внутри карточки, если был драг
-    const interactiveElements = sliderWrapper.querySelectorAll("button, a");
-    interactiveElements.forEach((el) => {
-      el.addEventListener(
-        "click",
-        (e) => {
-          if (isDraggingFlag) {
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        },
-        { capture: true }
-      );
-    });
-  };
-
-  /**
-   * =========================================================================
-   * 5. Логика формы заказа
+   * 4. Логика формы заказа
    * =========================================================================
    */
   const initOrderForm = () => {
@@ -580,7 +468,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 6. Lightbox
+   * 5. Lightbox
    * =========================================================================
    */
   const initLightbox = () => {
@@ -701,7 +589,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 7. Кнопки Слайдера (Влево / Вправо)
+   * 6. Кнопки Слайдера (Влево / Вправо)
    * =========================================================================
    */
   const initSliderButtons = () => {
@@ -738,58 +626,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Запускаем логику для Галереи
     setupExternalButtons("gallery", "gallery-list", "gallery__controls");
-
-    // Запускаем логику для Отзывов
-    setupExternalButtons("reviews", "reviews-list", "reviews__controls");
   };
+
   /**
    * =========================================================================
-   * 8. Логика кнопки "Читать полностью" в отзывах
-   * =========================================================================
-   */
-  const initReviewToggles = () => {
-    const cards = document.querySelectorAll(".review-card");
-
-    cards.forEach((card) => {
-      const textWrapper = card.querySelector(".js-review-text");
-      const btn = card.querySelector(".js-review-toggle");
-
-      if (!textWrapper || !btn) return;
-
-      // 1. ПРОВЕРКА: Влазит ли текст?
-      // scrollHeight — полная высота текста
-      // clientHeight — видимая высота (ограниченная CSS line-clamp)
-      // Добавляем 1px погрешности для точности
-      if (textWrapper.scrollHeight > textWrapper.clientHeight + 1) {
-        btn.hidden = false; // Текст длинный — показываем кнопку
-      } else {
-        btn.hidden = true; // Текст короткий — кнопка не нужна
-      }
-
-      // 2. ОБРАБОТКА КЛИКА
-      btn.addEventListener("click", () => {
-        // Переключаем класс
-        textWrapper.classList.toggle("is-expanded");
-
-        // Проверяем состояние после переключения
-        const isExpanded = textWrapper.classList.contains("is-expanded");
-
-        if (isExpanded) {
-          btn.textContent = "Свернуть";
-          btn.setAttribute("aria-expanded", "true");
-        } else {
-          btn.textContent = "Читать полностью";
-          btn.setAttribute("aria-expanded", "false");
-
-          // Опционально: плавный скролл обратно к началу отзыва, если он очень длинный
-          // card.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }
-      });
-    });
-  };
-  /**
-   * =========================================================================
-   * 9. Слайдер Преимуществ (Advantages)
+   * 7. Слайдер Преимуществ (Advantages)
    * Логика Drag-to-Scroll + Кнопки
    * =========================================================================
    */
@@ -865,12 +706,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Запуск
   initAdvantagesSlider();
-  initReviewToggles();
   initScrollSpy();
   initMobileMenu();
   initAccordion();
   initGallerySlider();
-  initReviewsSlider();
   initOrderForm();
   initLightbox();
   initSliderButtons();
