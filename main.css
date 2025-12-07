@@ -3739,3 +3739,78 @@ video.lightbox__image {
 .gallery__list.is-dragging {
   cursor: grabbing !important;
 }
+/* --- ADVANTAGES SECTION (Replacement for Reviews) --- */
+.advantages {
+  background-color: var(--color-bg-subtle);
+}
+
+.advantages__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-lg);
+}
+
+.advantage-card {
+  background-color: var(--white);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100%;
+
+  transition: transform 0.3s var(--ease-out-expo),
+    box-shadow 0.3s var(--ease-out-expo);
+}
+
+/* Hover-эффект для интерактивности */
+@media (hover: hover) {
+  .advantage-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
+  }
+}
+
+.advantage-card__icon-box {
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--gray-100);
+  color: var(--color-heading);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+
+  /* Плавная смена цвета при наведении на карточку */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.advantage-card:hover .advantage-card__icon-box {
+  background-color: var(--color-accent);
+  color: var(--white);
+}
+
+.advantage-card__icon-box svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  stroke-width: 1.5;
+}
+
+.advantage-card__title {
+  font-size: var(--text-lg);
+  font-weight: var(--fw-bold);
+  color: var(--color-heading);
+  margin-bottom: var(--space-sm);
+}
+
+.advantage-card__text {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
