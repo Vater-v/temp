@@ -742,8 +742,53 @@ document.addEventListener("DOMContentLoaded", () => {
     // Запускаем логику для Отзывов
     setupExternalButtons("reviews", "reviews-list", "reviews__controls");
   };
+  /**
+   * =========================================================================
+   * 8. Логика кнопки "Читать полностью" в отзывах
+   * =========================================================================
+   */
+  const initReviewToggles = () => {
+    const cards = document.querySelectorAll(".review-card");
 
-  // --- Инициализация ---
+    cards.forEach((card) => {
+      const textWrapper = card.querySelector(".js-review-text");
+      const btn = card.querySelector(".js-review-toggle");
+
+      if (!textWrapper || !btn) return;
+
+      // 1. ПРОВЕРКА: Влазит ли текст?
+      // scrollHeight — полная высота текста
+      // clientHeight — видимая высота (ограниченная CSS line-clamp)
+      // Добавляем 1px погрешности для точности
+      if (textWrapper.scrollHeight > textWrapper.clientHeight + 1) {
+        btn.hidden = false; // Текст длинный — показываем кнопку
+      } else {
+        btn.hidden = true; // Текст короткий — кнопка не нужна
+      }
+
+      // 2. ОБРАБОТКА КЛИКА
+      btn.addEventListener("click", () => {
+        // Переключаем класс
+        textWrapper.classList.toggle("is-expanded");
+
+        // Проверяем состояние после переключения
+        const isExpanded = textWrapper.classList.contains("is-expanded");
+
+        if (isExpanded) {
+          btn.textContent = "Свернуть";
+          btn.setAttribute("aria-expanded", "true");
+        } else {
+          btn.textContent = "Читать полностью";
+          btn.setAttribute("aria-expanded", "false");
+
+          // Опционально: плавный скролл обратно к началу отзыва, если он очень длинный
+          // card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      });
+    });
+  };
+
+  initReviewToggles();
   initScrollSpy();
   initMobileMenu();
   initAccordion();
