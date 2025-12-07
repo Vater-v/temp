@@ -1756,7 +1756,12 @@ body.no-scroll {
   height: 100%;
   object-fit: cover;
   display: block;
-  pointer-events: none; /* Чтобы картинка не перетаскивалась браузером */
+  /* pointer-events: none; — УДАЛЯЕМ ЭТУ СТРОКУ */
+
+  /* ДОБАВЛЯЕМ ЭТИ СТРОКИ: */
+  user-select: none; /* Запрет выделения */
+  -webkit-user-drag: none; /* Запрет "призрачного" перетаскивания картинки */
+  cursor: zoom-in; /* Показываем курсор лупы при наведении */
 }
 
 @media (hover: hover) {
