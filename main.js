@@ -266,7 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 4. Слайдер Отзывов (Drag + Snap)
+   * 4. Слайдер Отзывов (Drag + Snap + Protection)
    * =========================================================================
    */
   const initReviewsSlider = () => {
@@ -319,21 +319,27 @@ document.addEventListener("DOMContentLoaded", () => {
     let isDown = false;
     let startX;
     let scrollLeft;
+    // Добавили флаг, чтобы не блокировать клики по кнопкам "Читать далее" если нет драга
+    let isDraggingFlag = false;
 
     sliderWrapper.addEventListener("mousedown", (e) => {
       if ("ontouchstart" in window) return;
 
       isDown = true;
-      sliderWrapper.classList.add("is-dragging");
+      isDraggingFlag = false;
       startX = e.pageX - sliderWrapper.offsetLeft;
       scrollLeft = sliderWrapper.scrollLeft;
-      e.preventDefault();
+      // Не делаем e.preventDefault() сразу, чтобы мог пройти клик
     });
 
     const stopDragging = () => {
       if (!isDown) return;
       isDown = false;
-      sliderWrapper.classList.remove("is-dragging");
+
+      // Задержка удаления класса, чтобы предотвратить ложные срабатывания
+      setTimeout(() => {
+        sliderWrapper.classList.remove("is-dragging");
+      }, 0);
     };
 
     sliderWrapper.addEventListener("mouseleave", stopDragging);
@@ -341,10 +347,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     sliderWrapper.addEventListener("mousemove", (e) => {
       if (!isDown) return;
-      e.preventDefault();
+
       const x = e.pageX - sliderWrapper.offsetLeft;
-      const walk = (x - startX) * 2;
-      sliderWrapper.scrollLeft = scrollLeft - walk;
+      const walk = x - startX; // Walk amount
+
+      // Порог в 5px для начала драга
+      if (Math.abs(walk) > 5) {
+        isDraggingFlag = true;
+        sliderWrapper.classList.add("is-dragging");
+        e.preventDefault();
+        sliderWrapper.scrollLeft = scrollLeft - walk * 2;
+      }
+    });
+
+    // Блокируем клики на кнопках внутри карточки, если был драг
+    const interactiveElements = sliderWrapper.querySelectorAll("button, a");
+    interactiveElements.forEach((el) => {
+      el.addEventListener(
+        "click",
+        (e) => {
+          if (isDraggingFlag) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        },
+        { capture: true }
+      );
     });
   };
 
