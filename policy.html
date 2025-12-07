@@ -18,252 +18,273 @@
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
 
     <style>
-      /* --- Локальные стили для Policy Page (Premium Upgrade) --- */
+      /* --- УЛУЧШЕННЫЕ СТИЛИ ДЛЯ POLICY PAGE --- */
 
-      body {
-        /* Более сложный и приятный фон */
-        background-color: var(--color-bg-subtle);
-        background-image: radial-gradient(
-            at 0% 0%,
-            rgba(229, 57, 53, 0.03) 0px,
-            transparent 50%
+      :root {
+        --bg-pattern: radial-gradient(
+            circle at 15% 50%,
+            rgba(229, 57, 53, 0.08),
+            transparent 25%
           ),
           radial-gradient(
-            at 100% 100%,
-            rgba(0, 0, 0, 0.03) 0px,
-            transparent 50%
-          ),
-          radial-gradient(var(--gray-300) 1px, transparent 1px);
-        background-size: 100% 100%, 100% 100%, 32px 32px;
+            circle at 85% 30%,
+            rgba(22, 101, 52, 0.05),
+            transparent 25%
+          );
+      }
+
+      body {
+        background-color: var(--gray-050);
+        background-image: var(--bg-pattern);
         background-attachment: fixed;
       }
 
       .main {
-        padding-top: 60px;
-        padding-bottom: 100px;
+        padding-top: 40px;
+        padding-bottom: 80px;
       }
 
-      /* Ограничитель ширины */
-      .policy-wrapper {
-        max-width: 900px;
+      .policy-container {
+        max-width: 800px;
         margin: 0 auto;
         padding-inline: var(--gutter);
       }
 
-      /* Карточка документа */
-      .doc-card {
-        background-color: rgba(255, 255, 255, 0.95); /* Легкая прозрачность */
-        border-radius: var(--radius-xl);
-        /* Премиальная тень: мягкая и глубокая */
-        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1),
-          0 0 0 1px rgba(0, 0, 0, 0.03);
-        padding: 50px 40px;
-        position: relative;
-        overflow: hidden;
-        backdrop-filter: blur(10px); /* Эффект матового стекла */
-      }
-
-      /* Декоративная полоса сверху (Градиент бренда) */
-      .doc-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 6px;
-        background: linear-gradient(90deg, var(--color-accent), #ff6b6b);
-      }
-
-      /* Заголовок страницы */
-      .doc-header {
+      /* --- Заголовок страницы --- */
+      .page-header {
         text-align: center;
-        margin-bottom: 50px;
-        padding-bottom: 40px;
-        border-bottom: 1px solid var(--gray-200);
-        position: relative;
+        margin-bottom: 60px;
+        animation: fade-in-up 0.6s ease-out;
       }
 
-      .doc-icon-wrapper {
+      .page-header__icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 80px;
-        height: 80px;
-        background-color: #fff1f2; /* Очень светлый красный */
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #fff 0%, #fff1f2 100%);
         color: var(--color-accent);
-        border-radius: 50%;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px -5px rgba(229, 57, 53, 0.15),
+          0 0 0 1px rgba(229, 57, 53, 0.1);
         margin-bottom: 24px;
-        box-shadow: 0 10px 20px rgba(229, 57, 53, 0.15);
-        animation: floatIcon 3s ease-in-out infinite;
+        transform: rotate(-5deg);
+        transition: transform 0.3s ease;
       }
 
-      @keyframes floatIcon {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-6px);
-        }
+      .page-header:hover .page-header__icon {
+        transform: rotate(0deg) scale(1.05);
       }
 
-      .doc-title {
-        font-size: clamp(1.75rem, 5vw, 2.5rem); /* Адаптивный шрифт */
+      .page-header__title {
+        font-size: clamp(2rem, 5vw, 3rem);
         font-weight: 800;
-        color: var(--color-heading);
+        letter-spacing: -0.03em;
         line-height: 1.1;
-        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+        background: linear-gradient(
+          to right,
+          var(--gray-900) 20%,
+          var(--gray-600)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
 
-      /* Контент */
-      .doc-content {
-        font-size: 1.0625rem; /* ~17px для лучшей читаемости */
-        line-height: 1.75;
-        color: var(--color-text-main);
+      .page-header__subtitle {
+        font-size: 1.1rem;
+        color: var(--color-text-muted);
+        max-width: 600px;
+        margin: 0 auto;
       }
 
-      /* Заголовки разделов */
-      .doc-content h2 {
-        font-size: 1.35rem;
-        font-weight: 700;
-        color: var(--color-heading);
-        margin-top: 50px;
-        margin-bottom: 20px;
+      /* --- Секции --- */
+      .policy-section {
+        margin-bottom: 40px;
+        animation: fade-in-up 0.6s ease-out;
+        animation-fill-mode: both;
+      }
+
+      /* Задержка анимации для разных блоков */
+      .policy-section:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .policy-section:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .policy-section:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .policy-section:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      .section-title {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 12px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        color: var(--color-heading);
       }
 
-      /* Стилизация цифр (1, 2, 3...) */
-      .doc-content h2::before {
-        content: attr(data-num);
+      .section-num {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        background: var(--color-heading);
-        color: var(--white);
-        font-size: 16px;
-        font-weight: 800;
-        border-radius: 50%; /* Круг */
-        flex-shrink: 0;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      }
-
-      .doc-content p {
-        margin-bottom: 1.5em;
-        text-wrap: pretty;
-      }
-
-      .doc-content strong {
+        width: 28px;
+        height: 28px;
+        background-color: var(--color-heading);
+        color: #fff;
+        font-size: 14px;
         font-weight: 700;
+        border-radius: 8px;
+      }
+
+      /* --- Карточки (Bento Grid) --- */
+      .data-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+
+      .info-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        padding: 24px;
+        border-radius: 24px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease,
+          background-color 0.3s;
+      }
+
+      .info-card:hover {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.05);
+      }
+
+      .info-card__icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--gray-100);
+        color: var(--gray-700);
+        border-radius: 12px;
+        margin-bottom: 16px;
+      }
+
+      .info-card__title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
         color: var(--color-heading);
       }
 
-      /* Блок списка (Выделенный) */
-      .doc-list {
-        list-style: none;
-        padding: 30px;
-        margin-bottom: 30px;
-        background-color: var(--gray-050);
-        border-radius: var(--radius-md);
-        border: 1px solid var(--gray-200);
+      .info-card__text {
+        font-size: 0.95rem;
+        color: var(--color-text-muted);
+        line-height: 1.5;
       }
 
-      .doc-list li {
+      /* --- Блок безопасности --- */
+      .security-box {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 32px;
+        border-radius: 24px;
         position: relative;
-        padding-left: 32px;
-        margin-bottom: 14px;
-      }
-      .doc-list li:last-child {
-        margin-bottom: 0;
+        overflow: hidden;
+        box-shadow: 0 20px 40px -10px rgba(16, 185, 129, 0.3);
       }
 
-      /* Кастомные галочки */
-      .doc-list li::before {
+      .security-box::before {
         content: "";
         position: absolute;
-        left: 0;
-        top: 0.4em;
-        width: 18px;
-        height: 18px;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e53935' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: contain;
+        top: -50%;
+        right: -20%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.2) 0%,
+          transparent 60%
+        );
+        border-radius: 50%;
       }
 
-      /* Инфо-блок (Защита) */
-      .highlight-box {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-        border: 1px solid #bbf7d0;
-        padding: 24px;
-        border-radius: var(--radius-md);
-        color: #166534;
-        margin-block: 24px;
+      .security-header {
         display: flex;
+        align-items: center;
         gap: 16px;
-        align-items: flex-start;
-      }
-      .highlight-box svg {
-        flex-shrink: 0;
-        width: 24px;
-        height: 24px;
-        margin-top: 2px;
+        margin-bottom: 16px;
+        position: relative;
+        z-index: 2;
       }
 
-      /* Футер документа */
+      .security-box p {
+        position: relative;
+        z-index: 2;
+        opacity: 0.9;
+      }
+
+      /* --- Футер документа --- */
       .doc-footer {
         margin-top: 60px;
-        padding-top: 30px;
-        border-top: 1px dashed var(--gray-300);
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-        align-items: center;
         text-align: center;
+        animation: fade-in-up 0.6s ease-out 0.6s backwards;
       }
 
-      .update-date {
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--color-text-muted);
-        background-color: var(--white);
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-weight: 600;
-        border: 1px solid var(--gray-200);
-        box-shadow: var(--shadow-sm);
-      }
-
-      /* Кнопка "Вернуться" - улучшенная */
-      .back-link {
+      .back-btn {
         display: inline-flex;
         align-items: center;
         gap: 10px;
+        padding: 16px 32px;
+        background-color: var(--color-heading);
+        color: white;
+        border-radius: 100px;
         font-weight: 600;
-        color: var(--color-heading);
-        padding: 12px 24px;
-        border-radius: var(--radius-full);
-        transition: all 0.2s;
-        border: 2px solid transparent;
-      }
-      .back-link:hover {
-        background-color: var(--gray-100);
-        color: var(--color-accent);
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
       }
 
-      /* Адаптив */
-      @media (min-width: 768px) {
-        .doc-card {
-          padding: 70px 80px;
+      .back-btn:hover {
+        background-color: black;
+        transform: translateY(-2px);
+        box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.3);
+      }
+
+      .update-date {
+        display: block;
+        margin-top: 24px;
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        opacity: 0.7;
+      }
+
+      @keyframes fade-in-up {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-        .doc-footer {
-          flex-direction: row;
-          justify-content: space-between;
-          text-align: left;
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Мобильная адаптация */
+      @media (max-width: 768px) {
+        .data-grid {
+          grid-template-columns: 1fr;
+        }
+        .page-header {
+          margin-bottom: 40px;
         }
       }
     </style>
@@ -274,8 +295,54 @@
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </symbol>
-      <symbol id="shield" viewBox="0 0 24 24">
+      <symbol
+        id="shield-check"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <path d="M9 12l2 2 4-4" />
+      </symbol>
+      <symbol
+        id="user"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </symbol>
+      <symbol
+        id="phone"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+        ></path>
+      </symbol>
+      <symbol
+        id="map-pin"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
       </symbol>
       <symbol
         id="lock"
@@ -289,6 +356,20 @@
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
       </symbol>
+      <symbol
+        id="truck"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="1" y="3" width="15" height="13"></rect>
+        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+      </symbol>
     </svg>
 
     <header class="header" id="header">
@@ -296,240 +377,165 @@
         <a href="/" class="logo" aria-label="StyleAvto - На главную">
           Style<span>Avto</span>
         </a>
-
-        <nav class="nav-desktop">
-          <ul class="nav-desktop__list">
-            <li><a href="/#details" class="nav-desktop__link">Материал</a></li>
-            <li><a href="/#styles" class="nav-desktop__link">Дизайн</a></li>
-            <li><a href="/#gallery" class="nav-desktop__link">Фото</a></li>
-            <li><a href="/#reviews" class="nav-desktop__link">Отзывы</a></li>
-          </ul>
-        </nav>
-
         <div class="header__actions">
-          <a href="/#order" class="button button--primary header__cta-btn">
-            К заказу
-          </a>
+          <a href="/#order" class="button button--secondary">К заказу</a>
         </div>
-
-        <button
-          class="burger-btn js-menu-toggle"
-          aria-label="Открыть меню"
-          aria-expanded="false"
-        >
-          <span class="burger-btn__box">
-            <span class="burger-btn__inner"></span>
-          </span>
-        </button>
       </div>
     </header>
 
-    <div class="mobile-menu" id="mobile-menu-portal" aria-hidden="true" inert>
-      <div class="mobile-menu__overlay js-menu-close"></div>
-      <aside class="mobile-menu__drawer">
-        <div class="mobile-menu__header">
-          <span class="logo">Style<span>Avto</span></span>
-          <button class="close-btn js-menu-close" aria-label="Закрыть">
-            <svg class="icon" width="24" height="24">
-              <use xlink:href="#close" />
-            </svg>
-          </button>
-        </div>
-        <nav class="mobile-nav">
-          <ul class="mobile-nav__list">
-            <li>
-              <a href="/#details" class="mobile-nav__link js-menu-link"
-                >Материал</a
-              >
-            </li>
-            <li>
-              <a href="/#styles" class="mobile-nav__link js-menu-link"
-                >Дизайн</a
-              >
-            </li>
-            <li>
-              <a href="/#gallery" class="mobile-nav__link js-menu-link">Фото</a>
-            </li>
-            <li>
-              <a href="/#reviews" class="mobile-nav__link js-menu-link"
-                >Отзывы</a
-              >
-            </li>
-            <li>
-              <a href="/#faq" class="mobile-nav__link js-menu-link">Вопросы</a>
-            </li>
-          </ul>
-        </nav>
-        <div class="mobile-menu__footer">
-          <a
-            href="/#order"
-            class="button button--primary button--full js-menu-link"
-            >Оформить заказ</a
-          >
-        </div>
-      </aside>
-    </div>
-
     <main class="main">
-      <div class="policy-wrapper">
-        <article class="doc-card">
-          <header class="doc-header">
-            <div class="doc-icon-wrapper">
-              <svg class="icon" width="40" height="40" stroke-width="2">
-                <use xlink:href="#shield" />
+      <div class="policy-container">
+        <header class="page-header">
+          <div class="page-header__icon">
+            <svg width="32" height="32"><use xlink:href="#shield-check" /></svg>
+          </div>
+          <h1 class="page-header__title">Ваша приватность <br />под защитой</h1>
+          <p class="page-header__subtitle">
+            Мы собираем только ту информацию, которая необходима для того, чтобы
+            ваши новые накидки идеально подошли к авто и доехали вовремя.
+          </p>
+        </header>
+
+        <section class="policy-section">
+          <h2 class="section-title">
+            <span class="section-num">1</span> Что мы собираем
+          </h2>
+          <div class="data-grid">
+            <article class="info-card">
+              <div class="info-card__icon">
+                <svg width="20" height="20"><use xlink:href="#user" /></svg>
+              </div>
+              <h3 class="info-card__title">Ваше имя</h3>
+              <p class="info-card__text">
+                Чтобы менеджер мог корректно к вам обратиться при подтверждении
+                деталей заказа.
+              </p>
+            </article>
+
+            <article class="info-card">
+              <div class="info-card__icon">
+                <svg width="20" height="20"><use xlink:href="#phone" /></svg>
+              </div>
+              <h3 class="info-card__title">Телефон</h3>
+              <p class="info-card__text">
+                Для связи, уточнения комплектации и отправки трек-номера
+                посылки.
+              </p>
+            </article>
+
+            <article class="info-card">
+              <div class="info-card__icon">
+                <svg width="20" height="20"><use xlink:href="#map-pin" /></svg>
+              </div>
+              <h3 class="info-card__title">Город</h3>
+              <p class="info-card__text">
+                Для точного расчета стоимости доставки и сроков через СДЭК или
+                Почту.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="policy-section">
+          <h2 class="section-title">
+            <span class="section-num">2</span> Как используем данные
+          </h2>
+          <div
+            class="info-card"
+            style="
+              display: flex;
+              gap: 20px;
+              align-items: flex-start;
+              margin-bottom: 16px;
+            "
+          >
+            <div
+              class="info-card__icon"
+              style="background-color: #dcfce7; color: #166534; flex-shrink: 0"
+            >
+              <svg width="20" height="20">
+                <use xlink:href="#shield-check" />
               </svg>
             </div>
-            <h1 class="doc-title">Политика<br />конфиденциальности</h1>
-          </header>
-
-          <div class="doc-content">
-            <p>
-              Администрация сайта <strong>StyleAvto</strong> (далее — Оператор)
-              уважает ваше право на конфиденциальность и обязуется защищать
-              персональные данные, которые вы нам доверяете. Этот документ
-              простым языком объясняет, какие данные мы собираем, зачем они нам
-              нужны и как мы обеспечиваем их защиту.
-            </p>
-
-            <h2 data-num="1">Какие данные мы собираем</h2>
-            <p>
-              Мы собираем минимально необходимый набор данных, требуемый
-              исключительно для качественной обработки и доставки вашего заказа.
-              При заполнении формы на сайте вы указываете:
-            </p>
-            <ul class="doc-list">
-              <li>
-                <strong>Имя</strong> — чтобы менеджер мог корректно к вам
-                обратиться при подтверждении заявки;
-              </li>
-              <li>
-                <strong>Номер телефона</strong> — для связи, уточнения деталей
-                комплектации и информирования о прибытии посылки;
-              </li>
-              <li>
-                <strong>Город</strong> — для точного расчета стоимости доставки
-                и сроков через транспортные компании (СДЭК, Почта России).
-              </li>
-            </ul>
-
-            <h2 data-num="2">Для чего мы используем данные</h2>
-            <p>
-              Ваши данные используются исключительно для выполнения наших
-              обязательств перед вами как перед покупателем. Мы используем их
-              для:
-            </p>
-            <ul class="doc-list">
-              <li>Обратной связи и консультации по характеристикам накидок;</li>
-              <li>
-                Согласования цвета строчки, комплектации и итоговой стоимости;
-              </li>
-              <li>
-                Оформления накладной в службе доставки, чтобы груз
-                гарантированно доехал до вас.
-              </li>
-            </ul>
-
-            <h2 data-num="3">Передача третьим лицам</h2>
-            <p>
-              Мы <strong>категорически не продаем</strong> и не передаем ваши
-              контактные данные рекламным сетям, спам-базам или иным лицам, не
-              имеющим отношения к выполнению вашего заказа.
-            </p>
-            <p>
-              Единственное исключение — передача данных (ФИО и телефон)
-              транспортной компании непосредственно в момент отправки груза. Это
-              необходимое условие для того, чтобы курьер мог вручить вам
-              посылку.
-            </p>
-
-            <h2 data-num="4">Безопасность</h2>
-
-            <div class="highlight-box">
-              <svg width="24" height="24"><use xlink:href="#lock" /></svg>
-              <div>
-                <strong>Защищенное соединение</strong><br />
-                Наш сайт работает по защищенному протоколу HTTPS. Все данные
-                шифруются при передаче от вашего браузера к серверу.
-              </div>
+            <div>
+              <h3 class="info-card__title">Только по делу</h3>
+              <p class="info-card__text">
+                Мы используем данные исключительно для оформления заказа.
+                Никаких рассылок спама, "партнерских предложений" или продажи
+                базы данных.
+              </p>
             </div>
+          </div>
+        </section>
 
-            <p>
-              Доступ к базе заказов имеют только сотрудники, непосредственно
-              занимающиеся сборкой, упаковкой и отправкой товара. Мы
-              предпринимаем все необходимые технические меры для защиты
-              информации от несанкционированного доступа.
-            </p>
+        <section class="policy-section">
+          <h2 class="section-title">
+            <span class="section-num">3</span> Кому передаем
+          </h2>
+          <div class="data-grid" style="grid-template-columns: 1fr">
+            <article
+              class="info-card"
+              style="border-left: 4px solid var(--color-accent)"
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 12px;
+                  margin-bottom: 8px;
+                "
+              >
+                <svg width="24" height="24" style="color: var(--color-accent)">
+                  <use xlink:href="#truck" />
+                </svg>
+                <h3 class="info-card__title" style="margin: 0">
+                  Транспортные компании
+                </h3>
+              </div>
+              <p class="info-card__text">
+                Единственное исключение — передача ФИО и телефона в службу
+                доставки (СДЭК или Почта России) в момент отправки груза. Это
+                необходимо, чтобы курьер мог вручить вам посылку.
+              </p>
+            </article>
+          </div>
+        </section>
 
-            <h2 data-num="5">Ваши права</h2>
+        <section class="policy-section">
+          <div class="security-box">
+            <div class="security-header">
+              <svg width="32" height="32"><use xlink:href="#lock" /></svg>
+              <h2 style="margin: 0; font-size: 1.5rem">Техническая защита</h2>
+            </div>
             <p>
-              Вы имеете право в любой момент запросить информацию о том, какие
-              ваши данные хранятся у нас, изменить их (например, если сменился
-              адрес доставки), а также потребовать их полного удаления из нашей
-              базы после завершения сделки. Для этого достаточно связаться с
-              нами по телефону или в мессенджерах.
+              Наш сайт работает по защищенному протоколу <strong>HTTPS</strong>.
+              Все данные шифруются при передаче от вашего браузера к серверу.
+              Доступ к заказам имеют только сотрудники склада, занимающиеся
+              упаковкой.
             </p>
           </div>
+        </section>
 
-          <footer class="doc-footer">
-            <span class="update-date">Обновлено: 07.12.2025</span>
-            <a href="/" class="back-link">
-              <svg
-                class="icon"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                style="transform: rotate(180deg)"
-              >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-              Вернуться в магазин
-            </a>
-          </footer>
-        </article>
+        <footer class="doc-footer">
+          <a href="/" class="back-btn">
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Вернуться в магазин
+          </a>
+          <span class="update-date">Последнее обновление: 07.12.2025</span>
+        </footer>
       </div>
     </main>
-
-    <footer class="footer">
-      <div class="container footer__container">
-        <div class="footer__col">
-          <a href="/" class="logo footer__logo">Style<span>Avto</span></a>
-          <p class="footer__desc">
-            Премиальные автонакидки из алькантары и велюра. Эстетика, защита и
-            комфорт в каждой поездке.
-          </p>
-        </div>
-
-        <nav class="footer__col">
-          <h3 class="footer__title">Навигация</h3>
-          <ul class="footer__nav-list">
-            <li><a href="/#details" class="footer__link">Преимущества</a></li>
-            <li><a href="/#gallery" class="footer__link">Фото в салоне</a></li>
-            <li><a href="/#reviews" class="footer__link">Честные отзывы</a></li>
-          </ul>
-        </nav>
-
-        <div class="footer__col">
-          <h3 class="footer__title">Контакты</h3>
-          <address class="footer__address">
-            <a class="footer__phone" href="tel:+73833759285"
-              >+7 (383) 375-92-85</a
-            >
-            <p class="footer__info">г. Новосибирск, доставка по РФ</p>
-            <a class="footer__email" href="mailto:v333iv@gmail.com"
-              >v333iv@gmail.com</a
-            >
-          </address>
-        </div>
-      </div>
-      <div class="footer__bottom">
-        <div class="container footer__bottom-inner">
-          <p class="footer__copyright">© 2025 StyleAvto. Все права защищены.</p>
-        </div>
-      </div>
-    </footer>
 
     <script src="main.js"></script>
   </body>
