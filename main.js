@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * =========================================================================
-   * 3. Галерея (Drag + Snap)
+   * 3. Галерея (Drag + Snap + Smart Click)
    * =========================================================================
    */
   const initGallerySlider = () => {
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cards.forEach((card) => observer.observe(card));
     }
 
-    // 2. Логика перетаскивания мышкой (Drag-to-Scroll)
+    // 2. Логика перетаскивания мышкой (Drag-to-Scroll) с защитой от случайного клика
     let isDown = false;
     let startX;
     let scrollLeft;
@@ -216,14 +216,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       isDown = true;
       isDraggingFlag = false;
-      sliderWrapper.classList.add("is-dragging");
+      // ВАЖНО: Не ставим класс is-dragging сразу, чтобы не блокировать клик при малейшем дрожании
       startX = e.pageX - sliderWrapper.offsetLeft;
       scrollLeft = sliderWrapper.scrollLeft;
     });
 
     const stopDragging = () => {
       isDown = false;
-      sliderWrapper.classList.remove("is-dragging");
+      // Убираем класс с небольшой задержкой (event loop), чтобы click успел сработать или заблокироваться
+      setTimeout(() => {
+        sliderWrapper.classList.remove("is-dragging");
+      }, 0);
     };
 
     sliderWrapper.addEventListener("mouseleave", stopDragging);
@@ -235,21 +238,29 @@ document.addEventListener("DOMContentLoaded", () => {
       const x = e.pageX - sliderWrapper.offsetLeft;
       const walk = x - startX;
 
+      // Если сдвинули мышь больше чем на 5px — считаем это драгом
       if (Math.abs(walk) > 5) {
         isDraggingFlag = true;
+        sliderWrapper.classList.add("is-dragging"); // Меняем курсор и отключаем pointer-events на картинках (через CSS)
         e.preventDefault();
         sliderWrapper.scrollLeft = scrollLeft - walk * 2;
       }
     });
 
-    const links = sliderWrapper.querySelectorAll("img, a");
+    // Блокировка открытия лайтбокса, если был драг
+    const links = sliderWrapper.querySelectorAll("img, a, .js-zoomable");
     links.forEach((link) => {
-      link.addEventListener("click", (e) => {
-        if (isDraggingFlag) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      });
+      link.addEventListener(
+        "click",
+        (e) => {
+          if (isDraggingFlag) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation(); // Полная блокировка для лайтбокса
+          }
+        },
+        { capture: true } // Перехватываем событие на стадии погружения
+      );
     });
   };
 

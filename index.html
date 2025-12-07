@@ -269,7 +269,9 @@
                   <use xlink:href="#star" />
                 </svg>
               </div>
-              <span class="hero__rating-text">Выбор 500+ автовладельцев</span>
+              <span class="hero__rating-text"
+                >Подходит для 500+ моделей авто</span
+              >
             </div>
 
             <h1 class="hero__title">
@@ -758,11 +760,30 @@
         </div>
       </section>
 
-      <section class="section reviews" id="reviews">
+      <section
+        class="section reviews"
+        id="reviews"
+        aria-labelledby="reviews-title"
+      >
         <div class="container">
           <div class="reviews__header-group">
-            <h2 class="section__title">Опыт реальных владельцев</h2>
-            <div class="reviews__summary">
+            <h2 class="section__title" id="reviews-title">
+              Опыт реальных владельцев
+            </h2>
+
+            <div
+              class="reviews__summary"
+              itemprop="aggregateRating"
+              itemscope
+              itemtype="https://schema.org/AggregateRating"
+            >
+              <meta
+                itemprop="itemReviewed"
+                content="Премиальные накидки StyleAvto"
+              />
+              <meta itemprop="ratingValue" content="4.9" />
+              <meta itemprop="reviewCount" content="542" />
+
               <div
                 class="stars stars--large"
                 role="img"
@@ -792,44 +813,155 @@
         </div>
 
         <div class="reviews__slider-wrapper">
+          <div class="container reviews__meta-bar">
+            <span
+              class="reviews__counter"
+              id="reviews-counter"
+              aria-live="polite"
+              >1 / 5</span
+            >
+          </div>
+
           <div
             class="reviews__list js-reviews-slider js-drag-scroll"
             id="reviews-list"
             role="region"
-            aria-label="Отзывы покупателей"
+            aria-label="Слайдер отзывов"
+            tabindex="0"
           >
             <article
               class="review-card"
               itemscope
-              itemtype="http://schema.org/Review"
+              itemtype="https://schema.org/Review"
             >
               <div class="review-card__header">
-                <div class="review-card__user">
-                  <div class="user-avatar user-avatar--blue">А</div>
-                  <div
-                    class="user-info"
-                    itemprop="author"
-                    itemscope
-                    itemtype="http://schema.org/Person"
-                  >
-                    <span class="user-name" itemprop="name">Алексей Д.</span>
-                    <span class="user-car">Toyota Camry V70</span>
+                <div class="review-card__profile">
+                  <img
+                    src="https://i.pravatar.cc/150?img=11"
+                    alt="Фото Дмитрия"
+                    class="review-card__avatar"
+                    loading="lazy"
+                    width="48"
+                    height="48"
+                  />
+                  <div class="review-card__meta">
+                    <span
+                      class="review-card__author"
+                      itemprop="author"
+                      itemscope
+                      itemtype="https://schema.org/Person"
+                    >
+                      <span itemprop="name">Дмитрий</span>
+                    </span>
+                    <span class="review-card__car">Lada Vesta</span>
                   </div>
                 </div>
-                <span
-                  class="review-date"
+                <time
+                  class="review-card__date"
                   itemprop="datePublished"
-                  content="2024-10-15"
-                  >15 окт 2024</span
+                  datetime="2025-02-10"
+                  >10 фев 2025</time
                 >
               </div>
 
-              <div class="review-card__rating-row">
+              <div class="review-card__badges">
                 <div
                   class="stars"
                   itemprop="reviewRating"
                   itemscope
-                  itemtype="http://schema.org/Rating"
+                  itemtype="https://schema.org/Rating"
+                >
+                  <meta itemprop="ratingValue" content="4" />
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg
+                    width="14"
+                    height="14"
+                    aria-hidden="true"
+                    class="star--muted"
+                  >
+                    <use xlink:href="#star" />
+                  </svg>
+                </div>
+                <span class="verified-badge">
+                  <svg class="icon" width="10" height="10" aria-hidden="true">
+                    <use xlink:href="#check" />
+                  </svg>
+                  Покупка подтверждена
+                </span>
+              </div>
+
+              <div class="review-card__content">
+                <div class="review-card__text-wrapper js-review-text">
+                  <p itemprop="reviewBody">
+                    Сами накидки норм, сели плотно, смотрятся достойно. Но вот с
+                    доставкой беда — курьер опоздал на час. Звезду снял чисто за
+                    логистику, к качеству товара претензий нет. Материал
+                    приятный, спина не потеет.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  class="review-card__more js-review-toggle"
+                  aria-expanded="false"
+                  hidden
+                >
+                  Читать полностью
+                </button>
+              </div>
+            </article>
+
+            <article
+              class="review-card"
+              itemscope
+              itemtype="https://schema.org/Review"
+            >
+              <div class="review-card__header">
+                <div class="review-card__profile">
+                  <img
+                    src="https://i.pravatar.cc/150?img=3"
+                    alt="Фото Алексея"
+                    class="review-card__avatar"
+                    loading="lazy"
+                    width="48"
+                    height="48"
+                  />
+                  <div class="review-card__meta">
+                    <span
+                      class="review-card__author"
+                      itemprop="author"
+                      itemscope
+                      itemtype="https://schema.org/Person"
+                    >
+                      <span itemprop="name">Алексей Д.</span>
+                    </span>
+                    <span class="review-card__car">Toyota Camry V70</span>
+                  </div>
+                </div>
+                <time
+                  class="review-card__date"
+                  itemprop="datePublished"
+                  datetime="2024-10-15"
+                  >15 окт 2024</time
+                >
+              </div>
+
+              <div class="review-card__badges">
+                <div
+                  class="stars"
+                  itemprop="reviewRating"
+                  itemscope
+                  itemtype="https://schema.org/Rating"
                 >
                   <meta itemprop="ratingValue" content="5" />
                   <svg width="14" height="14" aria-hidden="true">
@@ -848,58 +980,77 @@
                     <use xlink:href="#star" />
                   </svg>
                 </div>
-                <span class="verified-badge">
+                <span class="verified-badge verified-badge--trust">
                   <svg class="icon" width="10" height="10" aria-hidden="true">
                     <use xlink:href="#check" />
                   </svg>
-                  Проверено
+                  Реальный покупатель
                 </span>
               </div>
 
-              <blockquote class="review-card__body" itemprop="reviewBody">
-                <p>
-                  «Честно? Боялся, что будет "колхоз". У меня черный кожаный
-                  салон, не хотел портить вид дешевыми чехлами. Рискнул заказать
-                  из-за холодов.
-                  <strong>Итог:</strong> сели как влитые, материал матовый,
-                  плотный. Друзья садятся и думают, что это заводская перетяжка.
-                  Спина теперь не мерзнет, подогрев даже не включаю.»
-                </p>
-              </blockquote>
+              <div class="review-card__content">
+                <div class="review-card__text-wrapper js-review-text">
+                  <p itemprop="reviewBody">
+                    Честно? Боялся, что будет "колхоз". У меня черный кожаный
+                    салон, не хотел портить вид дешевыми чехлами. Рискнул
+                    заказать из-за холодов. <strong>Итог:</strong> сели как
+                    влитые, материал матовый, плотный. Друзья садятся и думают,
+                    что это заводская перетяжка. Спина теперь не мерзнет,
+                    подогрев даже не включаю.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  class="review-card__more js-review-toggle"
+                  aria-expanded="false"
+                  hidden
+                >
+                  Читать полностью
+                </button>
+              </div>
             </article>
 
             <article
               class="review-card"
               itemscope
-              itemtype="http://schema.org/Review"
+              itemtype="https://schema.org/Review"
             >
               <div class="review-card__header">
-                <div class="review-card__user">
-                  <div class="user-avatar user-avatar--green">С</div>
-                  <div
-                    class="user-info"
-                    itemprop="author"
-                    itemscope
-                    itemtype="http://schema.org/Person"
-                  >
-                    <span class="user-name" itemprop="name">Сергей</span>
-                    <span class="user-car">Kia Sportage</span>
+                <div class="review-card__profile">
+                  <img
+                    src="https://i.pravatar.cc/150?img=13"
+                    alt="Фото Сергея"
+                    class="review-card__avatar"
+                    loading="lazy"
+                    width="48"
+                    height="48"
+                  />
+                  <div class="review-card__meta">
+                    <span
+                      class="review-card__author"
+                      itemprop="author"
+                      itemscope
+                      itemtype="https://schema.org/Person"
+                    >
+                      <span itemprop="name">Сергей</span>
+                    </span>
+                    <span class="review-card__car">Kia Sportage</span>
                   </div>
                 </div>
-                <span
-                  class="review-date"
+                <time
+                  class="review-card__date"
                   itemprop="datePublished"
-                  content="2024-11-02"
-                  >2 нояб 2024</span
+                  datetime="2024-11-02"
+                  >02 ноя 2024</time
                 >
               </div>
 
-              <div class="review-card__rating-row">
+              <div class="review-card__badges">
                 <div
                   class="stars"
                   itemprop="reviewRating"
                   itemscope
-                  itemtype="http://schema.org/Rating"
+                  itemtype="https://schema.org/Rating"
                 >
                   <meta itemprop="ratingValue" content="5" />
                   <svg width="14" height="14" aria-hidden="true">
@@ -923,49 +1074,67 @@
                 >
               </div>
 
-              <blockquote class="review-card__body" itemprop="reviewBody">
-                <p>
-                  «Спасение для семейных! Двое детей сзади — это вечно крошки,
-                  сок и следы от ботинок 😅. Раньше химчистку делал раз в месяц.
-                  С этими накидками — протер влажной салфеткой и чисто.
-                  Силиконовая подкладка держит намертво, не сползают, даже когда
-                  дети прыгают. Своих денег стоят на 100%.»
-                </p>
-              </blockquote>
+              <div class="review-card__content">
+                <div class="review-card__text-wrapper js-review-text">
+                  <p itemprop="reviewBody">
+                    Спасение для семейных! Двое детей сзади — это вечно крошки,
+                    сок и следы от ботинок 😅. Раньше химчистку делал раз в
+                    месяц. С этими накидками — протер влажной салфеткой и чисто.
+                    Силиконовая подкладка держит намертво, не сползают.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  class="review-card__more js-review-toggle"
+                  aria-expanded="false"
+                  hidden
+                >
+                  Читать полностью
+                </button>
+              </div>
             </article>
 
             <article
               class="review-card"
               itemscope
-              itemtype="http://schema.org/Review"
+              itemtype="https://schema.org/Review"
             >
               <div class="review-card__header">
-                <div class="review-card__user">
-                  <div class="user-avatar user-avatar--red">Е</div>
-                  <div
-                    class="user-info"
-                    itemprop="author"
-                    itemscope
-                    itemtype="http://schema.org/Person"
-                  >
-                    <span class="user-name" itemprop="name">Елена К.</span>
-                    <span class="user-car">Mazda 6 (GJ)</span>
+                <div class="review-card__profile">
+                  <img
+                    src="https://i.pravatar.cc/150?img=5"
+                    alt="Фото Елены"
+                    class="review-card__avatar"
+                    loading="lazy"
+                    width="48"
+                    height="48"
+                  />
+                  <div class="review-card__meta">
+                    <span
+                      class="review-card__author"
+                      itemprop="author"
+                      itemscope
+                      itemtype="https://schema.org/Person"
+                    >
+                      <span itemprop="name">Елена К.</span>
+                    </span>
+                    <span class="review-card__car">Mazda 6 (GJ)</span>
                   </div>
                 </div>
-                <span
-                  class="review-date"
+                <time
+                  class="review-card__date"
                   itemprop="datePublished"
-                  content="2024-12-10"
-                  >10 дек 2024</span
+                  datetime="2024-12-10"
+                  >10 дек 2024</time
                 >
               </div>
 
-              <div class="review-card__rating-row">
+              <div class="review-card__badges">
                 <div
                   class="stars"
                   itemprop="reviewRating"
                   itemscope
-                  itemtype="http://schema.org/Rating"
+                  itemtype="https://schema.org/Rating"
                 >
                   <meta itemprop="ratingValue" content="5" />
                   <svg width="14" height="14" aria-hidden="true">
@@ -984,52 +1153,72 @@
                     <use xlink:href="#star" />
                   </svg>
                 </div>
-                <span class="verified-badge">Red Stitch</span>
+                <span class="verified-badge verified-badge--accent"
+                  >Red Stitch</span
+                >
               </div>
 
-              <blockquote class="review-card__body" itemprop="reviewBody">
-                <p>
-                  «Я перфекционист, искала именно под красную строчку на руле и
-                  кулисе. Переживала, что оттенок будет дешевым «морковным».
-                  Пришли — цвет один в один! 😍 Швы ровные, нитки не торчат.
-                  Салон сразу стал выглядеть агрессивнее и дороже. Спасибо
-                  менеджеру, что помог подобрать!»
-                </p>
-              </blockquote>
+              <div class="review-card__content">
+                <div class="review-card__text-wrapper js-review-text">
+                  <p itemprop="reviewBody">
+                    Я перфекционист, искала именно под красную строчку на руле.
+                    Переживала, что оттенок будет дешевым «морковным». Пришли —
+                    цвет один в один! 😍 Швы ровные, нитки не торчат. Салон
+                    сразу стал выглядеть агрессивнее и дороже.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  class="review-card__more js-review-toggle"
+                  aria-expanded="false"
+                  hidden
+                >
+                  Читать полностью
+                </button>
+              </div>
             </article>
 
             <article
               class="review-card"
               itemscope
-              itemtype="http://schema.org/Review"
+              itemtype="https://schema.org/Review"
             >
               <div class="review-card__header">
-                <div class="review-card__user">
-                  <div class="user-avatar user-avatar--pink">М</div>
-                  <div
-                    class="user-info"
-                    itemprop="author"
-                    itemscope
-                    itemtype="http://schema.org/Person"
-                  >
-                    <span class="user-name" itemprop="name">Марина</span>
-                    <span class="user-car">Volkswagen Tiguan</span>
+                <div class="review-card__profile">
+                  <img
+                    src="https://i.pravatar.cc/150?img=9"
+                    alt="Фото Марины"
+                    class="review-card__avatar"
+                    loading="lazy"
+                    width="48"
+                    height="48"
+                  />
+                  <div class="review-card__meta">
+                    <span
+                      class="review-card__author"
+                      itemprop="author"
+                      itemscope
+                      itemtype="https://schema.org/Person"
+                    >
+                      <span itemprop="name">Марина</span>
+                    </span>
+                    <span class="review-card__car">VW Tiguan</span>
                   </div>
                 </div>
-                <span
-                  class="review-date"
+                <time
+                  class="review-card__date"
                   itemprop="datePublished"
-                  content="2025-01-14"
-                  >3 недели назад</span
+                  datetime="2025-01-14"
+                  >14 янв 2025</time
                 >
               </div>
 
-              <div class="review-card__rating-row">
+              <div class="review-card__badges">
                 <div
                   class="stars"
                   itemprop="reviewRating"
                   itemscope
-                  itemtype="http://schema.org/Rating"
+                  itemtype="https://schema.org/Rating"
                 >
                   <meta itemprop="ratingValue" content="5" />
                   <svg width="14" height="14" aria-hidden="true">
@@ -1056,14 +1245,24 @@
                 </span>
               </div>
 
-              <blockquote class="review-card__body" itemprop="reviewBody">
-                <p>
-                  «Муж сначала ворчал: "Зачем мне накидки, у меня же подогрев
-                  есть". Подарила на годовщину — теперь довольный как слон! 😄
-                  Установил сам за 15 минут прямо у подъезда. Отдельный плюс за
-                  упаковку — сумка очень приличная, дарить не стыдно.»
-                </p>
-              </blockquote>
+              <div class="review-card__content">
+                <div class="review-card__text-wrapper js-review-text">
+                  <p itemprop="reviewBody">
+                    Муж сначала ворчал: "Зачем мне накидки, у меня же подогрев
+                    есть". Подарила на годовщину — теперь довольный как слон! 😄
+                    Установил сам за 15 минут. Сумка в комплекте очень
+                    приличная, дарить не стыдно.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  class="review-card__more js-review-toggle"
+                  aria-expanded="false"
+                  hidden
+                >
+                  Читать полностью
+                </button>
+              </div>
             </article>
           </div>
         </div>
@@ -1072,7 +1271,7 @@
           <button
             class="slider-btn js-slider-prev"
             type="button"
-            aria-label="Назад"
+            aria-label="Предыдущий отзыв"
           >
             <svg class="icon" width="24" height="24" aria-hidden="true">
               <use xlink:href="#arrow-left" />
@@ -1082,7 +1281,7 @@
           <button
             class="slider-btn js-slider-next"
             type="button"
-            aria-label="Вперед"
+            aria-label="Следующий отзыв"
           >
             <svg class="icon" width="24" height="24" aria-hidden="true">
               <use xlink:href="#arrow-right" />

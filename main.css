@@ -3329,9 +3329,24 @@ video.lightbox__image {
      Используем токены для цветов и радиусов.
   */
   .order-form {
-    /* Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: var(--gray-300) transparent;
+    /* УБИРАЕМ липкость и скролл */
+    position: static; /* Было sticky */
+    top: auto; /* Было calc(...) */
+
+    /* Снимаем ограничение высоты */
+    max-height: none; /* Было calc(100vh - ...) */
+    overflow: visible; /* Было auto */
+
+    /* Остальные украшательства оставляем */
+    background-color: var(--white);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03),
+      0 20px 40px -12px rgba(0, 0, 0, 0.12);
+
+    /* Сброс трансформации (на всякий случай) */
+    transform: none;
+    will-change: auto;
   }
 
   /* Webkit (Chrome, Safari, Edge) */
@@ -3345,13 +3360,11 @@ video.lightbox__image {
     margin-block: var(--space-sm);
   }
 
+  /* Также сделаем сам ползунок чуть заметнее при наведении на форму */
   .order-form::-webkit-scrollbar-thumb {
-    background-color: var(--gray-300);
-    border-radius: var(--radius-full);
-    /* Прозрачная рамка создает эффект "парящего" ползунка */
-    border: 2px solid transparent;
+    background-color: var(--gray-400); /* Делаем темнее (было gray-300) */
+    border: 4px solid transparent; /* Сохраняем отступ внутри */
     background-clip: content-box;
-    transition: background-color var(--transition-base);
   }
 
   /* Hover эффект для скроллбара */
@@ -3607,4 +3620,16 @@ video.lightbox__image {
     justify-content: space-between;
     text-align: left;
   }
+}
+
+/* Когда список в режиме перетаскивания, отключаем события на картинках.
+   Это делает скролл "масляным" и убирает ложные срабатывания. */
+.gallery__list.is-dragging .gallery__image,
+.reviews__list.is-dragging .review-card {
+  pointer-events: none;
+}
+
+/* Опционально: убедимся, что курсор "хватающий" */
+.gallery__list.is-dragging {
+  cursor: grabbing !important;
 }
