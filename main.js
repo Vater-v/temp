@@ -787,7 +787,84 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   };
+  /**
+   * =========================================================================
+   * 9. Слайдер Преимуществ (Advantages)
+   * Логика Drag-to-Scroll + Кнопки
+   * =========================================================================
+   */
+  const initAdvantagesSlider = () => {
+    const sliderWrapper = document.getElementById("advantages-list");
+    if (!sliderWrapper) return;
 
+    // 1. Инициализация кнопок
+    const section = document.getElementById("advantages");
+    const prevBtn = section?.querySelector(".js-slider-prev");
+    const nextBtn = section?.querySelector(".js-slider-next");
+
+    if (prevBtn && nextBtn) {
+      const getScrollAmount = () => {
+        const card = sliderWrapper.querySelector(".advantage-card");
+        // Прокручиваем на ширину карточки + отступ
+        return card ? card.offsetWidth + 24 : 320;
+      };
+
+      prevBtn.addEventListener("click", () => {
+        sliderWrapper.scrollBy({
+          left: -getScrollAmount(),
+          behavior: "smooth",
+        });
+      });
+
+      nextBtn.addEventListener("click", () => {
+        sliderWrapper.scrollBy({ left: getScrollAmount(), behavior: "smooth" });
+      });
+    }
+
+    // 2. Логика перетаскивания (Drag Logic для мыши)
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    let isDraggingFlag = false;
+
+    sliderWrapper.addEventListener("mousedown", (e) => {
+      // Игнорируем тач-устройства (там работает нативный скролл)
+      if ("ontouchstart" in window) return;
+
+      isDown = true;
+      isDraggingFlag = false;
+      startX = e.pageX - sliderWrapper.offsetLeft;
+      scrollLeft = sliderWrapper.scrollLeft;
+    });
+
+    const stopDragging = () => {
+      isDown = false;
+      setTimeout(() => {
+        sliderWrapper.classList.remove("is-dragging");
+      }, 0);
+    };
+
+    sliderWrapper.addEventListener("mouseleave", stopDragging);
+    sliderWrapper.addEventListener("mouseup", stopDragging);
+
+    sliderWrapper.addEventListener("mousemove", (e) => {
+      if (!isDown) return;
+
+      const x = e.pageX - sliderWrapper.offsetLeft;
+      const walk = x - startX;
+
+      // Начинаем тянуть, только если сдвинули больше чем на 5px
+      if (Math.abs(walk) > 5) {
+        e.preventDefault();
+        isDraggingFlag = true;
+        sliderWrapper.classList.add("is-dragging");
+        sliderWrapper.scrollLeft = scrollLeft - walk;
+      }
+    });
+  };
+
+  // Запуск
+  initAdvantagesSlider();
   initReviewToggles();
   initScrollSpy();
   initMobileMenu();
