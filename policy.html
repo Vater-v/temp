@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="noindex, follow" />
+    <meta name="robots" content="index, follow" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -12,24 +13,43 @@
     />
 
     <title>Политика конфиденциальности | StyleAvto</title>
+    <meta
+      name="description"
+      content="Политика обработки персональных данных StyleAvto. Прозрачно о том, какие данные мы собираем и как их защищаем."
+    />
 
     <link rel="stylesheet" href="main.css" />
     <link rel="icon" href="favicon.ico" sizes="any" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
 
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Политика конфиденциальности StyleAvto",
+        "publisher": {
+          "@type": "Organization",
+          "name": "StyleAvto"
+        }
+      }
+    </script>
+
     <style>
-      /* --- УЛУЧШЕННЫЕ СТИЛИ ДЛЯ POLICY PAGE --- */
+      /* --- Локальные стили страницы --- 
+         Используем глобальные переменные из main.css для идеальной совместимости
+      */
 
       :root {
+        /* Деликатный фоновый паттерн в цветах бренда */
         --bg-pattern: radial-gradient(
-            circle at 15% 50%,
-            rgba(229, 57, 53, 0.08),
-            transparent 25%
+            circle at 10% 20%,
+            rgba(229, 57, 53, 0.04) 0%,
+            transparent 40%
           ),
           radial-gradient(
-            circle at 85% 30%,
-            rgba(22, 101, 52, 0.05),
-            transparent 25%
+            circle at 90% 80%,
+            rgba(22, 101, 52, 0.04) 0%,
+            transparent 40%
           );
       }
 
@@ -39,234 +59,245 @@
         background-attachment: fixed;
       }
 
-      .main {
-        padding-top: 40px;
-        padding-bottom: 80px;
+      .policy-main {
+        /* Отступ сверху с учетом фиксированного хедера */
+        padding-top: calc(var(--header-height) + var(--space-xl));
+        padding-bottom: var(--space-3xl);
+        min-height: 100vh;
       }
 
+      /* Контейнер для чтения (чуть уже основного для удобства глаз) */
       .policy-container {
-        max-width: 800px;
-        margin: 0 auto;
+        width: min(100%, 860px);
+        margin-inline: auto;
         padding-inline: var(--gutter);
       }
 
-      /* --- Заголовок страницы --- */
+      /* --- Hero Section --- */
       .page-header {
         text-align: center;
-        margin-bottom: 60px;
-        animation: fade-in-up 0.6s ease-out;
+        margin-bottom: var(--space-3xl);
+        animation: fade-in-up 0.8s var(--ease-out-expo);
       }
 
       .page-header__icon {
+        /* Твой контейнер (оставь как есть, 10rem это ок) */
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 64px;
-        height: 64px;
-        background: linear-gradient(135deg, #fff 0%, #fff1f2 100%);
+        width: 10rem;
+        height: 10rem;
+
+        background: var(--white);
         color: var(--color-accent);
-        border-radius: 20px;
-        box-shadow: 0 10px 25px -5px rgba(229, 57, 53, 0.15),
-          0 0 0 1px rgba(229, 57, 53, 0.1);
-        margin-bottom: 24px;
-        transform: rotate(-5deg);
-        transition: transform 0.3s ease;
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-lg), 0 0 20px rgba(229, 57, 53, 0.15);
+        border: 1px solid rgba(229, 57, 53, 0.1);
+        margin-bottom: var(--space-lg);
+        transform: rotate(-6deg);
+        transition: transform 0.4s var(--ease-out-expo);
+      }
+
+      /* !!! ДОБАВЬ ВОТ ЭТО !!! */
+      /* Это насильно растянет иконку на 60% от размера круга */
+      .page-header__icon .icon {
+        width: 60% !important;
+        height: 60% !important;
       }
 
       .page-header:hover .page-header__icon {
-        transform: rotate(0deg) scale(1.05);
+        transform: rotate(0deg) scale(1.1);
+      }
+
+      .page-header:hover .page-header__icon {
+        transform: rotate(0deg) scale(1.1);
       }
 
       .page-header__title {
         font-size: clamp(2rem, 5vw, 3rem);
-        font-weight: 800;
-        letter-spacing: -0.03em;
+        font-weight: var(--fw-black);
         line-height: 1.1;
-        margin-bottom: 16px;
-        background: linear-gradient(
-          to right,
-          var(--gray-900) 20%,
-          var(--gray-600)
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        margin-bottom: var(--space-md);
+        color: var(--color-heading);
+        text-wrap: balance;
       }
 
       .page-header__subtitle {
-        font-size: 1.1rem;
+        font-size: var(--text-lg);
         color: var(--color-text-muted);
-        max-width: 600px;
-        margin: 0 auto;
+        max-width: 38rem;
+        margin-inline: auto;
+        line-height: 1.6;
+        text-wrap: pretty;
       }
 
-      /* --- Секции --- */
-      .policy-section {
-        margin-bottom: 40px;
-        animation: fade-in-up 0.6s ease-out;
-        animation-fill-mode: both;
-      }
-
-      /* Задержка анимации для разных блоков */
-      .policy-section:nth-child(1) {
-        animation-delay: 0.1s;
-      }
-      .policy-section:nth-child(2) {
-        animation-delay: 0.2s;
-      }
-      .policy-section:nth-child(3) {
-        animation-delay: 0.3s;
-      }
-      .policy-section:nth-child(4) {
-        animation-delay: 0.4s;
-      }
-
-      .section-title {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin-bottom: 24px;
-        color: var(--color-heading);
-      }
-
-      .section-num {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
-        background-color: var(--color-heading);
-        color: #fff;
-        font-size: 14px;
-        font-weight: 700;
-        border-radius: 8px;
-      }
-
-      /* --- Карточки (Bento Grid) --- */
-      .data-grid {
+      /* --- Bento Grid Layout (Плитки) --- */
+      .policy-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: var(--space-lg);
+        margin-bottom: var(--space-3xl);
       }
 
       .info-card {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        background-color: rgba(255, 255, 255, 0.65);
+        /* Эффект матового стекла */
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+
+        padding: var(--space-xl);
+        border-radius: var(--radius-lg);
         border: 1px solid rgba(255, 255, 255, 0.5);
-        padding: 24px;
-        border-radius: 24px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease,
-          background-color 0.3s;
+        box-shadow: var(--shadow-sm);
+
+        display: flex;
+        flex-direction: column;
+
+        transition: transform 0.3s var(--ease-out-expo),
+          box-shadow 0.3s var(--ease-out-expo), background-color 0.3s;
+
+        /* Анимация появления */
+        animation: fade-in-up 0.8s var(--ease-out-expo) backwards;
       }
 
       .info-card:hover {
         transform: translateY(-4px);
-        background: rgba(255, 255, 255, 0.95);
-        box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.05);
+        background-color: var(--white);
+        box-shadow: var(--shadow-lg);
       }
 
-      .info-card__icon {
-        width: 40px;
-        height: 40px;
+      /* Каскадная задержка анимации */
+      .info-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .info-card:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .info-card:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      .info-card:nth-child(4) {
+        animation-delay: 0.25s;
+      }
+
+      .card-icon {
+        width: 3rem;
+        height: 3rem;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: var(--radius-md);
         background-color: var(--gray-100);
         color: var(--gray-700);
-        border-radius: 12px;
-        margin-bottom: 16px;
+        margin-bottom: var(--space-md);
+        flex-shrink: 0;
+        transition: color 0.3s, background-color 0.3s;
       }
 
-      .info-card__title {
-        font-weight: 700;
-        font-size: 1.1rem;
-        margin-bottom: 8px;
+      .info-card:hover .card-icon {
+        background-color: var(--gray-900);
+        color: var(--white);
+      }
+
+      .card-title {
+        font-size: var(--text-lg);
+        font-weight: var(--fw-bold);
         color: var(--color-heading);
+        margin-bottom: var(--space-xs);
       }
 
-      .info-card__text {
-        font-size: 0.95rem;
+      .card-text {
+        font-size: var(--text-base);
         color: var(--color-text-muted);
-        line-height: 1.5;
+        line-height: 1.6;
       }
 
-      /* --- Блок безопасности --- */
+      /* Широкая карточка */
+      .info-card--wide {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: var(--space-lg);
+        background-color: var(--white);
+        border-color: rgba(0, 0, 0, 0.05);
+      }
+
+      .info-card--wide .card-icon {
+        margin-bottom: 0;
+        background-color: var(--green-100);
+        color: var(--green-500);
+      }
+
+      .info-card--wide:hover .card-icon {
+        background-color: var(--green-500);
+        color: var(--white);
+      }
+
+      /* --- Security Block --- */
       .security-box {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white;
-        padding: 32px;
-        border-radius: 24px;
+        background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+        color: var(--white);
+        padding: var(--space-2xl);
+        border-radius: var(--radius-lg);
         position: relative;
         overflow: hidden;
         box-shadow: 0 20px 40px -10px rgba(16, 185, 129, 0.3);
+
+        animation: fade-in-up 0.8s var(--ease-out-expo) 0.3s backwards;
       }
 
+      /* Декоративный круг */
       .security-box::before {
         content: "";
         position: absolute;
         top: -50%;
-        right: -20%;
+        right: -10%;
         width: 300px;
         height: 300px;
         background: radial-gradient(
           circle,
           rgba(255, 255, 255, 0.2) 0%,
-          transparent 60%
+          transparent 70%
         );
         border-radius: 50%;
+        pointer-events: none;
       }
 
       .security-header {
         display: flex;
         align-items: center;
-        gap: 16px;
-        margin-bottom: 16px;
+        gap: var(--space-md);
+        margin-bottom: var(--space-md);
         position: relative;
         z-index: 2;
       }
 
-      .security-box p {
+      .security-text {
         position: relative;
         z-index: 2;
-        opacity: 0.9;
+        opacity: 0.95;
+        line-height: 1.6;
+        font-size: var(--text-base);
+        max-width: 42rem;
       }
 
-      /* --- Футер документа --- */
+      /* --- Footer --- */
       .doc-footer {
-        margin-top: 60px;
+        margin-top: var(--space-3xl);
+        padding-top: var(--space-xl);
+        border-top: 1px solid var(--gray-200);
         text-align: center;
-        animation: fade-in-up 0.6s ease-out 0.6s backwards;
-      }
-
-      .back-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 16px 32px;
-        background-color: var(--color-heading);
-        color: white;
-        border-radius: 100px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
-      }
-
-      .back-btn:hover {
-        background-color: black;
-        transform: translateY(-2px);
-        box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.3);
+        animation: fade-in-up 0.8s var(--ease-out-expo) 0.4s backwards;
       }
 
       .update-date {
         display: block;
-        margin-top: 24px;
-        font-size: 0.85rem;
-        color: var(--color-text-muted);
-        opacity: 0.7;
+        margin-top: var(--space-md);
+        font-size: var(--text-xs);
+        color: var(--gray-400);
       }
 
+      /* Анимации */
       @keyframes fade-in-up {
         from {
           opacity: 0;
@@ -280,262 +311,303 @@
 
       /* Мобильная адаптация */
       @media (max-width: 768px) {
-        .data-grid {
-          grid-template-columns: 1fr;
+        .info-card--wide {
+          flex-direction: column;
         }
-        .page-header {
-          margin-bottom: 40px;
+        .security-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--space-sm);
         }
       }
     </style>
   </head>
+
   <body class="page">
     <svg aria-hidden="true" style="display: none">
-      <symbol id="close" viewBox="0 0 24 24">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
+      <symbol id="arrow-left" viewBox="0 0 24 24">
+        <path
+          d="M19 12H5M5 12L12 19M5 12L12 5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </symbol>
-      <symbol
-        id="shield-check"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        <path d="M9 12l2 2 4-4" />
+      <symbol id="shield-check" viewBox="0 0 24 24">
+        <path
+          d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M9 12l2 2 4-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </symbol>
-      <symbol
-        id="user"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-        <circle cx="12" cy="7" r="4"></circle>
+      <symbol id="user" viewBox="0 0 24 24">
+        <path
+          d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <circle
+          cx="12"
+          cy="7"
+          r="4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </symbol>
-      <symbol
-        id="phone"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
+      <symbol id="phone" viewBox="0 0 24 24">
         <path
           d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
-        ></path>
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </symbol>
-      <symbol
-        id="map-pin"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-        <circle cx="12" cy="10" r="3"></circle>
+      <symbol id="map-pin" viewBox="0 0 24 24">
+        <path
+          d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <circle
+          cx="12"
+          cy="10"
+          r="3"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </symbol>
-      <symbol
-        id="lock"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      <symbol id="lock" viewBox="0 0 24 24">
+        <rect
+          x="3"
+          y="11"
+          width="18"
+          height="11"
+          rx="2"
+          ry="2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M7 11V7a5 5 0 0 1 10 0v4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </symbol>
-      <symbol
-        id="truck"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <rect x="1" y="3" width="15" height="13"></rect>
-        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-        <circle cx="5.5" cy="18.5" r="2.5"></circle>
-        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+      <symbol id="truck" viewBox="0 0 24 24">
+        <rect
+          x="1"
+          y="3"
+          width="15"
+          height="13"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <polygon
+          points="16 8 20 8 23 11 23 16 16 16 16 8"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <circle
+          cx="5.5"
+          cy="18.5"
+          r="2.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <circle
+          cx="18.5"
+          cy="18.5"
+          r="2.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </symbol>
     </svg>
 
     <header class="header" id="header">
       <div class="container header__container">
-        <a href="/" class="logo" aria-label="StyleAvto - На главную">
+        <a
+          href="/"
+          class="logo header__logo"
+          aria-label="StyleAvto - На главную"
+        >
           Style<span>Avto</span>
         </a>
         <div class="header__actions">
-          <a href="/#order" class="button button--secondary">К заказу</a>
+          <a href="/#order" class="button button--secondary group">
+            <svg
+              class="icon"
+              width="20"
+              height="20"
+              aria-hidden="true"
+              style="margin-right: 6px"
+            >
+              <use xlink:href="#arrow-left" />
+            </svg>
+            К заказу
+          </a>
         </div>
       </div>
     </header>
 
-    <main class="main">
+    <main class="main policy-main">
       <div class="policy-container">
         <header class="page-header">
           <div class="page-header__icon">
-            <svg width="32" height="32"><use xlink:href="#shield-check" /></svg>
+            <svg class="icon" width="60%" height="60%">
+              <use xlink:href="#shield-check" />
+            </svg>
           </div>
           <h1 class="page-header__title">Ваша приватность <br />под защитой</h1>
           <p class="page-header__subtitle">
-            Мы собираем только ту информацию, которая необходима для того, чтобы
-            ваши новые накидки идеально подошли к авто и доехали вовремя.
+            Мы собираем только ту информацию, которая необходима, чтобы новые
+            накидки идеально подошли к вашему авто и доехали вовремя.
           </p>
         </header>
 
-        <section class="policy-section">
-          <h2 class="section-title">
-            <span class="section-num">1</span> Что мы собираем
-          </h2>
-          <div class="data-grid">
-            <article class="info-card">
-              <div class="info-card__icon">
-                <svg width="20" height="20"><use xlink:href="#user" /></svg>
-              </div>
-              <h3 class="info-card__title">Ваше имя</h3>
-              <p class="info-card__text">
-                Чтобы менеджер мог корректно к вам обратиться при подтверждении
-                деталей заказа.
-              </p>
-            </article>
-
-            <article class="info-card">
-              <div class="info-card__icon">
-                <svg width="20" height="20"><use xlink:href="#phone" /></svg>
-              </div>
-              <h3 class="info-card__title">Телефон</h3>
-              <p class="info-card__text">
-                Для связи, уточнения комплектации и отправки трек-номера
-                посылки.
-              </p>
-            </article>
-
-            <article class="info-card">
-              <div class="info-card__icon">
-                <svg width="20" height="20"><use xlink:href="#map-pin" /></svg>
-              </div>
-              <h3 class="info-card__title">Город</h3>
-              <p class="info-card__text">
-                Для точного расчета стоимости доставки и сроков через СДЭК или
-                Почту.
-              </p>
-            </article>
-          </div>
-        </section>
-
-        <section class="policy-section">
-          <h2 class="section-title">
-            <span class="section-num">2</span> Как используем данные
-          </h2>
-          <div
-            class="info-card"
-            style="
-              display: flex;
-              gap: 20px;
-              align-items: flex-start;
-              margin-bottom: 16px;
-            "
-          >
-            <div
-              class="info-card__icon"
-              style="background-color: #dcfce7; color: #166534; flex-shrink: 0"
-            >
-              <svg width="20" height="20">
-                <use xlink:href="#shield-check" />
+        <div class="policy-grid">
+          <article class="info-card">
+            <div class="card-icon">
+              <svg class="icon" width="24" height="24">
+                <use xlink:href="#user" />
               </svg>
             </div>
             <div>
-              <h3 class="info-card__title">Только по делу</h3>
-              <p class="info-card__text">
-                Мы используем данные исключительно для оформления заказа.
-                Никаких рассылок спама, "партнерских предложений" или продажи
-                базы данных.
+              <h3 class="card-title">Имя</h3>
+              <p class="card-text">
+                Чтобы менеджер мог корректно обратиться к вам при подтверждении
+                деталей заказа.
               </p>
             </div>
-          </div>
-        </section>
+          </article>
 
-        <section class="policy-section">
-          <h2 class="section-title">
-            <span class="section-num">3</span> Кому передаем
-          </h2>
-          <div class="data-grid" style="grid-template-columns: 1fr">
-            <article
-              class="info-card"
-              style="border-left: 4px solid var(--color-accent)"
-            >
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  gap: 12px;
-                  margin-bottom: 8px;
-                "
-              >
-                <svg width="24" height="24" style="color: var(--color-accent)">
-                  <use xlink:href="#truck" />
-                </svg>
-                <h3 class="info-card__title" style="margin: 0">
-                  Транспортные компании
-                </h3>
-              </div>
-              <p class="info-card__text">
-                Единственное исключение — передача ФИО и телефона в службу
-                доставки (СДЭК или Почта России) в момент отправки груза. Это
-                необходимо, чтобы курьер мог вручить вам посылку.
-              </p>
-            </article>
-          </div>
-        </section>
-
-        <section class="policy-section">
-          <div class="security-box">
-            <div class="security-header">
-              <svg width="32" height="32"><use xlink:href="#lock" /></svg>
-              <h2 style="margin: 0; font-size: 1.5rem">Техническая защита</h2>
+          <article class="info-card">
+            <div class="card-icon">
+              <svg class="icon" width="24" height="24">
+                <use xlink:href="#phone" />
+              </svg>
             </div>
-            <p>
-              Наш сайт работает по защищенному протоколу <strong>HTTPS</strong>.
-              Все данные шифруются при передаче от вашего браузера к серверу.
-              Доступ к заказам имеют только сотрудники склада, занимающиеся
-              упаковкой.
-            </p>
+            <div>
+              <h3 class="card-title">Телефон</h3>
+              <p class="card-text">
+                Используется исключительно для согласования комплектации и
+                отправки трек-номера посылки.
+              </p>
+            </div>
+          </article>
+
+          <article class="info-card">
+            <div class="card-icon">
+              <svg class="icon" width="24" height="24">
+                <use xlink:href="#map-pin" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="card-title">Город</h3>
+              <p class="card-text">
+                Для точного расчета стоимости и сроков доставки через СДЭК или
+                Почту России.
+              </p>
+            </div>
+          </article>
+
+          <article class="info-card info-card--wide">
+            <div class="card-icon">
+              <svg class="icon" width="24" height="24">
+                <use xlink:href="#truck" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="card-title">Кому передаем данные?</h3>
+              <p class="card-text">
+                Мы <strong>не продаем</strong> базу клиентов и не шлем спам.
+                Ваши данные (ФИО, телефон) передаются только в транспортную
+                компанию в момент оформления накладной. Это технически
+                необходимо, чтобы курьер мог вручить вам заказ.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <section class="security-box">
+          <div class="security-header">
+            <svg class="icon" width="32" height="32">
+              <use xlink:href="#lock" />
+            </svg>
+            <h2 style="margin: 0; font-size: 1.5rem; font-weight: 800">
+              Техническая защита
+            </h2>
           </div>
+          <p class="security-text">
+            Наш сайт работает по защищенному протоколу
+            <strong>HTTPS</strong> (SSL-шифрование). Данные передаются в
+            зашифрованном виде. Доступ к базе заказов имеют только проверенные
+            сотрудники склада, занимающиеся упаковкой и отправкой.
+          </p>
         </section>
 
         <footer class="doc-footer">
-          <a href="/" class="back-btn">
-            <svg
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
+          <a href="/#order" class="button button--primary">
             Вернуться в магазин
           </a>
-          <span class="update-date">Последнее обновление: 07.12.2025</span>
+          <span class="update-date" id="date-label"
+            >Актуально на: 2025 год</span
+          >
         </footer>
       </div>
     </main>
+
+    <script>
+      const now = new Date();
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      document.getElementById("date-label").textContent =
+        "Актуально на: " + now.toLocaleDateString("ru-RU", options);
+    </script>
 
     <script src="main.js"></script>
   </body>

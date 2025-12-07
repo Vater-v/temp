@@ -555,6 +555,17 @@ body.no-scroll {
 
 /* --- Button Sizes & Modifiers --- */
 
+.button--small {
+  /* Компактные отступы: 8px сверху/снизу, 20px по бокам */
+  padding: var(--space-sm) 20px;
+
+  /* Шрифт 14px */
+  font-size: var(--text-sm);
+
+  /* Если нужно чуть скруглить углы для маленького размера */
+  border-radius: var(--radius-sm);
+}
+
 .button--large {
   font-size: var(--text-lg);
   /* Чуть больше вертикального воздуха для CTA */
@@ -964,6 +975,7 @@ body.no-scroll {
 }
 
 /* --- 4.5 Desktop Navigation --- */
+
 /* Mobile First: Hide desktop elements */
 .nav-desktop,
 .header__actions {
@@ -1643,137 +1655,100 @@ body.no-scroll {
   }
 }
 /* ==========================================================================
-   6. Универсальные Слайдеры (Галерея и Отзывы)
+   6. СЛАЙДЕРЫ (REFACTORED: Gallery & Reviews Decoupled)
    ========================================================================== */
 
-/* --- 6.1. Обертка и Секции --- */
+/* --- 6.1. Общие настройки секций --- */
 .gallery,
 .reviews {
-  background-color: var(--color-bg-body);
-  /* Изоляция отрисовки (Performance) */
+  /* Изоляция отрисовки для производительности */
   contain: content;
-  /* Отступ снизу для разделения секций */
   padding-bottom: var(--space-3xl);
 }
 
-/* 
-   Общий класс обертки (из HTML).
-   Задает вертикальные отступы и скрывает выходящие тени/скроллбары за пределами блока.
-*/
-.slider_wrapper_unified {
-  position: relative;
-  width: 100%;
-  padding-block: var(--space-lg) var(--space-xl);
-  overflow: hidden;
+.gallery {
+  background-color: var(--color-bg-body);
 }
 
-/* --- 6.2. Трек Слайдера (Список) --- */
-/* Группируем селекторы для чистоты кода (DRY) */
+.reviews {
+  /* Легкий серый фон для контраста с белыми карточками отзывов */
+  background-color: var(--color-bg-subtle);
+}
+
+/* Обертка для overflow и отступов */
+.gallery__slider-wrapper,
+.reviews__slider-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  /* Увеличенные вертикальные отступы, чтобы тени карточек не обрезались */
+  padding-block: var(--space-lg) var(--space-2xl);
+}
+
+/* Трек слайдера (Flex Container) */
 .gallery__list,
 .reviews__list {
   display: flex;
-  /* Используем gap вместо margin для отступов между слайдами */
+  /* Gap используется JS для расчета скролла (var(--space-md) = 16px) */
   gap: var(--space-md);
 
-  /* 
-     Smart Alignment (Full Bleed):
-     Вычисляем отступ так, чтобы первый слайд визуально начинался по сетке контейнера (1240px),
-     но скролл уходил за пределы экрана.
-     Формула: (Ширина экрана - Ширина контейнера) / 2 + Gutter.
-  */
+  /* Smart Alignment: Контент начинается по сетке контейнера */
   padding-inline: max(
     var(--gutter),
     calc((100% - var(--container-width)) / 2 + var(--gutter))
   );
-  /* Добавляем внутренний отступ снизу для теней карточек */
-  padding-block-end: var(--space-md);
+  /* Отступ снизу для теней */
+  padding-block-end: var(--space-xl);
 
-  /* Настройки скролла */
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x mandatory; /* Строгое прилипание */
+  scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
 
-  /* UX */
   cursor: grab;
-  /* Предотвращает рывки скролла всей страницы при скролле слайдера (Mobile) */
+  /* Блокировка скролла страницы при горизонтальном свайпе */
   overscroll-behavior-x: contain;
+  touch-action: pan-x-y;
 
-  /* Скрытие скроллбара (Firefox, IE/Edge) */
+  /* Скрытие скроллбара */
   scrollbar-width: none;
-  -ms-overflow-style: none;
-
-  /* Оптимизация */
   -webkit-overflow-scrolling: touch;
-  will-change: scroll-position;
 }
 
-/* Скрытие скроллбара (Chrome, Safari, Webkit) */
 .gallery__list::-webkit-scrollbar,
 .reviews__list::-webkit-scrollbar {
   display: none;
 }
 
-/* Увеличенные отступы для десктопов */
-@media (min-width: 1024px) {
-  .gallery__list,
-  .reviews__list {
-    gap: var(--space-lg);
-  }
-}
-
-/* Состояние активного перетаскивания (JS добавляет класс) */
+/* Состояние драга (активируется JS) */
 .gallery__list.is-dragging,
 .reviews__list.is-dragging {
   cursor: grabbing;
-  scroll-snap-type: none; /* Отключаем snap для плавности свободного драга */
+  scroll-snap-type: none; /* Отключаем snap для плавности перетаскивания */
   scroll-behavior: auto;
   user-select: none;
 }
 
-/* --- 6.3. Карточки: Общие стили --- */
-.gallery__card,
-.review-card {
-  position: relative;
-  flex: 0 0 auto; /* Запрещаем сжатие карточек */
-  scroll-snap-align: center; /* Прилипание по центру экрана */
-
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  background-color: var(--color-bg-surface);
-
-  /* Аппаратное ускорение и плавные переходы */
-  transform: translateZ(0);
-  transition: transform var(--transition-base),
-    box-shadow var(--transition-base), border-color var(--transition-base);
-}
-
-/* A11y: Явный фокус при навигации с клавиатуры */
-.gallery__card:focus-visible,
-.review-card:focus-visible {
-  outline: none;
-  /* Двойная тень для контраста на любом фоне */
-  box-shadow: 0 0 0 2px var(--color-bg-body), 0 0 0 5px var(--color-accent);
-}
-
-/* Hover-эффекты (только для устройств с мышью) */
-@media (hover: hover) {
-  .gallery__card:hover,
-  .review-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    z-index: var(--z-raised);
+@media (min-width: 1024px) {
+  .gallery__list,
+  .reviews__list {
+    gap: var(--space-lg); /* 24px */
   }
 }
 
-/* --- 6.4. Специфика ГАЛЕРЕИ --- */
+/* --- 6.2. Стили ГАЛЕРЕИ (Фото) --- */
 .gallery__card {
-  /* Адаптивная ширина через clamp (мин 260px, макс 340px) */
+  position: relative;
+  flex: 0 0 auto;
+  scroll-snap-align: center;
   width: clamp(260px, 70vw, 340px);
-  /* Сохраняем пропорции фото 3:4 */
   aspect-ratio: 3/4;
+  border-radius: var(--radius-md);
   overflow: hidden;
   background-color: var(--gray-100);
+  box-shadow: var(--shadow-sm);
+  transform: translateZ(0);
+  transition: transform var(--transition-base);
 }
 
 .gallery__image {
@@ -1781,203 +1756,270 @@ body.no-scroll {
   height: 100%;
   object-fit: cover;
   display: block;
-  cursor: zoom-in;
-  transition: transform 0.5s var(--ease-out-expo);
-  /* Блокируем системный драг картинки, чтобы не мешать свайпу */
-  -webkit-user-drag: none;
-  user-select: none;
+  pointer-events: none; /* Чтобы картинка не перетаскивалась браузером */
 }
 
 @media (hover: hover) {
-  .gallery__card:hover .gallery__image {
-    transform: scale(1.05);
+  .gallery__card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
   }
 }
 
-/* --- 6.5. Специфика ОТЗЫВОВ --- */
-.review-card {
-  /* Ширина чуть больше для удобства чтения текста */
-  width: clamp(280px, 80vw, 380px);
+/* --- 6.3. Стили ОТЗЫВОВ (Premium Cards) --- */
 
+/* Заголовок и Рейтинг */
+.reviews__header-group {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.reviews__summary {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.reviews__subtitle {
+  margin: 0;
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+}
+
+.stars--large {
+  color: var(--color-star);
+  gap: 4px; /* Чуть шире звезды в заголовке */
+}
+
+/* Карточка Отзыва */
+.review-card {
+  position: relative;
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+
+  /* Оптимальная ширина для чтения (шире, чем фото) */
+  width: clamp(300px, 85vw, 420px);
+
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+
+  /* Visuals: Белая карточка на сером фоне */
+  background-color: var(--white);
+  border-radius: var(--radius-lg); /* 24px */
   padding: var(--space-lg);
-  border: 1px solid var(--color-border);
-  height: auto; /* Карточки будут одинаковой высоты благодаря flex-контейнеру */
+
+  /* Elevation: Тонкая рамка + Глубокая тень */
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02),
+    0 10px 15px -3px rgba(0, 0, 0, 0.04);
+
+  transition: transform var(--transition-base),
+    box-shadow var(--transition-base);
+  height: auto;
 }
 
 @media (min-width: 1024px) {
   .review-card {
-    padding: var(--space-xl);
+    padding: var(--space-xl); /* Больше воздуха на десктопе */
   }
 }
 
 @media (hover: hover) {
   .review-card:hover {
-    border-color: var(--color-border-hover);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08),
+      0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+    z-index: 2;
   }
 }
 
-/* Внутренняя структура отзыва */
+/* Внутренности карточки */
 .review-card__header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--gray-100);
 }
 
-.review-card__rating {
-  display: inline-flex;
-}
-
-.star--muted {
-  color: var(--gray-300);
-}
-
-.review-card__quote {
-  flex-grow: 1; /* Прижимает футер с автором вниз */
-  margin: 0 0 var(--space-lg) 0;
-
-  font-size: var(--text-base);
-  line-height: 1.6;
-  color: var(--color-text-main);
-  /* Предотвращает висячие слова */
-  text-wrap: pretty;
-}
-
-@media (max-width: 767px) {
-  .review-card__quote {
-    font-size: 15px;
-  }
-}
-
-.review-card__author {
+.review-card__user {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--gray-100);
+  gap: 12px;
 }
 
-.author-avatar {
+/* CSS-Аватарки (без внешних картинок) */
+.user-avatar {
   width: 44px;
   height: 44px;
-  border-radius: var(--radius-full);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 
+  font-size: 18px;
   font-weight: var(--fw-bold);
-  font-size: var(--text-lg);
-  background-color: var(--gray-100);
-  color: var(--gray-500);
-  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
-.author-info {
+/* Градиенты для живости */
+.user-avatar--blue {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+.user-avatar--green {
+  background: linear-gradient(135deg, #22c55e, #15803d);
+}
+.user-avatar--red {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+.user-avatar--pink {
+  background: linear-gradient(135deg, #ec4899, #be185d);
+}
+
+.user-info {
   display: flex;
   flex-direction: column;
   line-height: 1.3;
 }
 
-.author-name {
+.user-name {
   font-weight: var(--fw-bold);
-  font-size: var(--text-sm);
+  font-size: 15px;
   color: var(--color-heading);
 }
 
-.author-desc {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
+.user-car {
+  font-size: 12px;
+  color: var(--gray-500);
+  font-weight: 500;
 }
 
-/* --- 6.6. Навигация (Кнопки и Точки) --- */
+.review-date {
+  font-size: 11px;
+  color: var(--gray-400);
+  white-space: nowrap;
+}
+
+.review-card__rating-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--space-md);
+}
+
+.review-card__rating-row .stars {
+  color: var(--color-star);
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  background-color: var(--green-100);
+  color: var(--green-500);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.verified-badge--yellow {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.verified-badge--gift {
+  background-color: #fdf2f8;
+  color: #db2777;
+}
+
+.review-card__body {
+  margin: 0;
+  flex-grow: 1;
+}
+
+.review-card__body p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--gray-700);
+  font-style: italic;
+  /* Красивый перенос текста */
+  text-wrap: pretty;
+}
+
+/* --- 6.4. Навигация (Кнопки и Точки) --- */
 .gallery__controls,
 .reviews__controls {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-lg);
-  margin-top: var(--space-md);
-
-  /* Центрируем блок управления по ширине контейнера */
   width: min(100%, var(--container-width));
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
-/* Кнопки-стрелки */
 .slider-btn {
-  /* Оптимальный размер тач-таргета (48px) */
   width: 3rem;
   height: 3rem;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
   border: none;
-  border-radius: var(--radius-full);
-  background-color: var(--color-accent);
-  color: var(--color-text-inverse);
+  border-radius: 50%;
+  background-color: var(--white);
+  color: var(--color-heading);
   box-shadow: var(--shadow-md);
+  border: 1px solid var(--gray-200);
 
   cursor: pointer;
-  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-}
-
-.slider-btn .icon {
-  width: 24px;
-  height: 24px;
-  fill: currentColor;
+  transition: all 0.2s;
+  z-index: 2;
 }
 
 @media (hover: hover) {
   .slider-btn:hover {
-    background-color: var(--color-accent-hover);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    background-color: var(--color-accent);
+    color: var(--white);
+    border-color: var(--color-accent);
+    transform: scale(1.1);
   }
 }
 
-.slider-btn:active {
-  transform: scale(0.95);
-  box-shadow: var(--shadow-sm);
-}
-
-.slider-btn:focus-visible {
-  outline: 2px solid var(--color-heading);
-  outline-offset: 2px;
-}
-
-/* Скрываем кнопки на мобильных (свайп нативнее и удобнее) */
 @media (max-width: 767px) {
   .slider-btn {
     display: none;
   }
 }
 
-/* Индикаторы (Точки) */
 .gallery__dots,
 .reviews__dots {
   display: flex;
-  gap: var(--space-sm);
+  gap: 8px;
 }
 
 .gallery__dot,
 .reviews__dot {
-  width: 10px;
-  height: 10px;
-  padding: 0;
-  border-radius: var(--radius-full);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
   border: none;
   background-color: var(--gray-300);
+  padding: 0;
   cursor: pointer;
-  transition: all 0.3s;
-
-  /* Увеличение зоны клика (UX pattern) */
   position: relative;
+  transition: all 0.3s;
 }
 
 .gallery__dot::after,
@@ -1987,21 +2029,10 @@ body.no-scroll {
   inset: -8px;
 }
 
-.gallery__dot:hover,
-.reviews__dot:hover {
-  background-color: var(--gray-400);
-}
-
 .gallery__dot.is-active,
 .reviews__dot.is-active {
   background-color: var(--color-accent);
   transform: scale(1.3);
-}
-
-.gallery__dot:focus-visible,
-.reviews__dot:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
 }
 
 /* ==========================================================================

@@ -3,14 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#e53935" />
 
     <title>Премиальные накидки на сиденья | StyleAvto | Скидка 33%</title>
+
     <meta
       name="description"
       content="Обновите салон авто за 5 минут! Бархатистые накидки StyleAvto. Всесезонные, дышащие, подходят на 95% авто. Доставка: Новосибирск, РФ."
@@ -19,6 +16,8 @@
       name="keywords"
       content="накидки на сиденья, авточехлы, защита салона, автоаксессуары новосибирск, StyleAvto, накидки универсальные"
     />
+    <link rel="canonical" href="https://styleavto.ru/" />
+
     <meta
       property="og:title"
       content="Премиальные Накидки StyleAvto - Скидка 33%"
@@ -32,14 +31,64 @@
     <meta property="og:site_name" content="StyleAvto" />
     <meta property="og:locale" content="ru_RU" />
 
+    <link
+      rel="preload"
+      as="image"
+      href="media/RedStitch_Front_Straight_2.webp"
+      fetchpriority="high"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="main.css" />
+
     <link rel="icon" href="favicon.ico" sizes="any" />
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "Премиальные накидки StyleAvto",
+        "image": "media/RedStitch_Front_Straight_2.webp",
+        "description": "Накидки из алькантары и велюра с эффектом памяти. Подходят на 95% автомобилей.",
+        "brand": {
+          "@type": "Brand",
+          "name": "StyleAvto"
+        },
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "RUB",
+          "price": "8500",
+          "availability": "https://schema.org/InStock",
+          "url": "https://styleavto.ru"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.73",
+          "reviewCount": "500"
+        }
+      }
+    </script>
+
+    <style>
+      .js-zoomable {
+        cursor: zoom-in;
+      }
+      .footer__info--sub {
+        margin-top: 12px;
+        opacity: 0.6;
+      }
+    </style>
   </head>
 
   <body class="page">
-    <svg aria-hidden="true" style="display: none">
+    <svg class="visually-hidden" aria-hidden="true">
       <symbol id="star" viewBox="0 0 20 20">
         <path d="M10 1L13 7L19 8L15 13L16 19L10 16L4 19L5 13L1 8L7 7L10 1Z" />
       </symbol>
@@ -55,6 +104,21 @@
       </symbol>
       <symbol id="arrow-right" viewBox="0 0 24 24">
         <path d="M5 12H19M19 12L12 5M19 12L12 19" />
+      </symbol>
+      <symbol
+        id="gift"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="20 12 20 22 4 22 4 12"></polyline>
+        <rect x="2" y="7" width="20" height="5"></rect>
+        <line x1="12" y1="22" x2="12" y2="7"></line>
+        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
       </symbol>
     </svg>
 
@@ -82,8 +146,11 @@
         </nav>
 
         <div class="header__actions">
-          <a href="#order" class="button button--primary header__cta-btn">
-            Подобрать
+          <a
+            href="#order"
+            class="button button--primary button--small header__cta-btn"
+          >
+            Заказать
           </a>
         </div>
 
@@ -163,6 +230,7 @@
               <a
                 href="https://t.me/styleavtoru"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="ms-btn ms-btn--tg"
               >
                 Telegram
@@ -261,7 +329,6 @@
                   width="20"
                   height="20"
                   aria-hidden="true"
-                  style="margin-left: 8px"
                 >
                   <use xlink:href="#arrow-right" />
                 </svg>
@@ -275,9 +342,8 @@
           <div class="hero__image-wrapper">
             <img
               class="hero__image js-zoomable"
-              style="cursor: zoom-in"
               src="media/RedStitch_Front_Straight_2.webp"
-              alt="Переднее кресло автомобиля с установленной черной накидкой и красной строчкой."
+              alt="Переднее кресло автомобиля с накидкой и красной строчкой"
               width="960"
               height="1280"
               fetchpriority="high"
@@ -298,7 +364,6 @@
               <figure class="feature-card__media">
                 <img
                   class="feature-card__image js-zoomable"
-                  style="cursor: zoom-in"
                   src="media/RedStitch_Texture_Macro.webp"
                   alt="Макро-съемка фактуры материала"
                   loading="lazy"
@@ -314,7 +379,7 @@
                   Накидки мягкие на ощупь, но при этом достаточно плотные, чтобы
                   надежно защитить родную обивку сидений. Главный плюс —
                   всесезонность: зимой материал не "дубеет" и остается теплым, а
-                  летом пропускает воздух, избавляя от дискомфорта в жару.
+                  летом пропускает воздух.
                 </p>
               </div>
             </article>
@@ -323,12 +388,11 @@
               <figure class="feature-card__media">
                 <video
                   class="feature-card__video js-zoomable"
-                  style="cursor: zoom-in"
                   autoplay
                   muted
                   loop
                   playsinline
-                  preload="metadata"
+                  preload="none"
                   poster="media/RedStitch_Texture_Macro.webp"
                   aria-label="Макро-видео материала"
                   width="1280"
@@ -364,9 +428,8 @@
               <figure class="style-card__media">
                 <img
                   class="style-card__image js-zoomable"
-                  style="cursor: zoom-in"
                   src="media/RedStitch_Front_Side_2.webp"
-                  alt="Вид сбоку, черная накидка с красной нитью."
+                  alt="Вид сбоку, черная накидка с красной нитью"
                   loading="lazy"
                   decoding="async"
                   width="810"
@@ -380,6 +443,7 @@
                   салону динамики и спортивного характера.
                 </p>
                 <button
+                  type="button"
                   class="button button--secondary js-select-color"
                   data-color="red"
                 >
@@ -392,9 +456,8 @@
               <figure class="style-card__media">
                 <img
                   class="style-card__image js-zoomable"
-                  style="cursor: zoom-in"
                   src="media/Black_Front_Pair_Best.webp"
-                  alt="Черные накидки, классика."
+                  alt="Черные накидки, классика"
                   loading="lazy"
                   decoding="async"
                   width="815"
@@ -408,6 +471,7 @@
                   решение, которое подходит к любому интерьеру.
                 </p>
                 <button
+                  type="button"
                   class="button button--secondary js-select-color"
                   data-color="black"
                 >
@@ -428,9 +492,8 @@
               <figure class="tech-card__media">
                 <img
                   class="tech-card__image js-zoomable"
-                  style="cursor: zoom-in"
                   src="media/Tech_Lining_Comparison.webp"
-                  alt="Сравнение подкладки"
+                  alt="Сравнение подкладки Anti-Slip"
                   loading="lazy"
                   decoding="async"
                   width="1080"
@@ -448,7 +511,6 @@
               <figure class="tech-card__media">
                 <img
                   class="tech-card__image js-zoomable"
-                  style="cursor: zoom-in"
                   src="media/Tech_Hooks_Straps.webp"
                   alt="Крепеж"
                   loading="lazy"
@@ -469,7 +531,6 @@
               <figure class="tech-card__media">
                 <img
                   class="tech-card__image js-zoomable"
-                  style="cursor: zoom-in"
                   src="media/Tech_Fixing_Washers.webp"
                   alt="Фурнитура"
                   loading="lazy"
@@ -500,7 +561,8 @@
             <video
               class="video-overview__player"
               controls
-              preload="metadata"
+              playsinline
+              preload="none"
               poster="media/RedStitch_Salon_Collage_v1.webp"
               aria-label="Видео-обзор в салоне"
               width="1280"
@@ -523,7 +585,6 @@
           <figure class="kit__media">
             <img
               class="kit__image js-zoomable"
-              style="cursor: zoom-in"
               src="media/Black_Kit_Flatlay.webp"
               alt="Раскладка полного комплекта"
               loading="lazy"
@@ -556,7 +617,7 @@
                 <span class="kit__item-count">👜</span> Удобная сумка для
                 хранения
               </li>
-              <li class="kit__item" style="border: none">
+              <li class="kit__item">
                 <span class="kit__item-count">🎁</span> + Подарок (Микрофибра)
               </li>
             </ul>
@@ -594,7 +655,6 @@
                 height="720"
               />
             </figure>
-
             <figure class="gallery__card">
               <img
                 class="gallery__image js-zoomable"
@@ -606,7 +666,6 @@
                 height="1080"
               />
             </figure>
-
             <figure class="gallery__card">
               <img
                 class="gallery__image js-zoomable"
@@ -618,7 +677,6 @@
                 height="1080"
               />
             </figure>
-
             <figure class="gallery__card">
               <img
                 class="gallery__image js-zoomable"
@@ -630,7 +688,6 @@
                 height="1440"
               />
             </figure>
-
             <figure class="gallery__card">
               <img
                 class="gallery__image js-zoomable"
@@ -642,7 +699,6 @@
                 height="1280"
               />
             </figure>
-
             <figure class="gallery__card">
               <img
                 class="gallery__image js-zoomable"
@@ -654,7 +710,6 @@
                 height="1280"
               />
             </figure>
-
             <figure class="gallery__card">
               <img
                 class="gallery__image js-zoomable"
@@ -666,7 +721,6 @@
                 height="720"
               />
             </figure>
-
             <figure class="gallery__card">
               <img
                 class="gallery__image js-zoomable"
@@ -682,16 +736,22 @@
         </div>
 
         <div class="container gallery__controls">
-          <button class="slider-btn js-slider-prev" aria-label="Назад">
-            <svg class="icon" width="24" height="24">
+          <button
+            class="slider-btn js-slider-prev"
+            type="button"
+            aria-label="Назад"
+          >
+            <svg class="icon" width="24" height="24" aria-hidden="true">
               <use xlink:href="#arrow-left" />
             </svg>
           </button>
-
           <div class="gallery__dots js-gallery-dots"></div>
-
-          <button class="slider-btn js-slider-next" aria-label="Вперед">
-            <svg class="icon" width="24" height="24">
+          <button
+            class="slider-btn js-slider-next"
+            type="button"
+            aria-label="Вперед"
+          >
+            <svg class="icon" width="24" height="24" aria-hidden="true">
               <use xlink:href="#arrow-right" />
             </svg>
           </button>
@@ -700,185 +760,331 @@
 
       <section class="section reviews" id="reviews">
         <div class="container">
-          <h2 class="section__title">Честные отзывы водителей</h2>
-          <p class="section__subtitle">
-            Средняя оценка 4.73 из 5 на основе опросов.
-          </p>
+          <div class="reviews__header-group">
+            <h2 class="section__title">Опыт реальных владельцев</h2>
+            <div class="reviews__summary">
+              <div
+                class="stars stars--large"
+                role="img"
+                aria-label="Рейтинг 4.9 из 5"
+              >
+                <svg width="20" height="20" aria-hidden="true">
+                  <use xlink:href="#star" />
+                </svg>
+                <svg width="20" height="20" aria-hidden="true">
+                  <use xlink:href="#star" />
+                </svg>
+                <svg width="20" height="20" aria-hidden="true">
+                  <use xlink:href="#star" />
+                </svg>
+                <svg width="20" height="20" aria-hidden="true">
+                  <use xlink:href="#star" />
+                </svg>
+                <svg width="20" height="20" aria-hidden="true">
+                  <use xlink:href="#star" />
+                </svg>
+              </div>
+              <p class="section__subtitle reviews__subtitle">
+                Средняя оценка <strong>4.9</strong> на основе 500+ установок
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div class="reviews__slider-wrapper slider_wrapper_unified">
+        <div class="reviews__slider-wrapper">
           <div
             class="reviews__list js-reviews-slider js-drag-scroll"
             id="reviews-list"
             role="region"
-            aria-label="Список отзывов"
+            aria-label="Отзывы покупателей"
           >
-            <figure class="review-card">
+            <article
+              class="review-card"
+              itemscope
+              itemtype="http://schema.org/Review"
+            >
               <div class="review-card__header">
-                <div class="stars" role="img" aria-label="Рейтинг 5 из 5">
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
+                <div class="review-card__user">
+                  <div class="user-avatar user-avatar--blue">А</div>
+                  <div
+                    class="user-info"
+                    itemprop="author"
+                    itemscope
+                    itemtype="http://schema.org/Person"
+                  >
+                    <span class="user-name" itemprop="name">Алексей Д.</span>
+                    <span class="user-car">Toyota Camry V70</span>
+                  </div>
                 </div>
-                <span class="verified-badge">
-                  <svg class="icon" width="12" height="12">
-                    <use xlink:href="#check" />
-                  </svg>
-                  Купил(а)
-                </span>
-              </div>
-              <blockquote class="review-card__quote">
-                <p>
-                  "Брал специально к зиме. У меня кожаный салон, садиться утром
-                  было пыткой 🥶. Накидки реально спасают — тепло сразу, даже
-                  подогрев не включаю. Материал плотный, не скользит. Выглядят
-                  дороже своей цены."
-                </p>
-              </blockquote>
-              <figcaption class="review-card__author">
-                <div
-                  class="author-avatar"
-                  style="background-color: #e0f2fe; color: #0284c7"
+                <span
+                  class="review-date"
+                  itemprop="datePublished"
+                  content="2024-10-15"
+                  >15 окт 2024</span
                 >
-                  И
-                </div>
-                <div class="author-info">
-                  <span class="author-name">Игорь М.</span>
-                  <span class="author-desc">Toyota Camry V70</span>
-                </div>
-              </figcaption>
-            </figure>
+              </div>
 
-            <figure class="review-card">
-              <div class="review-card__header">
-                <div class="stars" role="img" aria-label="Рейтинг 4 из 5">
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18" class="star--muted">
+              <div class="review-card__rating-row">
+                <div
+                  class="stars"
+                  itemprop="reviewRating"
+                  itemscope
+                  itemtype="http://schema.org/Rating"
+                >
+                  <meta itemprop="ratingValue" content="5" />
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
                     <use xlink:href="#star" />
                   </svg>
                 </div>
                 <span class="verified-badge">
-                  <svg class="icon" width="12" height="12">
+                  <svg class="icon" width="10" height="10" aria-hidden="true">
                     <use xlink:href="#check" />
                   </svg>
-                  Купил(а)
+                  Проверено
                 </span>
               </div>
-              <blockquote class="review-card__quote">
-                <p>
-                  "К качеству самих накидок вопросов нет — швы ровные, нитки не
-                  торчат. Снимаю одну звезду за доставку: курьер СДЭК опоздал на
-                  день и коробка была чуть мятая. Но внутри сумка целая, товар
-                  не пострадал. Магазин сработал четко."
-                </p>
-              </blockquote>
-              <figcaption class="review-card__author">
-                <div
-                  class="author-avatar"
-                  style="background-color: #f3f4f6; color: #4b5563"
-                >
-                  А
-                </div>
-                <div class="author-info">
-                  <span class="author-name">Алексей</span>
-                  <span class="author-desc">Mazda 6 (GJ)</span>
-                </div>
-              </figcaption>
-            </figure>
 
-            <figure class="review-card">
-              <div class="review-card__header">
-                <div class="stars" role="img" aria-label="Рейтинг 5 из 5">
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                </div>
-                <span class="verified-badge">
-                  <svg class="icon" width="12" height="12">
-                    <use xlink:href="#check" />
-                  </svg>
-                  Купила мужу
-                </span>
-              </div>
-              <blockquote class="review-card__quote">
+              <blockquote class="review-card__body" itemprop="reviewBody">
                 <p>
-                  "Муж скептик, боялся, что будет «колхоз». Подарила на
-                  годовщину — теперь всем друзьям хвастается! 😍 Сели как
-                  влитые. Спасибо менеджеру, что помог подобрать цвет нити под
-                  кузов!"
+                  «Честно? Боялся, что будет "колхоз". У меня черный кожаный
+                  салон, не хотел портить вид дешевыми чехлами. Рискнул заказать
+                  из-за холодов.
+                  <strong>Итог:</strong> сели как влитые, материал матовый,
+                  плотный. Друзья садятся и думают, что это заводская перетяжка.
+                  Спина теперь не мерзнет, подогрев даже не включаю.»
                 </p>
               </blockquote>
-              <figcaption class="review-card__author">
-                <div
-                  class="author-avatar"
-                  style="background-color: #fce7f3; color: #db2777"
-                >
-                  М
-                </div>
-                <div class="author-info">
-                  <span class="author-name">Марина К.</span>
-                  <span class="author-desc">г. Новосибирск</span>
-                </div>
-              </figcaption>
-            </figure>
+            </article>
 
-            <figure class="review-card">
+            <article
+              class="review-card"
+              itemscope
+              itemtype="http://schema.org/Review"
+            >
               <div class="review-card__header">
-                <div class="stars" role="img" aria-label="Рейтинг 5 из 5">
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
-                  <svg width="18" height="18"><use xlink:href="#star" /></svg>
+                <div class="review-card__user">
+                  <div class="user-avatar user-avatar--green">С</div>
+                  <div
+                    class="user-info"
+                    itemprop="author"
+                    itemscope
+                    itemtype="http://schema.org/Person"
+                  >
+                    <span class="user-name" itemprop="name">Сергей</span>
+                    <span class="user-car">Kia Sportage</span>
+                  </div>
                 </div>
-                <span class="verified-badge">
-                  <svg class="icon" width="12" height="12">
-                    <use xlink:href="#check" />
-                  </svg>
-                  Купил(а)
-                </span>
+                <span
+                  class="review-date"
+                  itemprop="datePublished"
+                  content="2024-11-02"
+                  >2 нояб 2024</span
+                >
               </div>
-              <blockquote class="review-card__quote">
+
+              <div class="review-card__rating-row">
+                <div
+                  class="stars"
+                  itemprop="reviewRating"
+                  itemscope
+                  itemtype="http://schema.org/Rating"
+                >
+                  <meta itemprop="ratingValue" content="5" />
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                </div>
+                <span class="verified-badge verified-badge--yellow"
+                  >Купил 2 комплекта</span
+                >
+              </div>
+
+              <blockquote class="review-card__body" itemprop="reviewBody">
                 <p>
-                  "У меня двое детей, велюр постоянно пачкается. Накидки спасают
-                  — протер влажной салфеткой и чисто. Силиконовая подкладка
-                  держит намертво, не сползают, когда дети прыгают."
+                  «Спасение для семейных! Двое детей сзади — это вечно крошки,
+                  сок и следы от ботинок 😅. Раньше химчистку делал раз в месяц.
+                  С этими накидками — протер влажной салфеткой и чисто.
+                  Силиконовая подкладка держит намертво, не сползают, даже когда
+                  дети прыгают. Своих денег стоят на 100%.»
                 </p>
               </blockquote>
-              <figcaption class="review-card__author">
-                <div
-                  class="author-avatar"
-                  style="background-color: #dcfce7; color: #166534"
+            </article>
+
+            <article
+              class="review-card"
+              itemscope
+              itemtype="http://schema.org/Review"
+            >
+              <div class="review-card__header">
+                <div class="review-card__user">
+                  <div class="user-avatar user-avatar--red">Е</div>
+                  <div
+                    class="user-info"
+                    itemprop="author"
+                    itemscope
+                    itemtype="http://schema.org/Person"
+                  >
+                    <span class="user-name" itemprop="name">Елена К.</span>
+                    <span class="user-car">Mazda 6 (GJ)</span>
+                  </div>
+                </div>
+                <span
+                  class="review-date"
+                  itemprop="datePublished"
+                  content="2024-12-10"
+                  >10 дек 2024</span
                 >
-                  Д
+              </div>
+
+              <div class="review-card__rating-row">
+                <div
+                  class="stars"
+                  itemprop="reviewRating"
+                  itemscope
+                  itemtype="http://schema.org/Rating"
+                >
+                  <meta itemprop="ratingValue" content="5" />
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
                 </div>
-                <div class="author-info">
-                  <span class="author-name">Дмитрий С.</span>
-                  <span class="author-desc">Kia Sportage</span>
+                <span class="verified-badge">Red Stitch</span>
+              </div>
+
+              <blockquote class="review-card__body" itemprop="reviewBody">
+                <p>
+                  «Я перфекционист, искала именно под красную строчку на руле и
+                  кулисе. Переживала, что оттенок будет дешевым «морковным».
+                  Пришли — цвет один в один! 😍 Швы ровные, нитки не торчат.
+                  Салон сразу стал выглядеть агрессивнее и дороже. Спасибо
+                  менеджеру, что помог подобрать!»
+                </p>
+              </blockquote>
+            </article>
+
+            <article
+              class="review-card"
+              itemscope
+              itemtype="http://schema.org/Review"
+            >
+              <div class="review-card__header">
+                <div class="review-card__user">
+                  <div class="user-avatar user-avatar--pink">М</div>
+                  <div
+                    class="user-info"
+                    itemprop="author"
+                    itemscope
+                    itemtype="http://schema.org/Person"
+                  >
+                    <span class="user-name" itemprop="name">Марина</span>
+                    <span class="user-car">Volkswagen Tiguan</span>
+                  </div>
                 </div>
-              </figcaption>
-            </figure>
+                <span
+                  class="review-date"
+                  itemprop="datePublished"
+                  content="2025-01-14"
+                  >3 недели назад</span
+                >
+              </div>
+
+              <div class="review-card__rating-row">
+                <div
+                  class="stars"
+                  itemprop="reviewRating"
+                  itemscope
+                  itemtype="http://schema.org/Rating"
+                >
+                  <meta itemprop="ratingValue" content="5" />
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                  <svg width="14" height="14" aria-hidden="true">
+                    <use xlink:href="#star" />
+                  </svg>
+                </div>
+                <span class="verified-badge verified-badge--gift">
+                  <svg class="icon" width="10" height="10" aria-hidden="true">
+                    <use xlink:href="#gift" />
+                  </svg>
+                  Подарок мужу
+                </span>
+              </div>
+
+              <blockquote class="review-card__body" itemprop="reviewBody">
+                <p>
+                  «Муж сначала ворчал: "Зачем мне накидки, у меня же подогрев
+                  есть". Подарила на годовщину — теперь довольный как слон! 😄
+                  Установил сам за 15 минут прямо у подъезда. Отдельный плюс за
+                  упаковку — сумка очень приличная, дарить не стыдно.»
+                </p>
+              </blockquote>
+            </article>
           </div>
         </div>
 
         <div class="container reviews__controls">
-          <button class="slider-btn js-slider-prev" aria-label="Назад">
-            <svg class="icon" width="24" height="24">
+          <button
+            class="slider-btn js-slider-prev"
+            type="button"
+            aria-label="Назад"
+          >
+            <svg class="icon" width="24" height="24" aria-hidden="true">
               <use xlink:href="#arrow-left" />
             </svg>
           </button>
-
           <div class="reviews__dots js-reviews-dots"></div>
-
-          <button class="slider-btn js-slider-next" aria-label="Вперед">
-            <svg class="icon" width="24" height="24">
+          <button
+            class="slider-btn js-slider-next"
+            type="button"
+            aria-label="Вперед"
+          >
+            <svg class="icon" width="24" height="24" aria-hidden="true">
               <use xlink:href="#arrow-right" />
             </svg>
           </button>
@@ -893,6 +1099,7 @@
             <div class="accordion__item">
               <h3 class="accordion__title">
                 <button
+                  type="button"
                   class="accordion__button js-accordion-toggle"
                   aria-expanded="false"
                   aria-controls="faq-content-1"
@@ -931,6 +1138,7 @@
             <div class="accordion__item">
               <h3 class="accordion__title">
                 <button
+                  type="button"
                   class="accordion__button js-accordion-toggle"
                   aria-expanded="false"
                   aria-controls="faq-content-2"
@@ -968,6 +1176,7 @@
             <div class="accordion__item">
               <h3 class="accordion__title">
                 <button
+                  type="button"
                   class="accordion__button js-accordion-toggle"
                   aria-expanded="false"
                   aria-controls="faq-content-3"
@@ -1005,6 +1214,7 @@
             <div class="accordion__item">
               <h3 class="accordion__title">
                 <button
+                  type="button"
                   class="accordion__button js-accordion-toggle"
                   aria-expanded="false"
                   aria-controls="faq-content-4"
@@ -1180,6 +1390,7 @@
                       id="city"
                       name="city"
                       required
+                      autocomplete="address-level2"
                     >
                       <option value="" disabled selected>Выберите город</option>
                       <option value="Новосибирск">Новосибирск</option>
@@ -1212,6 +1423,7 @@
                     name="phone"
                     placeholder="+7 (999) 000-00-00"
                     autocomplete="tel"
+                    inputmode="tel"
                     required
                     pattern="^(\+7|8)?[\s\-]?\(?[0-9]{3}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$"
                     title="Формат: +7 (999) 000-00-00"
@@ -1230,16 +1442,9 @@
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
+                    aria-hidden="true"
                   >
-                    <polyline points="20 12 20 22 4 22 4 12"></polyline>
-                    <rect x="2" y="7" width="20" height="5"></rect>
-                    <line x1="12" y1="22" x2="12" y2="7"></line>
-                    <path
-                      d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"
-                    ></path>
-                    <path
-                      d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"
-                    ></path>
+                    <use xlink:href="#gift" />
                   </svg>
                 </div>
                 <div class="gift-block__content">
@@ -1251,14 +1456,14 @@
 
               <button
                 class="button button--primary button--large form__submit"
-                type="submit"
+                type="button"
               >
                 Оформить заказ
               </button>
 
               <p class="form__privacy">
                 Нажимая кнопку, вы соглашаетесь с
-                <a href="policy.html" target="_blank"
+                <a href="policy.html" target="_blank" rel="noopener noreferrer"
                   >политикой конфиденциальности</a
                 >
               </p>
@@ -1307,6 +1512,7 @@
             <a
               href="https://t.me/styleavtoru"
               target="_blank"
+              rel="noopener noreferrer"
               class="footer__social-btn footer__social-btn--tg"
             >
               <svg
@@ -1320,6 +1526,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 style="margin-right: 8px"
+                aria-hidden="true"
               >
                 <line x1="22" y1="2" x2="11" y2="13"></line>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -1337,9 +1544,14 @@
             <li><a href="#reviews" class="footer__link">Честные отзывы</a></li>
             <li><a href="#faq" class="footer__link">Вопросы и ответы</a></li>
             <li>
-              <a href="policy.html" target="_blank" class="footer__link"
-                >Политика конфиденциальности</a
+              <a
+                href="policy.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__link"
               >
+                Политика конфиденциальности
+              </a>
             </li>
           </ul>
         </nav>
@@ -1354,7 +1566,7 @@
             <a class="footer__email" href="mailto:v333iv@gmail.com"
               >v333iv@gmail.com</a
             >
-            <p class="footer__info" style="margin-top: 12px; opacity: 0.6">
+            <p class="footer__info footer__info--sub">
               г. Новосибирск, доставка по РФ
             </p>
           </address>
@@ -1382,7 +1594,11 @@
       <div class="modal__overlay js-modal-close"></div>
 
       <div class="modal__content">
-        <button class="modal__close-btn js-modal-close" aria-label="Закрыть">
+        <button
+          class="modal__close-btn js-modal-close"
+          type="button"
+          aria-label="Закрыть"
+        >
           <svg class="icon" width="24" height="24" aria-hidden="true">
             <use xlink:href="#close" />
           </svg>
@@ -1404,7 +1620,7 @@
           Спасибо за заказ, <span id="success-name">[Имя]</span>!<br />
           Менеджер свяжется с вами в ближайшее время для уточнения деталей.
         </p>
-        <button class="button button--primary js-modal-close">
+        <button class="button button--primary js-modal-close" type="button">
           Хорошо, жду звонка
         </button>
       </div>
@@ -1416,9 +1632,16 @@
       <div class="lightbox__content">
         <button
           class="lightbox__close-btn js-lightbox-close"
+          type="button"
           aria-label="Закрыть"
         >
-          <svg class="icon" width="32" height="32" viewBox="0 0 24 24">
+          <svg
+            class="icon"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             <use xlink:href="#close" />
           </svg>
         </button>
@@ -1433,18 +1656,20 @@
 
         <button
           class="lightbox__nav-btn lightbox__nav-btn--prev js-lightbox-prev"
+          type="button"
           aria-label="Предыдущее фото"
         >
-          <svg class="icon" width="24" height="24">
+          <svg class="icon" width="24" height="24" aria-hidden="true">
             <use xlink:href="#arrow-left" />
           </svg>
         </button>
 
         <button
           class="lightbox__nav-btn lightbox__nav-btn--next js-lightbox-next"
+          type="button"
           aria-label="Следующее фото"
         >
-          <svg class="icon" width="24" height="24">
+          <svg class="icon" width="24" height="24" aria-hidden="true">
             <use xlink:href="#arrow-right" />
           </svg>
         </button>
