@@ -1668,9 +1668,19 @@ body.no-scroll {
 /* Обертка слайдера */
 .gallery__slider-wrapper {
   position: relative;
-  width: 100%;
+
+  /* ИЗМЕНЕНИЕ 1: Жестко ограничиваем ширину контейнером */
+  width: min(100%, var(--container-width));
+
+  /* ИЗМЕНЕНИЕ 2: Центрируем обертку */
+  margin-inline: auto;
+
+  /* ИЗМЕНЕНИЕ 3: Добавляем внутренние отступы (gutter), 
+     чтобы фото не касались краев экрана. Теперь это рамка для фото. */
+  padding-inline: var(--gutter);
+
   overflow: hidden;
-  /* Отступы сверху/снизу, чтобы тени карточек не обрезались */
+  /* Отступы сверху/снизу */
   padding-block: var(--space-lg) var(--space-2xl);
 }
 
@@ -1679,11 +1689,9 @@ body.no-scroll {
   display: flex;
   gap: var(--space-md);
 
-  /* Smart Alignment: Контент начинается по сетке контейнера */
-  padding-inline: max(
-    var(--gutter),
-    calc((100% - var(--container-width)) / 2 + var(--gutter))
-  );
+  /* ИЗМЕНЕНИЕ 4: Убираем "умный" паддинг. 
+     Теперь отступы контролирует родитель (wrapper) */
+  padding-inline: 0;
 
   /* Отступ снизу для теней */
   padding-block-end: var(--space-xl);
@@ -1701,6 +1709,10 @@ body.no-scroll {
 
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+}
+
+.gallery__list::-webkit-scrollbar {
+  display: none;
 }
 
 .gallery__list::-webkit-scrollbar {
@@ -1771,7 +1783,43 @@ body.no-scroll {
   gap: var(--space-lg);
   margin-top: 0;
 }
+/* --- Стили для кнопок слайдера --- */
+.slider-btn {
+  /* 1. Размеры и форма */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem; /* 48px — идеальный размер для тача */
+  height: 3rem;
+  border-radius: 50%; /* Делаем круг */
 
+  /* 2. Оформление (в спокойном состоянии) */
+  background-color: var(--white);
+  border: 1px solid var(--gray-200); /* Тонкая рамка */
+  color: var(--color-heading);
+  box-shadow: var(--shadow-sm); /* Легкая тень для объема */
+
+  /* 3. Курсор и плавность */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Состояние при наведении (Hover) */
+@media (hover: hover) {
+  .slider-btn:hover {
+    border-color: var(--color-accent); /* Красная обводка */
+    color: var(--color-accent); /* Красная стрелка */
+    background-color: var(--white);
+    transform: translateY(-2px); /* Легкое "всплытие" */
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* Состояние при нажатии (Active) */
+.slider-btn:active {
+  transform: scale(0.95); /* Эффект нажатия */
+  background-color: var(--gray-100);
+}
 .gallery__dots {
   display: flex;
   gap: 8px;
@@ -3878,4 +3926,59 @@ video.lightbox__image {
     padding-inline: 0;
     gap: var(--space-xl);
   }
+}
+/* ==========================================================================
+   Улучшение кнопок в блоке "Styles" (Версия 2.0: Цветные сразу)
+   ========================================================================== */
+
+/* 1. Базовая геометрия (как и обсуждали) */
+.style-card .button {
+  width: 100%;
+  justify-content: center;
+  margin-top: auto;
+  border-width: 2px; /* Чуть жирнее рамка, чтобы цвет был заметнее */
+  font-weight: var(--fw-black); /* Самый жирный шрифт */
+  padding-block: 16px;
+  transition: all 0.3s ease; /* Плавная анимация всего */
+}
+/* Стрелочка */
+.style-card .button::after {
+  content: "→";
+  margin-left: 8px;
+  font-family: system-ui, sans-serif;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+.style-card .button:hover::after {
+  transform: translateX(6px);
+}
+
+/* 2. НАСТРОЙКИ ДЛЯ КРАСНОГО (Red Stitch) */
+.button[data-color="red"] {
+  /* Сразу делаем её красной (текст и рамка) */
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* При наведении - заливаем красным */
+.button[data-color="red"]:hover {
+  background-color: var(--color-accent);
+  color: var(--white);
+  box-shadow: 0 10px 25px rgba(229, 57, 53, 0.5); /* Сочное свечение */
+  transform: translateY(-2px);
+}
+
+/* 3. НАСТРОЙКИ ДЛЯ ЧЕРНОГО (Classic Black) */
+.button[data-color="black"] {
+  /* Сразу делаем её черной */
+  color: var(--gray-900);
+  border-color: var(--gray-900);
+}
+
+/* При наведении - заливаем черным */
+.button[data-color="black"]:hover {
+  background-color: var(--gray-900);
+  color: var(--white);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
 }
